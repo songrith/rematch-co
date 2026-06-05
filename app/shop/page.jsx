@@ -116,7 +116,7 @@ function ShopContent() {
       </nav>
 
       {/* ── Header ── airy, light editorial */}
-      <div style={{ background: "#fff", borderBottom: "1px solid #e8edf5", padding: "44px 48px 36px", position: "relative", overflow: "hidden" }}>
+      <div className="rm-sec" style={{ background: "#fff", borderBottom: "1px solid #e8edf5", padding: "44px 48px 36px", position: "relative", overflow: "hidden" }}>
         {/* subtle dot grid */}
         <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(#cbd5e1 1px, transparent 1px)", backgroundSize: "28px 28px", opacity: 0.35, pointerEvents: "none" }} />
         {/* soft blue wash top-right */}
@@ -170,7 +170,7 @@ function ShopContent() {
       </div>
 
       {/* ── Grid ── */}
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 48px 80px" }}>
+      <div className="rm-sec" style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 48px 80px" }}>
         {loading ? (
           <div className="product-grid">
             {[1,2,3,4,5,6,7,8].map(i => (

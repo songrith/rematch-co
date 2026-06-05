@@ -49,7 +49,7 @@ function Navbar() {
       transition: "all 0.3s ease",
       display: "flex", alignItems: "center", justifyContent: "space-between",
       padding: "0 max(48px, calc((100vw - 1200px)/2 + 48px))",
-    }}>
+    }} className="rm-nav">
       <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
         <div style={{ width: 32, height: 32, background: onDark ? "rgba(255,255,255,.1)" : "#1e3a8a", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", border: onDark ? "1px solid rgba(255,255,255,.15)" : "none", transition: "all 0.3s" }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg>
@@ -59,7 +59,7 @@ function Navbar() {
         </span>
       </a>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 6 }}>
         {[["เสื้อบอล", "/shop?cat=football"], ["เสื้อบาส", "/shop?cat=basketball"], ["Retro", "/shop?cat=retro"], ["ปล่อยของ", "/seller/terms"]].map(([l, href]) => (
           <a key={l} href={href} style={{ fontSize: 14, fontWeight: 500, color: ink, textDecoration: "none", padding: "6px 12px", borderRadius: 8, transition: "all 0.15s" }}
             onMouseEnter={e => { e.currentTarget.style.color = inkHover; if (!onDark) e.currentTarget.style.background = "#f1f5f9"; }}
@@ -70,9 +70,9 @@ function Navbar() {
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         {user ? (
           <>
-            {profile?.role === "admin" && <a href="/admin" style={{ fontSize: 13, fontWeight: 600, color: "#7c3aed", textDecoration: "none", padding: "7px 14px", border: "1px solid #ede9fe", borderRadius: 8 }}>Admin</a>}
-            {profile?.role === "seller" && <a href="/seller/dashboard" style={{ fontSize: 13, fontWeight: 600, color: ink, textDecoration: "none", padding: "7px 14px", border: `1px solid ${onDark ? "rgba(255,255,255,.15)" : "#e2e8f0"}`, borderRadius: 8 }}>Dashboard</a>}
-            <a href="/orders" style={{ fontSize: 13, fontWeight: 500, color: ink, textDecoration: "none", padding: "7px 14px", borderRadius: 8 }}
+            {profile?.role === "admin" && <a href="/admin" className="rm-nav-hide" style={{ fontSize: 13, fontWeight: 600, color: "#7c3aed", textDecoration: "none", padding: "7px 14px", border: "1px solid #ede9fe", borderRadius: 8 }}>Admin</a>}
+            {profile?.role === "seller" && <a href="/seller/dashboard" className="rm-nav-hide" style={{ fontSize: 13, fontWeight: 600, color: ink, textDecoration: "none", padding: "7px 14px", border: `1px solid ${onDark ? "rgba(255,255,255,.15)" : "#e2e8f0"}`, borderRadius: 8 }}>Dashboard</a>}
+            <a href="/orders" className="rm-nav-hide" style={{ fontSize: 13, fontWeight: 500, color: ink, textDecoration: "none", padding: "7px 14px", borderRadius: 8 }}
               onMouseEnter={e => e.currentTarget.style.color = inkHover}
               onMouseLeave={e => e.currentTarget.style.color = ink}>คำสั่งซื้อ</a>
             <a href="/notifications" style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 8, color: ink, textDecoration: "none" }}>
@@ -122,7 +122,7 @@ function Hero() {
         <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px)", backgroundSize: "64px 64px", opacity: 0.6 }} />
       </div>
 
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "64px 48px 96px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", position: "relative", zIndex: 1, width: "100%" }}>
+      <div className="rm-hero-grid" style={{ maxWidth: 1200, margin: "0 auto", padding: "64px 48px 96px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", position: "relative", zIndex: 1, width: "100%" }}>
 
         {/* Left */}
         <div style={{ animation: "fadeUp 0.7s ease both" }}>
@@ -176,7 +176,7 @@ function Hero() {
         </div>
 
         {/* Right — product showcase */}
-        <div style={{ position: "relative", paddingBottom: 40, animation: "fadeIn 0.8s 0.2s ease both" }}>
+        <div className="rm-hero-right" style={{ position: "relative", paddingBottom: 40, animation: "fadeIn 0.8s 0.2s ease both" }}>
 
           {/* Glow ring behind main card */}
           <div style={{ position: "absolute", inset: -20, background: "radial-gradient(ellipse, rgba(99,102,241,.2) 0%, transparent 70%)", borderRadius: 32, pointerEvents: "none" }} />
@@ -289,7 +289,7 @@ function HowItWorks() {
   ];
   return (
     <section id="how" style={{ background: "#fff" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "100px 48px" }}>
+      <div className="rm-sec" style={{ maxWidth: 1200, margin: "0 auto", padding: "100px 48px" }}>
         <div style={{ textAlign: "center", marginBottom: 64 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>วิธีการทำงาน</div>
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(28px,3.5vw,44px)", fontWeight: 900, color: "#0f172a", margin: 0, letterSpacing: -1 }}>
@@ -297,7 +297,7 @@ function HowItWorks() {
           </h2>
           <p style={{ fontSize: 16, color: "#64748b", marginTop: 14, maxWidth: 480, margin: "14px auto 0" }}>ระบบ Escrow ของเราทำให้การซื้อขายเสื้อกีฬาของแท้เป็นเรื่องง่ายและปลอดภัยสำหรับทุกคน</p>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 24 }}>
+        <div className="rm-g3" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 24 }}>
           {steps.map((s, i) => (
             <div key={i} style={{ background: "#fff", border: "1px solid #f1f5f9", borderRadius: 20, padding: "36px 28px", position: "relative", overflow: "hidden", transition: "all 0.25s" }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.boxShadow = `0 16px 48px rgba(0,0,0,.06)`; e.currentTarget.style.transform = "translateY(-4px)"; }}
@@ -326,12 +326,12 @@ function WhyUs() {
   ];
   return (
     <section style={{ background: "#f8fafc" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "100px 48px" }}>
+      <div className="rm-sec" style={{ maxWidth: 1200, margin: "0 auto", padding: "100px 48px" }}>
         <div style={{ textAlign: "center", marginBottom: 60 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>ทำไมต้อง ReMatch</div>
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(28px,3.5vw,44px)", fontWeight: 900, color: "#0f172a", margin: 0, letterSpacing: -1 }}>มาตรฐานความปลอดภัยระดับพรีเมียม</h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 20 }}>
+        <div className="rm-g4" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 20 }}>
           {features.map(f => (
             <div key={f.title} style={{ padding: "28px 24px", borderRadius: 16, border: "1px solid #e2e8f0", transition: "all 0.25s", background: "#fff" }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = f.color + "40"; e.currentTarget.style.boxShadow = `0 12px 32px ${f.color}12`; e.currentTarget.style.transform = "translateY(-3px)"; }}
@@ -351,13 +351,13 @@ function WhyUs() {
 function SellerCTA() {
   return (
     <section style={{ background: "#fff" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 48px 100px" }}>
-        <div style={{ background: "linear-gradient(135deg, #060d1e 0%, #0f172a 100%)", borderRadius: 24, overflow: "hidden", display: "grid", gridTemplateColumns: "1fr 1fr", position: "relative" }}>
+      <div className="rm-sec-b" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 48px 100px" }}>
+        <div className="rm-g2" style={{ background: "linear-gradient(135deg, #060d1e 0%, #0f172a 100%)", borderRadius: 24, overflow: "hidden", display: "grid", gridTemplateColumns: "1fr 1fr", position: "relative" }}>
           <div style={{ position: "absolute", top: -100, left: -100, width: 400, height: 400, background: "radial-gradient(circle, rgba(99,102,241,.15), transparent 70%)", pointerEvents: "none" }} />
           <div style={{ position: "absolute", bottom: -80, right: 100, width: 300, height: 300, background: "radial-gradient(circle, rgba(139,92,246,.1), transparent 70%)", pointerEvents: "none" }} />
 
           {/* Left */}
-          <div style={{ padding: "64px 56px", position: "relative" }}>
+          <div className="rm-cta-left" style={{ padding: "64px 56px", position: "relative" }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.3)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>สำหรับผู้ขาย</div>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(28px,3vw,40px)", fontWeight: 900, color: "#fff", margin: "0 0 16px", lineHeight: 1.15, letterSpacing: -0.5 }}>
               มีเสื้อกีฬา<br />ของแท้อยู่?
@@ -372,7 +372,7 @@ function SellerCTA() {
           </div>
 
           {/* Right */}
-          <div style={{ padding: "64px 56px 64px 40px", borderLeft: "1px solid rgba(255,255,255,.06)", position: "relative" }}>
+          <div className="rm-cta-right" style={{ padding: "64px 56px 64px 40px", borderLeft: "1px solid rgba(255,255,255,.06)", position: "relative" }}>
             {[
               ["01", "สมัครและยืนยัน KYC", "รูปบัตร ปชช. + Selfie ใช้เวลา 5 นาที"],
               ["02", "ลงรายการสินค้า", "ถ่ายรูป ใส่ราคา รอ Admin อนุมัติใน 24 ชม."],
@@ -397,9 +397,9 @@ function SellerCTA() {
 function Footer() {
   return (
     <footer style={{ background: "#060d1e", borderTop: "1px solid rgba(255,255,255,.06)" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "56px 48px 32px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 48, marginBottom: 48 }}>
-          <div>
+      <div className="rm-footer-pad" style={{ maxWidth: 1200, margin: "0 auto", padding: "56px 48px 32px" }}>
+        <div className="rm-footer-grid" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 48, marginBottom: 48 }}>
+          <div className="rm-footer-brand">
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
               <div style={{ width: 30, height: 30, background: "rgba(255,255,255,.08)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,255,255,.1)" }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>

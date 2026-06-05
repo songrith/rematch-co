@@ -24,3 +24,37 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ─── ReMatch Responsive ─── */
+@media (max-width: 640px) {
+  /* Nav — ใช้กับทุก nav ในแอปโดยไม่ต้องเพิ่ม className */
+  nav { padding-left: 16px !important; padding-right: 16px !important; }
+  .rm-nav-links { display: none !important; }
+  .rm-nav-hide  { display: none !important; }
+
+  /* Hero */
+  .rm-hero-grid {
+    grid-template-columns: 1fr !important;
+    padding: 36px 20px 56px !important;
+    gap: 32px !important;
+  }
+  .rm-hero-right { display: none !important; }
+
+  /* Section padding */
+  .rm-sec   { padding-left: 20px !important; padding-right: 20px !important; }
+  .rm-sec-b { padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 56px !important; }
+
+  /* Grids */
+  .rm-g3 { grid-template-columns: 1fr !important;      gap: 16px !important; }
+  .rm-g4 { grid-template-columns: 1fr 1fr !important;  gap: 12px !important; }
+  .rm-g2 { grid-template-columns: 1fr !important;      gap: 0 !important; }
+
+  /* CTA dark card */
+  .rm-cta-left  { padding: 40px 24px 28px !important; }
+  .rm-cta-right { padding: 28px 24px 40px !important; border-left: none !important; border-top: 1px solid rgba(255,255,255,.06) !important; }
+
+  /* Footer */
+  .rm-footer-pad  { padding: 40px 20px 24px !important; }
+  .rm-footer-grid { grid-template-columns: 1fr 1fr !important; gap: 28px !important; }
+  .rm-footer-brand { grid-column: 1 / -1 !important; }
+}
