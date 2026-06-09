@@ -10,11 +10,15 @@ export default function MobileNav({ isOpen, onClose, user, profile, supabase, sh
 
   return (
     <>
+      <style>{`
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+      `}</style>
+
       {/* Overlay */}
-      <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.5)", zIndex: 998 }} />
+      <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(100,116,139,.35)", backdropFilter: "blur(2px)", zIndex: 998 }} />
 
       {/* Drawer */}
-      <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "80vw", maxWidth: 300, background: "#fff", zIndex: 999, display: "flex", flexDirection: "column", overflowY: "auto", boxShadow: "-8px 0 32px rgba(0,0,0,.15)" }}>
+      <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "80vw", maxWidth: 300, background: "#f8fafc", zIndex: 999, display: "flex", flexDirection: "column", overflowY: "auto", boxShadow: "-8px 0 40px rgba(0,0,0,.12)", animation: "slideIn 0.25s ease" }}>
 
         {/* Header */}
         <div style={{ padding: "20px 20px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #f3f4f6" }}>
