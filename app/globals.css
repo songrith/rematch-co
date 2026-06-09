@@ -53,6 +53,7 @@ body {
 
   /* Product detail */
   .rm-product-grid { grid-template-columns: 1fr !important; gap: 24px !important; padding: 16px 16px 48px !important; }
+  .rm-sticky-img   { position: static !important; }
 
   /* Card padding */
   .rm-card-pad { padding: 20px 16px !important; }

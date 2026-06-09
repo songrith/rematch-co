@@ -271,7 +271,7 @@ export default function ProductDetailPage() {
       <div className="rm-product-grid" style={{ background: "#fff", border: "1.5px solid #e4eaf3", borderRadius: 24, boxShadow: "0 8px 40px rgba(0,0,0,.07)", padding: "36px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 52, alignItems: "start" }}>
 
         {/* ── Left: Images ── */}
-        <div style={{ position: "sticky", top: 88 }}>
+        <div className="rm-sticky-img" style={{ position: "sticky", top: 88 }}>
           {/* Main image */}
           <div
             onClick={() => images[activeImg] && setLightbox(true)}
