@@ -82,29 +82,34 @@ function ShopContent() {
           Re<span style={{ color: "#1e3a8a" }}>Match</span>
         </a>
         <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-          {[["เสื้อบอล","football"],["เสื้อบาส","basketball"],["Retro","retro"]].map(([label, cat]) => (
-            <button key={cat} onClick={() => setActive(catReverse[cat])}
-              style={{ background: "none", border: "none", fontSize: 14, fontWeight: active === catReverse[cat] ? 700 : 500, color: active === catReverse[cat] ? "#1e3a8a" : "#4b5563", cursor: "pointer", padding: 0 }}>
-              {label}
-            </button>
-          ))}
+          <div className="rm-nav-links" style={{ display: "flex", gap: 24, alignItems: "center" }}>
+            {[["เสื้อบอล","football"],["เสื้อบาส","basketball"],["Retro","retro"]].map(([label, cat]) => (
+              <button key={cat} onClick={() => setActive(catReverse[cat])}
+                style={{ background: "none", border: "none", fontSize: 14, fontWeight: active === catReverse[cat] ? 700 : 500, color: active === catReverse[cat] ? "#1e3a8a" : "#4b5563", cursor: "pointer", padding: 0 }}>
+                {label}
+              </button>
+            ))}
+          </div>
           {user ? (
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {profile?.role === "admin"  && <a href="/admin" style={navFilled("#7c3aed")}>Admin</a>}
-              {profile?.role === "seller" && <><a href="/sell" style={navFilled("#1e3a8a")}>+ ลงสินค้า</a><a href="/seller/dashboard" style={navBorder}>Dashboard</a></>}
-              {(profile?.role === "buyer" || !profile?.role) && <a href="/seller/terms" style={navBorder}>สมัครเป็น Seller</a>}
-              <a href="/orders"   style={navBorder}>คำสั่งซื้อ</a>
-              <a href="/messages" style={navBorder}>ข้อความ</a>
+              {profile?.role === "admin"  && <a href="/admin" className="rm-nav-hide" style={navFilled("#7c3aed")}>Admin</a>}
+              {profile?.role === "seller" && <><a href="/sell" className="rm-nav-hide" style={navFilled("#1e3a8a")}>+ ลงสินค้า</a><a href="/seller/dashboard" className="rm-nav-hide" style={navBorder}>Dashboard</a></>}
+              {(profile?.role === "buyer" || !profile?.role) && <a href="/seller/terms" className="rm-nav-hide" style={navBorder}>สมัครเป็น Seller</a>}
+              <a href="/orders"   className="rm-nav-hide" style={navBorder}>คำสั่งซื้อ</a>
+              <a href="/messages" className="rm-nav-hide" style={navBorder}>ข้อความ</a>
               <a href="/notifications" style={{ position: "relative", display: "flex", alignItems: "center", color: "#6b7280", textDecoration: "none" }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                 </svg>
                 {unread > 0 && <span style={{ position: "absolute", top: -2, right: -2, background: "#dc2626", color: "#fff", borderRadius: "50%", fontSize: 10, fontWeight: 700, width: 15, height: 15, display: "flex", alignItems: "center", justifyContent: "center" }}>{unread > 9 ? "9+" : unread}</span>}
               </a>
-              <a href="/dashboard" style={{ fontSize: 13, color: "#6b7280", textDecoration: "none" }}>
-                👋 {profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}
+              <a href="/dashboard" style={{ fontSize: 13, color: "#6b7280", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
+                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
+                  {(profile?.full_name || user.email || "?")[0].toUpperCase()}
+                </div>
+                <span className="rm-nav-name">{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
               </a>
-              <button onClick={handleLogout} style={{ background: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", padding: "8px 14px", borderRadius: 99, fontSize: 13, cursor: "pointer" }}>ออก</button>
+              <button onClick={handleLogout} className="rm-nav-hide" style={{ background: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", padding: "8px 14px", borderRadius: 99, fontSize: 13, cursor: "pointer" }}>ออก</button>
             </div>
           ) : (
             <div style={{ display: "flex", gap: 8 }}>
