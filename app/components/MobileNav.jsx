@@ -17,7 +17,7 @@ export default function MobileNav({ isOpen, onClose, user, profile, showCategori
   if (!isOpen) return null;
 
   async function handleSignOut() {
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: 'local' });
     window.location.href = "/";
   }
 
