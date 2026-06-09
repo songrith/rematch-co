@@ -105,7 +105,7 @@ export default function SellPage() {
 
       <nav style={S.nav}>
         <a href="/" style={S.logo}>Re<span style={{ color: "#1e3a8a" }}>Match</span></a>
-        <button onClick={async () => { await supabase.auth.signOut(); window.location.href = "/"; }} style={S.logoutBtn}>ออกจากระบบ</button>
+        <button onClick={async () => { try { await supabase.auth.signOut(); } catch {} window.location.reload(); }} style={S.logoutBtn}>ออกจากระบบ</button>
       </nav>
 
       <div style={{ maxWidth: 680, margin: "0 auto", padding: "48px 24px" }}>

@@ -75,7 +75,7 @@ export default function SellerTermsPage() {
         <a href="/" style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900, color: "#0f0f0e", textDecoration: "none" }}>
           Re<span style={{ color: "#1e3a8a" }}>Match</span>
         </a>
-        <button onClick={async () => { await supabase.auth.signOut(); window.location.href = "/"; }}
+        <button onClick={async () => { try { await supabase.auth.signOut(); } catch {} window.location.reload(); }}
           style={{ background: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", padding: "8px 16px", borderRadius: 99, fontSize: 13, cursor: "pointer" }}>
           ออกจากระบบ
         </button>

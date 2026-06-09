@@ -114,7 +114,7 @@ export default function DashboardPage() {
           Re<span style={{ color: "#1e3a8a" }}>Match</span>
         </a>
         <button
-          onClick={async () => { await supabase.auth.signOut(); window.location.href = "/"; }}
+          onClick={async () => { try { await supabase.auth.signOut(); } catch {} window.location.reload(); }}
           style={{ background: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", padding: "8px 16px", borderRadius: 99, fontSize: 13, fontWeight: 500, cursor: "pointer" }}
         >
           ออกจากระบบ

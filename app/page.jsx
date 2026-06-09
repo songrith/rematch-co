@@ -98,7 +98,7 @@ function Navbar() {
               </div>
               <span className="rm-nav-name">{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
             </a>
-            <button className="rm-nav-hide" onClick={async () => { try { await supabase.auth.signOut(); } catch {} window.location.href = "/"; }}
+            <button className="rm-nav-hide" onClick={async () => { try { await supabase.auth.signOut(); } catch {} window.location.reload(); }}
               style={{ fontSize: 13, color: ink, background: "none", border: "none", cursor: "pointer", padding: "7px 10px", borderRadius: 8 }}
               onMouseEnter={e => e.currentTarget.style.color = "#dc2626"}
               onMouseLeave={e => e.currentTarget.style.color = ink}>ออก</button>
