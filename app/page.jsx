@@ -77,7 +77,7 @@ function Navbar() {
         </svg>
       </button>
 
-      <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} supabase={supabase} showCategories={true} />
+      <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
 
       {/* Desktop nav */}
       <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 8 }}>

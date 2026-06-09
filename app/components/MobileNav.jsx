@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useRef } from "react";
+import { createClient } from "@/lib/supabase/client";
 
-export default function MobileNav({ isOpen, onClose, user, profile, supabase, showCategories = true }) {
+export default function MobileNav({ isOpen, onClose, user, profile, showCategories = true }) {
   const ref = useRef(null);
+  const supabase = createClient();
 
   useEffect(() => {
     function handleClick(e) {

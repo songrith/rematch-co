@@ -91,7 +91,7 @@ function ShopContent() {
             <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
         </button>
-        <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} supabase={supabase} showCategories={true} />
+        <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
 
         {/* Desktop nav */}
         <div className="rm-nav-links" style={{ display: "flex", gap: 24, alignItems: "center" }}>
