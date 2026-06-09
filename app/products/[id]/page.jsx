@@ -267,8 +267,8 @@ export default function ProductDetailPage() {
       </div>
 
       {/* ── Main card ── */}
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "16px 32px 64px" }}>
-      <div style={{ background: "#fff", border: "1.5px solid #e4eaf3", borderRadius: 24, boxShadow: "0 8px 40px rgba(0,0,0,.07)", padding: "36px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 52, alignItems: "start" }}>
+      <div className="rm-page" style={{ maxWidth: 1080, margin: "0 auto", padding: "16px 32px 64px" }}>
+      <div className="rm-product-grid" style={{ background: "#fff", border: "1.5px solid #e4eaf3", borderRadius: 24, boxShadow: "0 8px 40px rgba(0,0,0,.07)", padding: "36px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 52, alignItems: "start" }}>
 
         {/* ── Left: Images ── */}
         <div style={{ position: "sticky", top: 88 }}>

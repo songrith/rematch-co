@@ -255,7 +255,7 @@ export default function SellerDashboardPage() {
         </div>
 
         {/* Stats */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20, marginBottom: 40 }}>
+        <div className="rm-g4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20, marginBottom: 40 }}>
           {stats.map(s => (
             <div key={s.label} style={{ background: "#fff", borderRadius: 16, border: "1px solid #e5e7eb", padding: "24px 28px", display: "flex", alignItems: "center", gap: 16 }}>
               <div style={{ fontSize: 32 }}>{s.icon}</div>
@@ -458,7 +458,7 @@ export default function SellerDashboardPage() {
                   </div>
 
                   {/* Body */}
-                  <div style={{ padding: "24px 28px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+                  <div className="rm-g2-form" style={{ padding: "24px 28px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
                     {/* Product */}
                     <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
                       <div style={{ width: 72, height: 72, borderRadius: 12, background: "#e2e8f0", flexShrink: 0, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28 }}>

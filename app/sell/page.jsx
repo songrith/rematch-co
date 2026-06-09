@@ -119,7 +119,7 @@ export default function SellPage() {
           <div style={S.card}>
             <h2 style={S.sectionTitle}>รูปสินค้า <span style={{ fontWeight: 400, color: "#9ca3af", fontSize: 13 }}>(สูงสุด {MAX_IMAGES} รูป)</span></h2>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, marginBottom: 12 }}>
+            <div className="rm-g5" style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, marginBottom: 12 }}>
               {previews.map((src, i) => (
                 <div key={i} style={{ position: "relative", aspectRatio: "1", borderRadius: 10, overflow: "hidden", border: "1px solid #e5e7eb" }}>
                   <img src={src} alt={`preview ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -155,7 +155,7 @@ export default function SellPage() {
                 <input required value={form.name} onChange={e => set("name", e.target.value)}
                   placeholder="เช่น Real Madrid Home 24/25" style={S.input} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              <div className="rm-g2-form" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                 <div>
                   <label style={S.label}>ประเภท</label>
                   <select required value={form.category} onChange={e => set("category", e.target.value)} style={{ ...S.input, cursor: "pointer" }}>
@@ -168,7 +168,7 @@ export default function SellPage() {
                   <input value={form.team} onChange={e => set("team", e.target.value)} placeholder="เช่น La Liga, NBA" style={S.input} />
                 </div>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14 }}>
+              <div className="rm-g2-form" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14 }}>
                 <div>
                   <label style={S.label}>ขนาด</label>
                   <select required value={form.size} onChange={e => set("size", e.target.value)} style={{ ...S.input, cursor: "pointer" }}>

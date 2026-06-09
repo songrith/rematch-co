@@ -168,7 +168,7 @@ export default function DashboardPage() {
           {/* Personal Info */}
           <div style={card}>
             <h2 style={sectionTitle}>ข้อมูลส่วนตัว</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <div className="rm-g2-form" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
               <Field label="ชื่อ-นามสกุล" value={profile.full_name || ""} onChange={v => set("full_name", v)} placeholder="กรอกชื่อ-นามสกุล" />
               <Field label="เบอร์โทรศัพท์" value={profile.phone || ""} onChange={v => set("phone", v.replace(/\D/g, ""))} placeholder="0XXXXXXXXX" inputMode="tel" maxLength={10} />
             </div>
@@ -184,11 +184,11 @@ export default function DashboardPage() {
                 onChange={v => set("address", v)}
                 placeholder="เช่น 123/4 ถ.สุขุมวิท ซ.11"
               />
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              <div className="rm-g2-form" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                 <Field label="แขวง / ตำบล" value={profile.subdistrict || ""} onChange={v => set("subdistrict", v)} placeholder="แขวง/ตำบล" />
                 <Field label="เขต / อำเภอ" value={profile.district || ""} onChange={v => set("district", v)} placeholder="เขต/อำเภอ" />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              <div className="rm-g2-form" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                 <Field label="จังหวัด" value={profile.province || ""} onChange={v => set("province", v)} placeholder="เช่น กรุงเทพมหานคร" />
                 <Field label="รหัสไปรษณีย์" value={profile.postal_code || ""} onChange={v => set("postal_code", v.replace(/\D/g, ""))} placeholder="10XXX" inputMode="numeric" maxLength={5} />
               </div>
