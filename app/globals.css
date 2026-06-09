@@ -31,6 +31,7 @@ body {
   nav { padding-left: 16px !important; padding-right: 16px !important; }
   .rm-nav-links { display: none !important; }
   .rm-nav-hide  { display: none !important; }
+  .rm-nav-name  { display: none !important; }
 
   /* Hero */
   .rm-hero-grid {
