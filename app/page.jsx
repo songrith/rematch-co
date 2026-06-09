@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import MobileNav from "@/app/components/MobileNav";
 
 /* ─── Navbar ─── */
 function Navbar() {
@@ -9,6 +10,7 @@ function Navbar() {
   const [profile, setProfile] = useState(null);
   const [unread, setUnread] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     async function loadUser() {
@@ -67,7 +69,18 @@ function Navbar() {
         ))}
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      {/* Hamburger — mobile only */}
+      <button className="rm-hamburger" onClick={() => setMenuOpen(true)}
+        style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: ink, alignItems: "center", justifyContent: "center" }}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+
+      <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} supabase={supabase} showCategories={true} />
+
+      {/* Desktop nav */}
+      <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 8 }}>
         {user ? (
           <>
             {profile?.role === "admin" && <a href="/admin" className="rm-nav-hide" style={{ fontSize: 13, fontWeight: 600, color: "#7c3aed", textDecoration: "none", padding: "7px 14px", border: "1px solid #ede9fe", borderRadius: 8 }}>Admin</a>}

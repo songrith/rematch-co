@@ -25,6 +25,9 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Hamburger hidden on desktop */
+.rm-hamburger { display: none; }
+
 /* ─── ReMatch Responsive ─── */
 @media (max-width: 640px) {
   /* Nav — ใช้กับทุก nav ในแอปโดยไม่ต้องเพิ่ม className */
@@ -32,6 +35,9 @@ body {
   .rm-nav-links { display: none !important; }
   .rm-nav-hide  { display: none !important; }
   .rm-nav-name  { display: none !important; }
+
+  /* Hamburger — แสดงบนมือถือ ซ่อนบน desktop */
+  .rm-hamburger { display: flex !important; }
 
   /* Hero */
   .rm-hero-grid {

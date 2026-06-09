@@ -2,6 +2,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
+import MobileNav from "@/app/components/MobileNav";
 
 const CAT_EMOJI = { football: "⚽", basketball: "🏀", retro: "🏆" };
 const GRADE_STYLE = {
@@ -18,13 +19,14 @@ function ShopContent() {
   const supabase     = createClient();
   const searchParams = useSearchParams();
 
-  const [user,     setUser]     = useState(null);
-  const [profile,  setProfile]  = useState(null);
-  const [unread,   setUnread]   = useState(0);
-  const [products, setProducts] = useState([]);
-  const [loading,  setLoading]  = useState(true);
-  const [search,   setSearch]   = useState("");
-  const [active,   setActive]   = useState(() => catReverse[searchParams.get("cat")] || "ทั้งหมด");
+  const [user,      setUser]     = useState(null);
+  const [profile,   setProfile]  = useState(null);
+  const [unread,    setUnread]   = useState(0);
+  const [products,  setProducts] = useState([]);
+  const [loading,   setLoading]  = useState(true);
+  const [search,    setSearch]   = useState("");
+  const [active,    setActive]   = useState(() => catReverse[searchParams.get("cat")] || "ทั้งหมด");
+  const [menuOpen,  setMenuOpen] = useState(false);
 
   useEffect(() => {
     async function init() {
@@ -81,8 +83,19 @@ function ShopContent() {
         <a href="/" style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900, color: "#0f0f0e", textDecoration: "none" }}>
           Re<span style={{ color: "#1e3a8a" }}>Match</span>
         </a>
-        <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-          <div className="rm-nav-links" style={{ display: "flex", gap: 24, alignItems: "center" }}>
+
+        {/* Hamburger — mobile only */}
+        <button className="rm-hamburger" onClick={() => setMenuOpen(true)}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#374151", alignItems: "center", justifyContent: "center" }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} supabase={supabase} showCategories={true} />
+
+        {/* Desktop nav */}
+        <div className="rm-nav-links" style={{ display: "flex", gap: 24, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
             {[["เสื้อบอล","football"],["เสื้อบาส","basketball"],["Retro","retro"]].map(([label, cat]) => (
               <button key={cat} onClick={() => setActive(catReverse[cat])}
                 style={{ background: "none", border: "none", fontSize: 14, fontWeight: active === catReverse[cat] ? 700 : 500, color: active === catReverse[cat] ? "#1e3a8a" : "#4b5563", cursor: "pointer", padding: 0 }}>
