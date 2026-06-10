@@ -419,7 +419,7 @@ function Footer() {
               </div>
               <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 900, color: "#fff" }}>Re<span style={{ color: "#93c5fd" }}>Match</span></span>
             </div>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,.3)", lineHeight: 1.75, maxWidth: 240, margin: 0 }}>ตลาดซื้อขายเสื้อกีฬาของแท้ที่ปลอดภัยที่สุดในไทย ด้วยระบบ Escrow และ KYC</p>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,.3)", lineHeight: 1.75, maxWidth: 240, margin: 0 }}>ตลาดซื้อขายเสื้อกีฬาของแท้ที่ปลอดภัยที่สุดในไทย ด้วยระบบความปลอดภัย</p>
           </div>
           {[
             ["สินค้า", [["เสื้อบอล", "/shop?cat=football"], ["เสื้อบาส", "/shop?cat=basketball"], ["Retro Jersey", "/shop?cat=retro"], ["ดูทั้งหมด", "/shop"]]],

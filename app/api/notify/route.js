@@ -19,7 +19,7 @@ export async function POST(request) {
 
     switch (type) {
       case "order_placed":     return await orderPlaced(body);
-      case "kyc_submitted":    return await kycSubmitted(body);
+      case "verification_submitted":    return await verificationSubmitted(body);
       case "seller_approved":  return await sellerApproved(body);
       case "seller_rejected":  return await sellerRejected(body);
       case "product_approved": return await productApproved(body);
@@ -98,8 +98,8 @@ async function orderPlaced({ buyerEmail, buyerName, sellerEmail, sellerName, pro
   return Response.json({ ok: true });
 }
 
-async function kycSubmitted({ sellerName, sellerEmail }) {
-  await send(ADMIN, `👤 KYC ใหม่รออนุมัติ — ${sellerName}`, wrap(
+async function verificationSubmitted({ sellerName, sellerEmail }) {
+  await send(ADMIN, `👤 Verified ใหม่รออนุมัติ — ${sellerName}`, wrap(
     `Seller ใหม่รอการตรวจสอบ`,
     `<p style="color:#6b7280;font-size:14px;margin:0 0 16px;">มีคำขอยืนยัน Seller ใหม่รอการอนุมัติ</p>
     ${table(`${row("ชื่อ", sellerName || "-")}${row("อีเมล", sellerEmail || "-")}`)}

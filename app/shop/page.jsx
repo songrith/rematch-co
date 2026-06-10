@@ -299,10 +299,10 @@ function ProductCard({ product }) {
             <span style={{ fontSize: 11, color: "#374151", fontWeight: 600, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
               {product.seller_name}
             </span>
-            {/* KYC */}
+            {/* Verified */}
             <div style={{ display: "flex", alignItems: "center", gap: 3, background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 99, padding: "2px 7px", flexShrink: 0 }}>
               <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="#1e40af" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              <span style={{ fontSize: 9, fontWeight: 700, color: "#1e40af" }}>KYC</span>
+              <span style={{ fontSize: 9, fontWeight: 700, color: "#1e40af" }}>Verified</span>
             </div>
             {/* Star */}
             {product.seller_rating != null ? (

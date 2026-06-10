@@ -144,7 +144,7 @@ export default function SellerVerifyPage() {
 
     fetch("/api/notify", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "kyc_submitted", sellerName: profile?.full_name || user.email, sellerEmail: user.email }),
+      body: JSON.stringify({ type: "verification_submitted", sellerName: profile?.full_name || user.email, sellerEmail: user.email }),
     }).catch(() => {});
 
     const { data } = await supabase.from("seller_verifications").select("*").eq("user_id", user.id).maybeSingle();
