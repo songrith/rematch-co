@@ -79,11 +79,16 @@ function Navbar() {
 
       <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
 
+      {/* Admin — always visible regardless of screen size */}
+      {profile?.role === "admin" && (
+        <a href="/admin" style={{ fontSize: 13, fontWeight: 700, color: "#7c3aed", textDecoration: "none", padding: "7px 14px", border: "1px solid #ede9fe", borderRadius: 8, background: "#faf5ff", flexShrink: 0 }}>Admin</a>
+      )}
+
       {/* Desktop nav */}
       <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 8 }}>
         {user ? (
           <>
-            {profile?.role === "admin" && <a href="/admin" style={{ fontSize: 13, fontWeight: 600, color: "#7c3aed", textDecoration: "none", padding: "7px 14px", border: "1px solid #ede9fe", borderRadius: 8 }}>Admin</a>}
+            {profile?.role === "admin" && null}
             {profile?.role === "seller" && <a href="/seller/dashboard" className="rm-nav-hide" style={{ fontSize: 13, fontWeight: 600, color: ink, textDecoration: "none", padding: "7px 14px", border: `1px solid ${onDark ? "rgba(255,255,255,.15)" : "#e2e8f0"}`, borderRadius: 8 }}>Dashboard</a>}
             <a href="/orders" className="rm-nav-hide" style={{ fontSize: 13, fontWeight: 500, color: ink, textDecoration: "none", padding: "7px 14px", borderRadius: 8 }}
               onMouseEnter={e => e.currentTarget.style.color = inkHover}
