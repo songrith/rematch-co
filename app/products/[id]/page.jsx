@@ -347,7 +347,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Title */}
-          <h1 className="rm-thai" style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, fontWeight: 900, color: "#0f172a", margin: "0 0 8px", lineHeight: 1.25 }}>
+          <h1 className="rm-thai" style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900, color: "#0f172a", margin: "0 0 8px", lineHeight: 1.3 }}>
             {product.name}
           </h1>
 
@@ -358,7 +358,7 @@ export default function ProductDetailPage() {
 
           {/* Price */}
           <div style={{ marginBottom: 24 }}>
-            <span className="rm-price" style={{ fontSize: 40, fontWeight: 800, color: "#0f172a", letterSpacing: "-1.5px", lineHeight: 1 }}>
+            <span className="rm-price" style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", letterSpacing: "-0.5px", lineHeight: 1 }}>
               ฿{Number(product.price).toLocaleString()}
             </span>
             <div style={{ fontSize: 12, color: "#15803d", fontWeight: 600, marginTop: 6, display: "flex", alignItems: "center", gap: 5 }}>
