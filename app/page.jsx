@@ -153,7 +153,7 @@ function Hero() {
           </h1>
 
           <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,.5)", margin: "0 0 36px", maxWidth: 420 }}>
-            Seller ทุกคนผ่าน KYC · เงินถูกกักไว้ใน Escrow จนกว่าคุณจะได้ของจริง · คืนเงินเต็มหากสินค้าไม่ตรงปก
+            Seller ทุกคนผ่านการยืนยัน · เงินถูกกักไว้ใน Escrow จนกว่าคุณจะได้ของจริง · คืนเงินเต็มหากสินค้าไม่ตรงปก
           </p>
 
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
@@ -174,7 +174,7 @@ function Hero() {
           <div style={{ marginTop: 52, paddingTop: 32, borderTop: "1px solid rgba(255,255,255,.08)", display: "flex", gap: 28, flexWrap: "wrap" }}>
             {[
               { icon: "🔒", title: "Escrow ทุกออเดอร์", sub: "เงินปลอดภัย 100%" },
-              { icon: "🪪", title: "KYC ทุก Seller",   sub: "ยืนยันตัวตนก่อนขาย" },
+              { icon: "🪪", title: "Verified Seller",   sub: "ยืนยันตัวตนก่อนขาย" },
               { icon: "💸", title: "คืนเงินเต็ม",      sub: "ถ้าสินค้าไม่ตรงปก" },
             ].map(({ icon, title, sub }) => (
               <div key={title} style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -221,7 +221,7 @@ function Hero() {
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(99,102,241,.12)", color: "#a5b4fc", fontSize: 11, fontWeight: 600, padding: "7px 12px", borderRadius: 8, border: "1px solid rgba(99,102,241,.2)" }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                KYC Verified
+                Verified
               </div>
             </div>
           </div>
@@ -259,7 +259,7 @@ function Hero() {
           </div>
           <div style={{ position: "absolute", bottom: 56, left: -20, background: "rgba(255,255,255,.95)", border: "1px solid rgba(255,255,255,.3)", borderRadius: 10, padding: "8px 14px", fontSize: 12, fontWeight: 600, color: "#0f172a", boxShadow: "0 8px 32px rgba(0,0,0,.3)", display: "flex", alignItems: "center", gap: 7, animation: "float 3s 1.5s ease-in-out infinite", backdropFilter: "blur(8px)" }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            KYC Verified Seller
+            Verified Seller
           </div>
         </div>
       </div>
@@ -270,7 +270,7 @@ function Hero() {
 /* ─── Scrolling trust marquee ─── */
 function TrustBar() {
   const items = [
-    "✓  Seller ยืนยัน KYC ทุกคน",
+    "✓  Seller ยืนยัน Verified Seller",
     "🔒  Escrow คุ้มครองทุกออเดอร์",
     "↩  คืนเงิน 100% ถ้าไม่ตรงปก",
     "🚚  จัดส่งภายใน 48 ชั่วโมง",
@@ -296,7 +296,7 @@ function TrustBar() {
 /* ─── How It Works ─── */
 function HowItWorks() {
   const steps = [
-    { icon: "🔍", num: "01", title: "เลือกและสั่งซื้อ", desc: "เลือกสินค้าจาก Seller ที่ผ่าน KYC แล้ว ทุกรายการผ่านการตรวจสอบโดย Admin", accent: "#3b82f6" },
+    { icon: "🔍", num: "01", title: "เลือกและสั่งซื้อ", desc: "เลือกสินค้าจาก Seller ที่ผ่านการยืนยันแล้ว ทุกรายการผ่านการตรวจสอบโดย Admin", accent: "#3b82f6" },
     { icon: "🔒", num: "02", title: "ชำระผ่าน Escrow", desc: "เงินถูกเก็บไว้อย่างปลอดภัย Seller จะได้รับเงินเมื่อคุณยืนยันว่าได้รับสินค้าแล้ว", accent: "#6366f1" },
     { icon: "✅", num: "03", title: "ยืนยันและรีวิว", desc: "ตรวจสอบสินค้าที่ได้รับ กดยืนยัน เงินปล่อยให้ Seller ทันที มีปัญหา ReMatch ช่วยทุกขั้นตอน", accent: "#8b5cf6" },
   ];
@@ -332,7 +332,7 @@ function HowItWorks() {
 /* ─── Why ReMatch ─── */
 function WhyUs() {
   const features = [
-    { icon: "🛡️", title: "KYC ทุกคน", desc: "Seller ต้องยืนยันบัตรประชาชน + Selfie ก่อนลงขาย ไม่มีมือสองปลอมแน่นอน", color: "#3b82f6" },
+    { icon: "🛡️", title: "Verified Seller", desc: "Seller ต้องยืนยันบัตรประชาชน + Selfie ก่อนลงขาย ไม่มีมือสองปลอมแน่นอน", color: "#3b82f6" },
     { icon: "💰", title: "Escrow ปลอดภัย", desc: "เงินค้างระบบจนกว่าคุณจะยืนยันรับของ ไม่มีทางโดนโกงแน่นอน", color: "#6366f1" },
     { icon: "🎽", title: "Admin ตรวจสินค้า", desc: "ทีมงาน ReMatch ตรวจสอบรูปและเอกสารความแท้ก่อนอนุมัติทุกรายการ", color: "#8b5cf6" },
     { icon: "💬", title: "แชทกับ Seller ได้เลย", desc: "ถามข้อมูลสินค้า ต่อรองราคา หรือขอรูปเพิ่มเติมได้โดยตรง", color: "#06b6d4" },
@@ -387,7 +387,7 @@ function SellerCTA() {
           {/* Right */}
           <div className="rm-cta-right" style={{ padding: "64px 56px 64px 40px", borderLeft: "1px solid rgba(255,255,255,.06)", position: "relative" }}>
             {[
-              ["01", "สมัครและยืนยัน KYC", "รูปบัตร ปชช. + Selfie ใช้เวลา 5 นาที"],
+              ["01", "สมัครและยืนยันตัวตน", "รูปบัตร ปชช. + Selfie ใช้เวลา 5 นาที"],
               ["02", "ลงรายการสินค้า", "ถ่ายรูป ใส่ราคา รอ Admin อนุมัติใน 24 ชม."],
               ["03", "รับออเดอร์ ส่งของ รับเงิน", "หักค่าธรรมเนียม 10% โอนเข้าบัญชีทันที"],
             ].map(([n, t, s]) => (
