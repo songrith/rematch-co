@@ -105,7 +105,7 @@ function ShopContent() {
           </div>
           {user ? (
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {profile?.role === "admin"  && <a href="/admin" className="rm-nav-hide" style={navFilled("#7c3aed")}>Admin</a>}
+              {profile?.role === "admin" && <a href="/admin" style={navFilled("#7c3aed")}>Admin</a>}
               {profile?.role === "seller" && <><a href="/sell" className="rm-nav-hide" style={navFilled("#1e3a8a")}>+ ลงสินค้า</a><a href="/seller/dashboard" className="rm-nav-hide" style={navBorder}>Dashboard</a></>}
               {(profile?.role === "buyer" || !profile?.role) && <a href="/seller/terms" className="rm-nav-hide" style={navBorder}>สมัครเป็น Seller</a>}
               <a href="/orders"   className="rm-nav-hide" style={navBorder}>คำสั่งซื้อ</a>

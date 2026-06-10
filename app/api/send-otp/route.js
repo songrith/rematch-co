@@ -42,7 +42,7 @@ export async function POST(request) {
     <p style="font-size:12px;color:#9ca3af;margin:0;text-align:center;">รหัสนี้จะหมดอายุใน <strong>10 นาที</strong><br/>ห้ามแชร์รหัสนี้กับผู้อื่น</p>
   </div>
   <div style="padding:16px 32px;background:#f8fafc;border-top:1px solid #e2e8f0;font-size:11px;color:#9ca3af;text-align:center;">
-    © 2025 ReMatch · หากคุณไม่ได้ทำรายการนี้ กรุณาเพิกเฉย
+    © 2026 ReMatch · หากคุณไม่ได้ทำรายการนี้ กรุณาเพิกเฉย
   </div>
 </div>
 </body></html>`,
