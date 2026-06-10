@@ -333,54 +333,56 @@ export default function ProductDetailPage() {
         <div style={{ animation: "fadeIn 0.35s ease" }}>
 
           {/* Category + badges */}
-          <div style={{ display: "flex", gap: 7, marginBottom: 12, flexWrap: "wrap", alignItems: "center" }}>
-            <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-              {CAT_ICON[product.category]} {CAT_LABEL[product.category]}
+          <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap", alignItems: "center" }}>
+            <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+              {CAT_LABEL[product.category]}
             </span>
             <span style={{ color: "#d1d5db" }}>·</span>
-            <span style={{ background: gradeInfo.bg, color: gradeInfo.text, fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 99 }}>
-              Grade {product.grade}
+            <span style={{ background: gradeInfo.bg, color: gradeInfo.text, fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 6 }}>
+              Grade {product.grade} — {gradeInfo.label}
             </span>
             {isSold && (
-              <span style={{ background: "#fee2e2", color: "#dc2626", fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 99 }}>SOLD</span>
+              <span style={{ background: "#fef2f2", color: "#dc2626", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 6 }}>ขายแล้ว</span>
             )}
           </div>
 
           {/* Title */}
-          <h1 className="rm-thai" style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900, color: "#0f172a", margin: "0 0 8px", lineHeight: 1.3 }}>
+          <h1 className="rm-thai" style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: "0 0 6px", lineHeight: 1.35 }}>
             {product.name}
           </h1>
 
-          {/* Meta line */}
-          <p className="rm-thai" style={{ margin: "0 0 20px", fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>
-            {[product.team, `ไซส์ ${product.size}`, gradeInfo.label, gradeInfo.desc].filter(Boolean).join(" · ")}
-          </p>
+          {/* Meta tags */}
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 20 }}>
+            {[product.team, `ไซส์ ${product.size}`].filter(Boolean).map(tag => (
+              <span key={tag} style={{ fontSize: 12, color: "#475569", background: "#f1f5f9", padding: "3px 10px", borderRadius: 6, fontWeight: 500 }}>{tag}</span>
+            ))}
+          </div>
 
-          {/* Price */}
-          <div style={{ marginBottom: 24 }}>
-            <span className="rm-price" style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", letterSpacing: "-0.5px", lineHeight: 1 }}>
+          {/* Price box */}
+          <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "16px 18px", marginBottom: 20 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, color: "#94a3b8", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 6 }}>ราคา</div>
+            <span className="rm-price" style={{ fontSize: 26, fontWeight: 700, color: "#0f172a" }}>
               ฿{Number(product.price).toLocaleString()}
             </span>
-            <div style={{ fontSize: 12, color: "#15803d", fontWeight: 600, marginTop: 6, display: "flex", alignItems: "center", gap: 5 }}>
+            <div style={{ fontSize: 11, color: "#15803d", fontWeight: 600, marginTop: 8, display: "flex", alignItems: "center", gap: 5 }}>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               ปลอดภัยด้วยระบบ Escrow — ไม่ได้ของ คืนเงิน 100%
             </div>
           </div>
 
-          {/* Description box */}
+          {/* Description */}
           {product.description && (
-            <div style={{ background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: 12, padding: "14px 16px", marginBottom: 24 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>คำอธิบายสินค้า</div>
-              <p className="rm-thai" style={{ margin: 0, fontSize: 13, color: "#374151", lineHeight: 1.75 }}>{product.description}</p>
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>รายละเอียด</div>
+              <p className="rm-thai" style={{ margin: 0, fontSize: 13, color: "#374151", lineHeight: 1.8 }}>{product.description}</p>
             </div>
           )}
 
-          {/* Divider */}
-          <div style={{ height: 1, background: "#f1f5f9", marginBottom: 20 }} />
+          <div style={{ height: 1, background: "#f1f5f9", marginBottom: 18 }} />
 
           {/* Seller row */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
-            <div style={{ width: 38, height: 38, borderRadius: "50%", background: "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 15, fontWeight: 700, flexShrink: 0, overflow: "hidden" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, padding: "12px 14px", background: "#f8fafc", borderRadius: 10, border: "1px solid #e2e8f0" }}>
+            <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 14, fontWeight: 700, flexShrink: 0, overflow: "hidden" }}>
               {seller?.avatar_url
                 ? <img src={seller.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 : seller?.full_name?.[0] || "S"}
@@ -390,48 +392,54 @@ export default function ProductDetailPage() {
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 2 }}>
                 <span style={{ fontSize: 11, color: "#15803d", fontWeight: 600, display: "flex", alignItems: "center", gap: 3 }}>
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  KYC Verified
+                  KYC ยืนยันแล้ว
                 </span>
-                {shippedCount > 0 && (
-                  <span style={{ fontSize: 11, color: "#6b7280", display: "flex", alignItems: "center", gap: 3 }}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12H3l9-9 9 9h-2"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>
-                    ส่งแล้ว {shippedCount} ชิ้น
-                  </span>
-                )}
+                {shippedCount > 0 && <span style={{ fontSize: 11, color: "#6b7280" }}>· ส่งแล้ว {shippedCount} ชิ้น</span>}
               </div>
             </div>
             {!isOwner && (
               <button onClick={handleChat} className="btn-chat"
-                style={{ padding: "7px 12px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12, fontWeight: 600, color: "#374151", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, transition: "all 0.15s", flexShrink: 0 }}>
+                style={{ padding: "6px 12px", background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12, fontWeight: 600, color: "#374151", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, transition: "all 0.15s", flexShrink: 0 }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                แชทผู้ขาย
+                แชท
               </button>
             )}
           </div>
 
           {/* CTA */}
           {isSold ? (
-            <div style={{ width: "100%", padding: "15px", background: "#f1f5f9", color: "#94a3b8", borderRadius: 12, fontSize: 15, fontWeight: 700, textAlign: "center" }}>
+            <div style={{ width: "100%", padding: "14px", background: "#f1f5f9", color: "#94a3b8", borderRadius: 10, fontSize: 14, fontWeight: 700, textAlign: "center", boxSizing: "border-box" }}>
               สินค้าถูกซื้อแล้ว
             </div>
           ) : (
             <button onClick={openCheckout}
-              style={{ width: "100%", padding: "15px", background: "#1e3a8a", color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "background 0.15s" }}
-              onMouseEnter={e => e.currentTarget.style.background = "#172554"}
-              onMouseLeave={e => e.currentTarget.style.background = "#1e3a8a"}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-              สั่งซื้อเลย
+              style={{ width: "100%", padding: "14px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "background 0.15s", boxSizing: "border-box" }}
+              onMouseEnter={e => e.currentTarget.style.background = "#1e3a8a"}
+              onMouseLeave={e => e.currentTarget.style.background = "#0f172a"}>
+              สั่งซื้อสินค้า
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           )}
 
-          {/* Comment link */}
-          <a href="/reviews" style={{ marginTop: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, textDecoration: "none", color: "#94a3b8", transition: "color .2s" }}
+          {/* Trust row */}
+          <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 12 }}>
+            {[
+              { icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, text: "Escrow" },
+              { icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>, text: "KYC Verified" },
+              { icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>, text: "คืนเงิน 7 วัน" },
+            ].map(({ icon, text }) => (
+              <div key={text} style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "#64748b" }}>
+                {icon}{text}
+              </div>
+            ))}
+          </div>
+
+          {/* Reviews link */}
+          <a href="/reviews" style={{ marginTop: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 5, textDecoration: "none", color: "#94a3b8", fontSize: 12 }}
             onMouseEnter={e => e.currentTarget.style.color = "#475569"}
             onMouseLeave={e => e.currentTarget.style.color = "#94a3b8"}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-            <span style={{ fontSize: 13 }}>{reviews.length > 0 ? `${reviews.length} รีวิว` : "ยังไม่มีรีวิว"}</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            {reviews.length > 0 ? `${reviews.length} รีวิว` : "ยังไม่มีรีวิว"}
           </a>
         </div>
         </div>
@@ -481,7 +489,7 @@ export default function ProductDetailPage() {
               <div style={{ width: 50, height: 50, borderRadius: 10, overflow: "hidden", background: "#f1f5f9", flexShrink: 0, border: "1px solid #e2e8f0" }}>
                 {(product.image_urls?.[0] || product.image_url)
                   ? <img src={product.image_urls?.[0] || product.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>🎽</div>
+                  : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg></div>
                 }
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
