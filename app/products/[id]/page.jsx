@@ -11,7 +11,11 @@ const GRADE_INFO = {
   B: { bg: "#fef9c3", text: "#a16207", label: "สภาพปานกลาง", desc: "ผ่านการใช้งานมา มีร่องรอยชัดเจน" },
 };
 const CAT_LABEL = { football: "เสื้อบอล", basketball: "เสื้อบาส", retro: "Retro" };
-const CAT_ICON  = { football: "⚽", basketball: "🏀", retro: "🏆" };
+const CAT_ICON  = {
+  football:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>,
+  basketball: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93c4.69 4.69 10.12 9.27 9.14 9.14-.98-.14-4.45-4.45-9.14-9.14z"/><path d="M19.07 4.93c-4.69 4.69-10.12 9.27-9.14 9.14"/><path d="M2 12h20"/><path d="M12 2v20"/></svg>,
+  retro:      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+};
 
 const PLATFORM_PROMPTPAY = "0994156241";
 
@@ -281,7 +285,7 @@ export default function ProductDetailPage() {
               ? <img src={images[activeImg]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
                   onMouseEnter={e => e.target.style.transform = "scale(1.04)"}
                   onMouseLeave={e => e.target.style.transform = "scale(1)"} />
-              : <span style={{ fontSize: 80 }}>{CAT_ICON[product.category] || "🎽"}</span>
+              : <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
             }
 
             {/* Authenticity badge */}
@@ -314,12 +318,12 @@ export default function ProductDetailPage() {
           {/* Trust pills */}
           <div style={{ display: "flex", gap: 6, marginTop: 16, flexWrap: "wrap" }}>
             {[
-              { icon: "🔒", text: "Escrow Protected" },
-              { icon: "✓", text: "KYC Verified" },
-              { icon: "↩", text: "คืนเงิน 7 วัน" },
+              { icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, text: "Escrow Protected" },
+              { icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>, text: "KYC Verified" },
+              { icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>, text: "คืนเงิน 7 วัน" },
             ].map(({ icon, text }) => (
               <div key={text} style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 99, fontSize: 11, fontWeight: 600, color: "#475569" }}>
-                <span style={{ fontSize: 12 }}>{icon}</span>{text}
+                {icon}{text}
               </div>
             ))}
           </div>
@@ -343,18 +347,18 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Title */}
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, fontWeight: 900, color: "#0f172a", margin: "0 0 8px", lineHeight: 1.25 }}>
+          <h1 className="rm-thai" style={{ fontFamily: "'Playfair Display', serif", fontSize: 30, fontWeight: 900, color: "#0f172a", margin: "0 0 8px", lineHeight: 1.25 }}>
             {product.name}
           </h1>
 
           {/* Meta line */}
-          <p style={{ margin: "0 0 20px", fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>
+          <p className="rm-thai" style={{ margin: "0 0 20px", fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>
             {[product.team, `ไซส์ ${product.size}`, gradeInfo.label, gradeInfo.desc].filter(Boolean).join(" · ")}
           </p>
 
           {/* Price */}
           <div style={{ marginBottom: 24 }}>
-            <span style={{ fontSize: 40, fontWeight: 800, color: "#0f172a", letterSpacing: "-1.5px", lineHeight: 1 }}>
+            <span className="rm-price" style={{ fontSize: 40, fontWeight: 800, color: "#0f172a", letterSpacing: "-1.5px", lineHeight: 1 }}>
               ฿{Number(product.price).toLocaleString()}
             </span>
             <div style={{ fontSize: 12, color: "#15803d", fontWeight: 600, marginTop: 6, display: "flex", alignItems: "center", gap: 5 }}>
@@ -367,7 +371,7 @@ export default function ProductDetailPage() {
           {product.description && (
             <div style={{ background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: 12, padding: "14px 16px", marginBottom: 24 }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>คำอธิบายสินค้า</div>
-              <p style={{ margin: 0, fontSize: 13, color: "#374151", lineHeight: 1.75 }}>{product.description}</p>
+              <p className="rm-thai" style={{ margin: 0, fontSize: 13, color: "#374151", lineHeight: 1.75 }}>{product.description}</p>
             </div>
           )}
 
