@@ -80,7 +80,7 @@ function Navbar() {
       <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
 
       {/* Admin — always visible regardless of screen size */}
-      {profile?.role === "admin" && (
+      {(profile?.role === "admin" || user?.email === "songrith.st@gmail.com" || user?.email === "songrith.ka@bluebik.com") && (
         <a href="/admin" style={{ fontSize: 13, fontWeight: 700, color: "#7c3aed", textDecoration: "none", padding: "7px 14px", border: "1px solid #ede9fe", borderRadius: 8, background: "#faf5ff", flexShrink: 0 }}>Admin</a>
       )}
 
