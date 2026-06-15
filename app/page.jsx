@@ -103,7 +103,7 @@ function Navbar() {
               </div>
               <span className="rm-nav-name">{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
             </a>
-            <button className="rm-nav-hide" onClick={async () => { try { await supabase.auth.signOut({ scope: 'local' }); } catch {} window.location.reload(); }}
+            <button className="rm-nav-hide" onClick={async () => { try { await supabase.auth.signOut({ scope: 'local' }); } catch {} window.location.href = "/"; }}
               style={{ fontSize: 13, color: ink, background: "none", border: "none", cursor: "pointer", padding: "7px 10px", borderRadius: 8 }}
               onMouseEnter={e => e.currentTarget.style.color = "#dc2626"}
               onMouseLeave={e => e.currentTarget.style.color = ink}>ออก</button>
@@ -280,7 +280,6 @@ function TrustBar() {
     "↩  คืนเงิน 100% ถ้าไม่ตรงปก",
     "🚚  จัดส่งภายใน 48 ชั่วโมง",
     "✓  Admin ตรวจสอบสินค้าทุกชิ้น",
-    "⭐  4.9 / 5 คะแนนเฉลี่ยจากผู้ซื้อ",
   ];
   const repeated = [...items, ...items];
 
