@@ -28,7 +28,14 @@ function LoginForm() {
       password: form.password,
     });
     setLoading(false);
-    if (error) { setError("อีเมลหรือรหัสผ่านไม่ถูกต้อง"); return; }
+    if (error) {
+      if (error.message?.toLowerCase().includes("email not confirmed")) {
+        setError("กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ — เช็คกล่องจดหมายของคุณ");
+      } else {
+        setError("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+      }
+      return;
+    }
     router.push("/");
   }
 

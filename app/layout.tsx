@@ -14,10 +14,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "ReMatch — ตลาดซื้อขายเสื้อกีฬาของแท้",
-  description: "ซื้อขายเสื้อกีฬาของแท้อย่างปลอดภัย Seller ทุกคนผ่านการยืนยัน ระบบ Escrow คุ้มครองทุกออเดอร์ คืนเงินเต็มถ้าสินค้าไม่ตรงปก",
+  description: "ตลาดซื้อขายเสื้อกีฬาของแท้ที่ไว้วางใจได้ Seller ทุกคนผ่านการยืนยันตัวตน เงินปลอดภัยด้วยระบบ Escrow คืนเงินเต็มหากสินค้าไม่ตรงปก",
   openGraph: {
     title: "ReMatch — ตลาดซื้อขายเสื้อกีฬาของแท้",
-    description: "ซื้อขายเสื้อกีฬาของแท้อย่างปลอดภัย Seller ทุกคนผ่านการยืนยัน ระบบ Escrow คุ้มครองทุกออเดอร์",
+    description: "ตลาดซื้อขายเสื้อกีฬาของแท้ที่ไว้วางใจได้ Seller ทุกคนผ่านการยืนยันตัวตน เงินปลอดภัยด้วยระบบ Escrow คืนเงินเต็มหากสินค้าไม่ตรงปก",
     url: "https://rematch-co.com",
     siteName: "ReMatch",
     locale: "th_TH",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "ReMatch — ตลาดซื้อขายเสื้อกีฬาของแท้",
-    description: "ซื้อขายเสื้อกีฬาของแท้อย่างปลอดภัย ระบบ Escrow คุ้มครองทุกออเดอร์",
+    description: "ตลาดซื้อขายเสื้อกีฬาของแท้ที่ไว้วางใจได้ Seller ทุกคนผ่านการยืนยันตัวตน คืนเงินเต็มหากสินค้าไม่ตรงปก",
   },
   metadataBase: new URL("https://rematch-co.com"),
 };

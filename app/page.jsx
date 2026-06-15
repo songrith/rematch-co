@@ -80,7 +80,7 @@ function Navbar() {
       <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
 
       {/* Admin — always visible regardless of screen size */}
-      {(profile?.role === "admin" || user?.email === "songrith.st@gmail.com" || user?.email === "songrith.ka@bluebik.com") && (
+      {(profile?.role === "admin" || (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim()).includes(user?.email)) && (
         <a href="/admin" style={{ fontSize: 13, fontWeight: 700, color: "#7c3aed", textDecoration: "none", padding: "7px 14px", border: "1px solid #ede9fe", borderRadius: 8, background: "#faf5ff", flexShrink: 0 }}>Admin</a>
       )}
 
@@ -178,12 +178,12 @@ function Hero() {
           {/* Guarantees */}
           <div style={{ marginTop: 52, paddingTop: 32, borderTop: "1px solid rgba(255,255,255,.08)", display: "flex", gap: 28, flexWrap: "wrap" }}>
             {[
-              { icon: "🔒", title: "Escrow ทุกออเดอร์", sub: "เงินปลอดภัย 100%" },
-              { icon: "🪪", title: "Verified Seller",   sub: "ยืนยันตัวตนก่อนขาย" },
-              { icon: "💸", title: "คืนเงินเต็ม",      sub: "ถ้าสินค้าไม่ตรงปก" },
+              { icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, title: "Escrow ทุกออเดอร์", sub: "เงินปลอดภัย 100%" },
+              { icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>, title: "Verified Seller", sub: "ยืนยันตัวตนก่อนขาย" },
+              { icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>, title: "คืนเงินเต็ม", sub: "ถ้าสินค้าไม่ตรงปก" },
             ].map(({ icon, title, sub }) => (
               <div key={title} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ width: 38, height: 38, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, flexShrink: 0 }}>{icon}</div>
+                <div style={{ width: 38, height: 38, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,.7)", flexShrink: 0 }}>{icon}</div>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", lineHeight: 1.2 }}>{title}</div>
                   <div style={{ fontSize: 11, color: "rgba(255,255,255,.4)", marginTop: 2 }}>{sub}</div>
@@ -337,10 +337,22 @@ function HowItWorks() {
 /* ─── Why ReMatch ─── */
 function WhyUs() {
   const features = [
-    { icon: "🛡️", title: "Verified Seller", desc: "Seller ต้องยืนยันบัตรประชาชน + Selfie ก่อนลงขาย ไม่มีมือสองปลอมแน่นอน", color: "#3b82f6" },
-    { icon: "💰", title: "Escrow ปลอดภัย", desc: "เงินค้างระบบจนกว่าคุณจะยืนยันรับของ ไม่มีทางโดนโกงแน่นอน", color: "#6366f1" },
-    { icon: "🎽", title: "Admin ตรวจสินค้า", desc: "ทีมงาน ReMatch ตรวจสอบรูปและเอกสารความแท้ก่อนอนุมัติทุกรายการ", color: "#8b5cf6" },
-    { icon: "💬", title: "แชทกับ Seller ได้เลย", desc: "ถามข้อมูลสินค้า ต่อรองราคา หรือขอรูปเพิ่มเติมได้โดยตรง", color: "#06b6d4" },
+    {
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>,
+      title: "Verified Seller", desc: "Seller ต้องยืนยันบัตรประชาชน + Selfie ก่อนลงขาย ไม่มีมือสองปลอมแน่นอน", color: "#3b82f6",
+    },
+    {
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
+      title: "Escrow ปลอดภัย", desc: "เงินค้างระบบจนกว่าคุณจะยืนยันรับของ ไม่มีทางโดนโกงแน่นอน", color: "#6366f1",
+    },
+    {
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
+      title: "Admin ตรวจสินค้า", desc: "ทีมงาน ReMatch ตรวจสอบรูปและเอกสารความแท้ก่อนอนุมัติทุกรายการ", color: "#8b5cf6",
+    },
+    {
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+      title: "แชทกับ Seller ได้เลย", desc: "ถามข้อมูลสินค้า ต่อรองราคา หรือขอรูปเพิ่มเติมได้โดยตรง", color: "#06b6d4",
+    },
   ];
   return (
     <section style={{ background: "#f8fafc" }}>
@@ -354,7 +366,7 @@ function WhyUs() {
             <div key={f.title} style={{ padding: "28px 24px", borderRadius: 16, border: "1px solid #e2e8f0", transition: "all 0.25s", background: "#fff" }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = f.color + "40"; e.currentTarget.style.boxShadow = `0 12px 32px ${f.color}12`; e.currentTarget.style.transform = "translateY(-3px)"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
-              <div style={{ width: 48, height: 48, background: f.color + "12", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, marginBottom: 16 }}>{f.icon}</div>
+              <div style={{ width: 48, height: 48, background: f.color + "12", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16, color: f.color }}>{f.icon}</div>
               <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>{f.title}</div>
               <div style={{ fontSize: 13, lineHeight: 1.75, color: "#64748b" }}>{f.desc}</div>
             </div>

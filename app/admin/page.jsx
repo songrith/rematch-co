@@ -56,7 +56,7 @@ export default function AdminPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/login"); return; }
       const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
-      const ADMIN_EMAILS = ["songrith.st@gmail.com", "songrith.ka@bluebik.com"];
+      const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim()).filter(Boolean);
       if (profile?.role !== "admin" && !ADMIN_EMAILS.includes(user.email)) { router.push("/"); return; }
       await Promise.all([fetchVerifications(), fetchProducts(), fetchPayoutOrders(), fetchDisputeOrders()]);
       setLoading(false);
