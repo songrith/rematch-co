@@ -53,9 +53,7 @@ function Navbar() {
       padding: "0 max(48px, calc((100vw - 1200px)/2 + 48px))",
     }} className="rm-nav">
       <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
-        <div style={{ width: 32, height: 32, background: onDark ? "rgba(255,255,255,.1)" : "#1e3a8a", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", border: onDark ? "1px solid rgba(255,255,255,.15)" : "none", transition: "all 0.3s" }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg>
-        </div>
+        <img src="/favicon.ico" alt="ReMatch" width="32" height="32" style={{ borderRadius: 8, display: "block" }} />
         <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 900, color: onDark ? "#fff" : "#0f172a", letterSpacing: -0.3, transition: "color 0.3s" }}>
           Re<span style={{ color: onDark ? "#93c5fd" : "#1e3a8a" }}>Match</span>
         </span>
@@ -300,9 +298,9 @@ function TrustBar() {
 /* ─── How It Works ─── */
 function HowItWorks() {
   const steps = [
-    { icon: "🔍", num: "01", title: "เลือกและสั่งซื้อ", desc: "เลือกสินค้าจาก Seller ที่ผ่านการยืนยันแล้ว ทุกรายการผ่านการตรวจสอบโดย Admin", accent: "#3b82f6" },
-    { icon: "🔒", num: "02", title: "ชำระผ่าน Escrow", desc: "เงินถูกเก็บไว้อย่างปลอดภัย Seller จะได้รับเงินเมื่อคุณยืนยันว่าได้รับสินค้าแล้ว", accent: "#6366f1" },
-    { icon: "✅", num: "03", title: "ยืนยันและรีวิว", desc: "ตรวจสอบสินค้าที่ได้รับ กดยืนยัน เงินปล่อยให้ Seller ทันที มีปัญหา ReMatch ช่วยทุกขั้นตอน", accent: "#8b5cf6" },
+    { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>, num: "01", title: "เลือกและสั่งซื้อ", desc: "เลือกสินค้าจาก Seller ที่ผ่านการยืนยันแล้ว ทุกรายการผ่านการตรวจสอบโดย Admin", accent: "#3b82f6" },
+    { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>, num: "02", title: "ชำระผ่าน Escrow", desc: "เงินถูกเก็บไว้อย่างปลอดภัย Seller จะได้รับเงินเมื่อคุณยืนยันว่าได้รับสินค้าแล้ว", accent: "#6366f1" },
+    { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>, num: "03", title: "ยืนยันและรีวิว", desc: "ตรวจสอบสินค้าที่ได้รับ กดยืนยัน เงินปล่อยให้ Seller ทันที มีปัญหา ReMatch ช่วยทุกขั้นตอน", accent: "#8b5cf6" },
   ];
   return (
     <section id="how" style={{ background: "#fff" }}>
@@ -320,7 +318,7 @@ function HowItWorks() {
               onMouseEnter={e => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.boxShadow = `0 16px 48px rgba(0,0,0,.06)`; e.currentTarget.style.transform = "translateY(-4px)"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "#f1f5f9"; e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
               <div style={{ position: "absolute", top: 16, right: 20, fontFamily: "'Playfair Display', serif", fontSize: 80, fontWeight: 900, color: "#f8fafc", lineHeight: 1, userSelect: "none" }}>{s.num}</div>
-              <div style={{ width: 52, height: 52, background: `linear-gradient(135deg, ${s.accent}18, ${s.accent}08)`, border: `1px solid ${s.accent}20`, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 22, fontSize: 24 }}>
+              <div style={{ width: 52, height: 52, background: `linear-gradient(135deg, ${s.accent}18, ${s.accent}08)`, border: `1px solid ${s.accent}20`, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 22, color: s.accent }}>
                 {s.icon}
               </div>
               <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 10 }}>{s.title}</div>
