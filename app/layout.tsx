@@ -13,11 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ReMatch — ตลาดซื้อขายเสื้อกีฬาของแท้",
-  description: "ตลาดซื้อขายเสื้อกีฬาของแท้ที่ไว้วางใจได้ Seller ทุกคนผ่านการยืนยันตัวตน เงินปลอดภัยด้วยระบบ Escrow คืนเงินเต็มหากสินค้าไม่ตรงปก",
+  title: "ReMatch — ตลาดซื้อขายเสื้อบอล เสื้อบาส เสื้อกีฬา Retro ของแท้",
+  description: "ช้อปเสื้อบอล เสื้อบาส และ Retro Jersey ของแท้ 100% จาก Verified Seller ที่ผ่านการยืนยันตัวตน ระบบ Escrow คุ้มครองเงินทุกออเดอร์ — คืนเงินเต็มหากสินค้าไม่ตรงปก Admin ตรวจสอบทุกรายการก่อนอนุมัติ",
+  keywords: ["เสื้อบอลของแท้", "เสื้อกีฬา", "เสื้อบาส", "retro jersey", "เสื้อฟุตบอล", "ซื้อขายเสื้อกีฬา", "verified seller", "escrow"],
   openGraph: {
-    title: "ReMatch — ตลาดซื้อขายเสื้อกีฬาของแท้",
-    description: "ตลาดซื้อขายเสื้อกีฬาของแท้ที่ไว้วางใจได้ Seller ทุกคนผ่านการยืนยันตัวตน เงินปลอดภัยด้วยระบบ Escrow คืนเงินเต็มหากสินค้าไม่ตรงปก",
+    title: "ReMatch — ตลาดซื้อขายเสื้อกีฬาของแท้ที่ปลอดภัยที่สุดในไทย",
+    description: "ช้อปเสื้อบอล เสื้อบาส และ Retro Jersey ของแท้ 100% จาก Verified Seller ที่ผ่านการยืนยันตัวตน ระบบ Escrow คุ้มครองเงินทุกออเดอร์ — คืนเงินเต็มหากสินค้าไม่ตรงปก Admin ตรวจสอบทุกรายการก่อนอนุมัติ",
     url: "https://rematch-co.com",
     siteName: "ReMatch",
     locale: "th_TH",
@@ -25,8 +26,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ReMatch — ตลาดซื้อขายเสื้อกีฬาของแท้",
-    description: "ตลาดซื้อขายเสื้อกีฬาของแท้ที่ไว้วางใจได้ Seller ทุกคนผ่านการยืนยันตัวตน คืนเงินเต็มหากสินค้าไม่ตรงปก",
+    title: "ReMatch — ตลาดซื้อขายเสื้อกีฬาของแท้ที่ปลอดภัยที่สุดในไทย",
+    description: "ช้อปเสื้อบอล เสื้อบาส และ Retro Jersey ของแท้ 100% จาก Verified Seller ระบบ Escrow คุ้มครองทุกออเดอร์ คืนเงินเต็มหากสินค้าไม่ตรงปก",
   },
   metadataBase: new URL("https://rematch-co.com"),
 };

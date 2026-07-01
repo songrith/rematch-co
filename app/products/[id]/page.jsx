@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useParams } from "next/navigation";
 import generatePayload from "promptpay-qr";
@@ -48,6 +48,10 @@ export default function ProductDetailPage() {
   const [slipHash, setSlipHash]       = useState(null);
   const [reviews, setReviews]         = useState([]);
   const [shippedCount, setShippedCount] = useState(0);
+  const [timeLeft, setTimeLeft]       = useState(180);
+  const [isReservedByMe, setIsReservedByMe] = useState(false);
+  const isReservedRef = useRef(false);
+  const intervalRef   = useRef(null);
 
   useEffect(() => {
     async function load() {
@@ -102,14 +106,86 @@ export default function ProductDetailPage() {
     load();
   }, [id]);
 
+  // Revert product back to available if payment was abandoned
+  async function unreserveProduct() {
+    if (!isReservedRef.current) return;
+    clearInterval(intervalRef.current);
+    isReservedRef.current = false;
+    setIsReservedByMe(false);
+    await supabase
+      .from("products")
+      .update({ status: "approved" })
+      .eq("id", product.id)
+      .eq("status", "sold");
+  }
+
+  // Clear interval on unmount
+  useEffect(() => () => clearInterval(intervalRef.current), []);
+
+  // Real-time product status subscription — updates other browsers/tabs immediately
+  useEffect(() => {
+    if (!id) return;
+    const channel = supabase
+      .channel(`product-${id}`)
+      .on("postgres_changes", {
+        event: "UPDATE", schema: "public", table: "products", filter: `id=eq.${id}`,
+      }, ({ new: updated }) => {
+        // Don't override local state if WE are the ones who locked it
+        if (!isReservedRef.current) {
+          setProduct(prev => prev ? { ...prev, ...updated } : prev);
+        }
+      })
+      .subscribe();
+    return () => supabase.removeChannel(channel);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   async function generateQR(amount) {
     const payload = generatePayload(PLATFORM_PROMPTPAY, { amount });
     const url = await QRCode.toDataURL(payload, { width: 220, margin: 2 });
     setQrDataUrl(url);
   }
 
-  function openCheckout() {
+  async function openCheckout() {
     if (!buyer) { router.push("/login"); return; }
+
+    // Lock the product the moment user opens checkout
+    if (!isReservedRef.current) {
+      const { data: locked } = await supabase
+        .from("products")
+        .update({ status: "sold" })
+        .eq("id", product.id)
+        .eq("status", "approved")
+        .select("id");
+
+      if (!locked?.length) {
+        alert("ขออภัย สินค้านี้กำลังอยู่ในระหว่างการซื้อ หรือถูกซื้อไปแล้ว");
+        setProduct(p => p ? { ...p, status: "sold" } : p);
+        return;
+      }
+      isReservedRef.current = true;
+      setIsReservedByMe(true);
+
+      // Start 3-minute countdown from the moment checkout opens
+      setTimeLeft(180);
+      clearInterval(intervalRef.current);
+      intervalRef.current = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            clearInterval(intervalRef.current);
+            ;(async () => {
+              if (isReservedRef.current) {
+                isReservedRef.current = false;
+                await supabase.from("products").update({ status: "approved" }).eq("id", product.id).eq("status", "sold");
+              }
+              router.push("/");
+            })();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
     setStep(1);
   }
 
@@ -174,6 +250,12 @@ export default function ProductDetailPage() {
     const shippingText = [addrForm.address, addrForm.subdistrict, addrForm.district, addrForm.province, addrForm.postal_code].filter(Boolean).join(" ");
     const fee = Math.round(product.price * 0.1 * 100) / 100;
 
+    // Temporarily revert to "approved" so place_order RPC can proceed atomically
+    // (We held the lock as "sold" during checkout to block other buyers)
+    await supabase.from("products").update({ status: "approved" }).eq("id", product.id).eq("status", "sold");
+    isReservedRef.current = false;
+    setIsReservedByMe(false);
+
     const { data: newOrderId, error } = await supabase.rpc("place_order", {
       p_product_id: product.id, p_amount: product.price,
       p_fee_amount: fee, p_seller_amount: product.price - fee,
@@ -199,6 +281,7 @@ export default function ProductDetailPage() {
       }),
     }).catch(() => {});
 
+    clearInterval(intervalRef.current);
     setOrderId(newOrderId);
     setOrdering(false);
     setStep(3);
@@ -481,7 +564,7 @@ export default function ProductDetailPage() {
       {/* ── CHECKOUT MODAL (Steps 1 & 2) ── */}
       {step > 0 && step < 3 && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.7)", backdropFilter: "blur(4px)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
-          onClick={e => { if (e.target === e.currentTarget) setStep(0); }}>
+          onClick={e => { if (e.target === e.currentTarget) { unreserveProduct(); setStep(0); } }}>
           <div style={{ background: "#fff", borderRadius: 20, width: "100%", maxWidth: 520, maxHeight: "92vh", overflowY: "auto", boxShadow: "0 24px 64px rgba(0,0,0,.25)" }}>
 
             {/* Modal product header */}
@@ -497,7 +580,7 @@ export default function ProductDetailPage() {
                 <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>ไซส์ {product.size} · Grade {product.grade}</div>
               </div>
               <div style={{ fontSize: 18, fontWeight: 900, color: "#1e3a8a", flexShrink: 0 }}>฿{Number(product.price).toLocaleString()}</div>
-              <button onClick={() => setStep(0)} style={{ width: 30, height: 30, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", fontSize: 16, flexShrink: 0 }}>✕</button>
+              <button onClick={() => { unreserveProduct(); setStep(0); }} style={{ width: 30, height: 30, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", fontSize: 16, flexShrink: 0 }}>✕</button>
             </div>
 
             {/* Step bar */}
@@ -522,6 +605,24 @@ export default function ProductDetailPage() {
               {/* STEP 1 — Address */}
               {step === 1 && (
                 <>
+                  {/* Countdown timer */}
+                  {(() => {
+                    const mins = Math.floor(timeLeft / 60);
+                    const secs = String(timeLeft % 60).padStart(2, "0");
+                    const urgent = timeLeft <= 60;
+                    return (
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: urgent ? "#fef2f2" : "#f0fdf4", border: `1px solid ${urgent ? "#fecaca" : "#bbf7d0"}`, borderRadius: 10, padding: "10px 14px", marginBottom: 14 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 600, color: urgent ? "#dc2626" : "#15803d" }}>
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                          {urgent ? "⚠️ ใกล้หมดเวลา! กรุณากรอกที่อยู่ด่วน" : "สินค้าถูกจองให้คุณแล้ว กรุณาชำระภายใน"}
+                        </div>
+                        <div style={{ fontSize: 20, fontWeight: 900, color: urgent ? "#dc2626" : "#15803d", fontVariantNumeric: "tabular-nums", letterSpacing: 1 }}>
+                          {mins}:{secs}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                   <div style={{ display: "flex", alignItems: "center", gap: 9, background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 10, padding: "10px 13px", marginBottom: 18 }}>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     <span style={{ fontSize: 12, color: "#1e40af", fontWeight: 600 }}>เงินของคุณจะถูกกักไว้ใน Escrow — Seller ได้รับเมื่อคุณยืนยันรับของแล้วเท่านั้น</span>
@@ -557,6 +658,24 @@ export default function ProductDetailPage() {
               {/* STEP 2 — Payment */}
               {step === 2 && (
                 <>
+                  {/* Countdown timer */}
+                  {(() => {
+                    const mins = Math.floor(timeLeft / 60);
+                    const secs = String(timeLeft % 60).padStart(2, "0");
+                    const urgent = timeLeft <= 60;
+                    return (
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: urgent ? "#fef2f2" : "#f0fdf4", border: `1px solid ${urgent ? "#fecaca" : "#bbf7d0"}`, borderRadius: 10, padding: "10px 14px", marginBottom: 14 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 600, color: urgent ? "#dc2626" : "#15803d" }}>
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                          {urgent ? "⚠️ ใกล้หมดเวลา — กรุณาแนบสลิปด่วน!" : "สินค้าถูกจองให้คุณแล้ว กรุณาชำระภายใน"}
+                        </div>
+                        <div style={{ fontSize: 20, fontWeight: 900, color: urgent ? "#dc2626" : "#15803d", fontVariantNumeric: "tabular-nums", letterSpacing: 1 }}>
+                          {mins}:{secs}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                   {/* Order summary */}
                   <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "13px 15px", marginBottom: 18 }}>
                     <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>สรุปคำสั่งซื้อ</div>
