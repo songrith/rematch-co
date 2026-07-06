@@ -8,13 +8,17 @@ const CATEGORIES = [
   { value: "basketball", label: "🏀 เสื้อบาส" },
   { value: "retro",      label: "🏆 Retro" },
 ];
-const SIZES  = ["XS", "S", "M", "L", "XL", "XXL"];
-const GRADES = [
-  { value: "S", label: "S — สภาพใหม่มาก" },
-  { value: "A", label: "A — สภาพดี" },
-  { value: "B", label: "B — มีรอยบ้าง" },
+const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+const GRADE_TYPES = [
+  { value: "player", label: "เกรดเพลเยอร์", desc: "ตัดเย็บแบบนักเตะ (Authentic)" },
+  { value: "fan",    label: "เกรดแฟนบอล",   desc: "รุ่น Replica สำหรับแฟน" },
 ];
-const MAX_IMAGES = 5;
+const CONDITIONS = [
+  { value: "S", label: "มือ 1 / ใหม่มาก",  desc: "แทบไม่ผ่านการใช้งาน สภาพสมบูรณ์" },
+  { value: "A", label: "สภาพดีมาก",         desc: "ผ่านการใช้งานเล็กน้อย ไม่มีร่องรอยชัด" },
+  { value: "B", label: "สภาพดี",            desc: "มีร่องรอยการใช้งานบ้าง ยังสวยงาม" },
+];
+const MAX_IMAGES = 25;
 
 export default function SellPage() {
   const supabase = createClient();
@@ -28,7 +32,7 @@ export default function SellPage() {
   const [files, setFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [form, setForm] = useState({
-    name: "", category: "", team: "", size: "", grade: "", price: "", description: "",
+    name: "", category: "", team: "", year: "", size: "", chest: "", gradeType: "", grade: "", price: "", description: "",
   });
 
   useEffect(() => {
@@ -61,9 +65,10 @@ export default function SellPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!form.category) { setError("กรุณาเลือกประเภทสินค้า"); return; }
-    if (!form.size)     { setError("กรุณาเลือกขนาด"); return; }
-    if (!form.grade)    { setError("กรุณาเลือกเกรด"); return; }
+    if (!form.category)  { setError("กรุณาเลือกประเภทสินค้า"); return; }
+    if (!form.size)      { setError("กรุณาเลือกขนาด"); return; }
+    if (!form.gradeType) { setError("กรุณาเลือกประเภทเสื้อ (เพลเยอร์ / แฟนบอล)"); return; }
+    if (!form.grade)     { setError("กรุณาเลือกสภาพเสื้อ"); return; }
     if (files.length === 0) { setError("กรุณาอัพโหลดรูปสินค้าอย่างน้อย 1 รูป"); return; }
 
     setSaving(true);
@@ -84,7 +89,10 @@ export default function SellPage() {
       name:        form.name,
       category:    form.category,
       team:        form.team,
+      year:        form.year || null,
       size:        form.size,
+      chest:       form.chest ? Number(form.chest) : null,
+      grade_type:  form.gradeType,
       grade:       form.grade,
       price:       Number(form.price),
       description: form.description,
@@ -117,9 +125,12 @@ export default function SellPage() {
 
           {/* รูปสินค้า */}
           <div style={S.card}>
-            <h2 style={S.sectionTitle}>รูปสินค้า <span style={{ fontWeight: 400, color: "#9ca3af", fontSize: 13 }}>(สูงสุด {MAX_IMAGES} รูป)</span></h2>
+            <h2 style={S.sectionTitle}>
+              รูปสินค้า
+              <span style={{ fontWeight: 400, color: "#9ca3af", fontSize: 13 }}> (สูงสุด {MAX_IMAGES} รูป · เพิ่มได้ทีละหลายรูป)</span>
+            </h2>
 
-            <div className="rm-g5" style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, marginBottom: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8, marginBottom: 12 }}>
               {previews.map((src, i) => (
                 <div key={i} style={{ position: "relative", aspectRatio: "1", borderRadius: 10, overflow: "hidden", border: "1px solid #e5e7eb" }}>
                   <img src={src} alt={`preview ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -135,27 +146,36 @@ export default function SellPage() {
 
               {previews.length < MAX_IMAGES && (
                 <div onClick={() => fileRef.current.click()}
-                  style={{ aspectRatio: "1", borderRadius: 10, border: "2px dashed #e5e7eb", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: "pointer", background: "#fafafa", fontSize: 11, color: "#9ca3af", gap: 4 }}>
-                  <span style={{ fontSize: 22 }}>+</span>
-                  <span>เพิ่มรูป</span>
+                  style={{ aspectRatio: "1", borderRadius: 10, border: "2px dashed #d1d5db", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: "pointer", background: "#fafafa", color: "#9ca3af", gap: 4, transition: "all 0.15s" }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = "#1e3a8a"; e.currentTarget.style.color = "#1e3a8a"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = "#d1d5db"; e.currentTarget.style.color = "#9ca3af"; }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <span style={{ fontSize: 10, fontWeight: 600 }}>เพิ่มรูป</span>
                 </div>
               )}
             </div>
 
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>รูปแรกจะเป็นรูปหลัก · JPG, PNG · เพิ่มได้สูงสุด {MAX_IMAGES} รูป</p>
+              <span style={{ fontSize: 11, color: previews.length >= MAX_IMAGES ? "#dc2626" : "#9ca3af", fontWeight: 600 }}>{previews.length}/{MAX_IMAGES}</span>
+            </div>
             <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleFiles} style={{ display: "none" }} />
-            <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>รูปแรกจะเป็นรูปหลัก · JPG, PNG</p>
           </div>
 
           {/* ข้อมูลสินค้า */}
           <div style={S.card}>
             <h2 style={S.sectionTitle}>ข้อมูลสินค้า</h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+
+              {/* ชื่อ */}
               <div>
                 <label style={S.label}>ชื่อสินค้า</label>
                 <input required value={form.name} onChange={e => set("name", e.target.value)}
                   placeholder="เช่น Real Madrid Home 24/25" style={S.input} />
               </div>
-              <div className="rm-g2-form" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+
+              {/* ประเภท + ทีม + ปี */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
                 <div>
                   <label style={S.label}>ประเภท</label>
                   <select required value={form.category} onChange={e => set("category", e.target.value)} style={{ ...S.input, cursor: "pointer" }}>
@@ -165,23 +185,41 @@ export default function SellPage() {
                 </div>
                 <div>
                   <label style={S.label}>ทีม / ลีก</label>
-                  <input value={form.team} onChange={e => set("team", e.target.value)} placeholder="เช่น La Liga, NBA" style={S.input} />
+                  <input value={form.team} onChange={e => set("team", e.target.value)} placeholder="เช่น Man City, NBA" style={S.input} />
+                </div>
+                <div>
+                  <label style={S.label}>ซีซั่น / ปี</label>
+                  <input value={form.year} onChange={e => set("year", e.target.value)} placeholder="เช่น 2024/25" style={S.input} />
                 </div>
               </div>
-              <div className="rm-g2-form" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14 }}>
+
+              {/* ประเภทเสื้อ toggle */}
+              <div>
+                <label style={S.label}>ประเภทเสื้อ <span style={{ color: "#dc2626" }}>*</span></label>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  {GRADE_TYPES.map(gt => (
+                    <button key={gt.value} type="button" onClick={() => set("gradeType", gt.value)}
+                      style={{ padding: "12px 14px", borderRadius: 12, border: `2px solid ${form.gradeType === gt.value ? "#1e3a8a" : "#e5e7eb"}`, background: form.gradeType === gt.value ? "#eff6ff" : "#fff", cursor: "pointer", textAlign: "left", transition: "all 0.15s" }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: form.gradeType === gt.value ? "#1e3a8a" : "#374151", marginBottom: 2 }}>{gt.label}</div>
+                      <div style={{ fontSize: 11, color: form.gradeType === gt.value ? "#3b82f6" : "#9ca3af" }}>{gt.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* ขนาด + รอบอก + ราคา */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
                 <div>
-                  <label style={S.label}>ขนาด</label>
+                  <label style={S.label}>ขนาด (Size)</label>
                   <select required value={form.size} onChange={e => set("size", e.target.value)} style={{ ...S.input, cursor: "pointer" }}>
-                    <option value="">Size</option>
+                    <option value="">เลือก Size</option>
                     {SIZES.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label style={S.label}>เกรด</label>
-                  <select required value={form.grade} onChange={e => set("grade", e.target.value)} style={{ ...S.input, cursor: "pointer" }}>
-                    <option value="">เกรด</option>
-                    {GRADES.map(g => <option key={g.value} value={g.value}>{g.label}</option>)}
-                  </select>
+                  <label style={S.label}>รอบอก (cm)</label>
+                  <input value={form.chest} onChange={e => set("chest", e.target.value.replace(/\D/g, ""))}
+                    placeholder="เช่น 100" inputMode="numeric" maxLength={3} style={S.input} />
                 </div>
                 <div>
                   <label style={S.label}>ราคา (บาท)</label>
@@ -189,10 +227,26 @@ export default function SellPage() {
                     placeholder="0" inputMode="numeric" style={S.input} />
                 </div>
               </div>
+
+              {/* สภาพเสื้อ */}
+              <div>
+                <label style={S.label}>สภาพเสื้อ <span style={{ color: "#dc2626" }}>*</span></label>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+                  {CONDITIONS.map(c => (
+                    <button key={c.value} type="button" onClick={() => set("grade", c.value)}
+                      style={{ padding: "12px 14px", borderRadius: 12, border: `2px solid ${form.grade === c.value ? "#1e3a8a" : "#e5e7eb"}`, background: form.grade === c.value ? "#eff6ff" : "#fff", cursor: "pointer", textAlign: "left", transition: "all 0.15s" }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: form.grade === c.value ? "#1e3a8a" : "#374151", marginBottom: 2 }}>{c.label}</div>
+                      <div style={{ fontSize: 10, color: form.grade === c.value ? "#3b82f6" : "#9ca3af", lineHeight: 1.4 }}>{c.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* รายละเอียด */}
               <div>
                 <label style={S.label}>รายละเอียดเพิ่มเติม</label>
                 <textarea value={form.description} onChange={e => set("description", e.target.value)}
-                  placeholder="สภาพสินค้า ขนาดจริง ประวัติการใช้งาน ฯลฯ" rows={4}
+                  placeholder="ขนาดจริง ประวัติการใช้งาน รายละเอียดอื่น ๆ" rows={4}
                   style={{ ...S.input, resize: "vertical", lineHeight: 1.6 }} />
               </div>
             </div>
