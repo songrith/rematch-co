@@ -428,6 +428,12 @@ export default function ProductDetailPage() {
         .thumb-item { transition: all 0.15s; }
         .thumb-item:hover { border-color: #1e3a8a !important; transform: translateY(-1px); }
         .btn-chat:hover { background: #f1f5f9 !important; border-color: #94a3b8 !important; }
+        .rm-mobile-bar { display: none; }
+        @media (max-width: 640px) {
+          .rm-mobile-bar { display: flex !important; }
+          .rm-desktop-cta { display: none !important; }
+          .rm-chat-btn-inline { display: none !important; }
+        }
       `}</style>
 
       {/* ── Navbar ── */}
@@ -651,7 +657,7 @@ export default function ProductDetailPage() {
               </div>
             </div>
             {!isOwner && (
-              <button onClick={handleChat} className="btn-chat"
+              <button onClick={handleChat} className="btn-chat rm-chat-btn-inline"
                 style={{ padding: "6px 12px", background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12, fontWeight: 600, color: "#374151", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, transition: "all 0.15s", flexShrink: 0 }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 {t("chatBtn")}
@@ -659,20 +665,22 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          {/* CTA */}
-          {isSold ? (
-            <div style={{ width: "100%", padding: "14px", background: "#f1f5f9", color: "#94a3b8", borderRadius: 10, fontSize: 14, fontWeight: 700, textAlign: "center", boxSizing: "border-box" }}>
-              {t("soldLabel")}
-            </div>
-          ) : (
-            <button onClick={openCheckout}
-              style={{ width: "100%", padding: "14px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "background 0.15s", boxSizing: "border-box" }}
-              onMouseEnter={e => e.currentTarget.style.background = "#1e3a8a"}
-              onMouseLeave={e => e.currentTarget.style.background = "#0f172a"}>
-              {t("buyBtn")}
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-          )}
+          {/* CTA — desktop only, replaced by sticky bar on mobile */}
+          <div className="rm-desktop-cta">
+            {isSold ? (
+              <div style={{ width: "100%", padding: "14px", background: "#f1f5f9", color: "#94a3b8", borderRadius: 10, fontSize: 14, fontWeight: 700, textAlign: "center", boxSizing: "border-box" }}>
+                {t("soldLabel")}
+              </div>
+            ) : (
+              <button onClick={openCheckout}
+                style={{ width: "100%", padding: "14px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "background 0.15s", boxSizing: "border-box" }}
+                onMouseEnter={e => e.currentTarget.style.background = "#1e3a8a"}
+                onMouseLeave={e => e.currentTarget.style.background = "#0f172a"}>
+                {t("buyBtn")}
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            )}
+          </div>
 
           {/* Trust row */}
           <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 12 }}>
@@ -1000,6 +1008,27 @@ export default function ProductDetailPage() {
           </div>
         </div>
       )}
+
+      {/* ── Mobile sticky bottom bar ── */}
+      <div className="rm-mobile-bar" style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #e5e7eb", padding: "10px 16px", gap: 10, zIndex: 150, alignItems: "center", boxShadow: "0 -4px 20px rgba(0,0,0,.06)" }}>
+        {!isOwner && !isSold && (
+          <button onClick={handleChat}
+            style={{ width: 48, height: 48, borderRadius: 10, border: "1px solid #e5e7eb", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0, color: "#374151" }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        )}
+        {isSold ? (
+          <div style={{ flex: 1, padding: "13px", background: "#f1f5f9", color: "#94a3b8", borderRadius: 10, fontSize: 14, fontWeight: 700, textAlign: "center" }}>
+            {t("soldLabel")}
+          </div>
+        ) : (
+          <button onClick={openCheckout}
+            style={{ flex: 1, padding: "13px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+            {t("buyBtn")}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        )}
+      </div>
     </div>
   );
 }

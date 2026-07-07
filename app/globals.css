@@ -70,7 +70,7 @@ body {
   .rm-card-pad { padding: 20px 16px !important; }
 
   /* Overflow protection */
-  .rm-page { padding: 24px 16px !important; }
+  .rm-page { padding: 24px 16px 80px !important; }
 
   /* CTA dark card */
   .rm-cta-left  { padding: 40px 24px 28px !important; }
