@@ -1,5 +1,11 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+
+const EMOJIS = [
+  "😀","😂","🥰","😍","😮","😢","😡","🤔","😎","🙏",
+  "👍","👎","❤️","🔥","💯","✅","❌","⚽","🏀","🏆",
+  "👕","📦","💰","🎉","💪","👀","🤝","😅","🤣","🫡",
+];
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useParams } from "next/navigation";
 
@@ -15,7 +21,10 @@ export default function ChatPage() {
   const [text, setText]         = useState("");
   const [sending, setSending]   = useState(false);
   const [loading, setLoading]   = useState(true);
+  const [emojiOpen, setEmojiOpen] = useState(false);
   const bottomRef = useRef(null);
+  const emojiRef  = useRef(null);
+  const inputRef  = useRef(null);
 
   useEffect(() => {
     async function load() {
@@ -87,6 +96,31 @@ export default function ChatPage() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Close emoji panel on outside click
+  useEffect(() => {
+    if (!emojiOpen) return;
+    function onDown(e) {
+      if (emojiRef.current && !emojiRef.current.contains(e.target)) setEmojiOpen(false);
+    }
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [emojiOpen]);
+
+  function insertEmoji(em) {
+    const input = inputRef.current;
+    if (!input) { setText(prev => prev + em); return; }
+    const start = input.selectionStart ?? text.length;
+    const end   = input.selectionEnd   ?? text.length;
+    const next  = text.slice(0, start) + em + text.slice(end);
+    setText(next);
+    // Restore cursor after emoji
+    requestAnimationFrame(() => {
+      input.focus();
+      const pos = start + em.length;
+      input.setSelectionRange(pos, pos);
+    });
+  }
 
   async function sendMessage(e) {
     e.preventDefault();
@@ -197,8 +231,33 @@ export default function ChatPage() {
           </div>
 
           {/* Input */}
-          <form onSubmit={sendMessage} style={{ borderTop: "1px solid #e2e8f0", padding: "14px 20px", display: "flex", gap: 10, flexShrink: 0, background: "#fff" }}>
+          <form onSubmit={sendMessage} style={{ borderTop: "1px solid #e2e8f0", padding: "14px 20px", display: "flex", gap: 8, flexShrink: 0, background: "#fff", alignItems: "center", position: "relative" }}>
+
+            {/* Emoji picker button */}
+            <div ref={emojiRef} style={{ position: "relative", flexShrink: 0 }}>
+              <button type="button" onClick={() => setEmojiOpen(o => !o)}
+                style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid #e2e8f0", background: emojiOpen ? "#f1f5f9" : "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, transition: "background 0.15s" }}>
+                😊
+              </button>
+              {emojiOpen && (
+                <div style={{ position: "absolute", bottom: 48, left: 0, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "10px 8px 8px", boxShadow: "0 8px 32px rgba(0,0,0,.13)", display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: 2, zIndex: 20, width: 224 }}>
+                  <div style={{ gridColumn: "1/-1", fontSize: 10, fontWeight: 700, color: "#9ca3af", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 6, paddingLeft: 2 }}>
+                    Emoji
+                  </div>
+                  {EMOJIS.map(em => (
+                    <button key={em} type="button" onClick={() => insertEmoji(em)}
+                      style={{ fontSize: 22, background: "none", border: "none", cursor: "pointer", padding: "5px 4px", borderRadius: 8, lineHeight: 1, transition: "background 0.1s" }}
+                      onMouseEnter={ev => ev.currentTarget.style.background = "#f1f5f9"}
+                      onMouseLeave={ev => ev.currentTarget.style.background = "none"}>
+                      {em}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <input
+              ref={inputRef}
               value={text}
               onChange={e => setText(e.target.value)}
               placeholder="พิมพ์ข้อความ..."
