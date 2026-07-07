@@ -45,83 +45,110 @@ function Navbar() {
   const ink = onDark ? "rgba(255,255,255,0.75)" : "#475569";
   const inkHover = onDark ? "#fff" : "#0f172a";
 
+  const isAdmin = profile?.role === "admin" || (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim()).includes(user?.email);
+
+  const linkStyle = {
+    fontSize: 13.5, fontWeight: 500, color: ink, textDecoration: "none",
+    padding: "6px 13px", borderRadius: 8, transition: "all 0.15s",
+  };
+  const onLink = e => { e.currentTarget.style.color = inkHover; e.currentTarget.style.background = onDark ? "rgba(255,255,255,0.09)" : "#f1f5f9"; };
+  const offLink = e => { e.currentTarget.style.color = ink; e.currentTarget.style.background = "transparent"; };
+
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
-      height: 68,
+      height: 64,
       background: scrolled ? "rgba(255,255,255,0.97)" : "transparent",
-      backdropFilter: scrolled ? "blur(16px)" : "none",
-      borderBottom: scrolled ? "1px solid #e2e8f0" : "none",
-      boxShadow: scrolled ? "0 1px 12px rgba(0,0,0,.06)" : "none",
-      transition: "all 0.3s ease",
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      padding: "0 max(48px, calc((100vw - 1200px)/2 + 48px))",
-    }} className="rm-nav">
+      backdropFilter: scrolled ? "blur(20px)" : "none",
+      borderBottom: scrolled ? "1px solid rgba(226,232,240,0.9)" : "none",
+      transition: "background 0.3s, border-color 0.3s, backdrop-filter 0.3s",
+      display: "grid",
+      gridTemplateColumns: "1fr auto 1fr",
+      alignItems: "center",
+      padding: "0 max(40px, calc((100vw - 1280px)/2 + 40px))",
+      gap: 12,
+    }}>
+
+      {/* ── LEFT: Logo ── */}
       <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
-        <img src="/favicon.ico" alt="ReMatch" width="32" height="32" style={{ borderRadius: 8, display: "block" }} />
-        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 900, color: onDark ? "#fff" : "#0f172a", letterSpacing: -0.3, transition: "color 0.3s" }}>
+        <img src="/favicon.ico" alt="ReMatch" width="28" height="28" style={{ borderRadius: 7, display: "block" }} />
+        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 19, fontWeight: 900, color: onDark ? "#fff" : "#0f172a", letterSpacing: -0.4, transition: "color 0.3s" }}>
           Re<span style={{ color: onDark ? "#93c5fd" : "#1e3a8a" }}>Match</span>
         </span>
       </a>
 
-      <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      {/* ── CENTER: Category links (desktop only) ── */}
+      <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 2 }}>
         {[[t("navCatFootball"), "/shop?cat=football"], [t("navCatBasketball"), "/shop?cat=basketball"], [t("navCatRetro"), "/shop?cat=retro"], [t("navCatSell"), "/seller/terms"]].map(([l, href]) => (
-          <a key={href} href={href} style={{ fontSize: 14, fontWeight: 500, color: ink, textDecoration: "none", padding: "6px 12px", borderRadius: 8, transition: "all 0.15s" }}
-            onMouseEnter={e => { e.currentTarget.style.color = inkHover; if (!onDark) e.currentTarget.style.background = "#f1f5f9"; }}
-            onMouseLeave={e => { e.currentTarget.style.color = ink; e.currentTarget.style.background = "transparent"; }}>{l}</a>
+          <a key={href} href={href} style={linkStyle} onMouseEnter={onLink} onMouseLeave={offLink}>{l}</a>
         ))}
       </div>
 
-      {/* Hamburger — mobile only */}
-      <button className="rm-hamburger" onClick={() => setMenuOpen(true)}
-        style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: ink, alignItems: "center", justifyContent: "center" }}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-        </svg>
-      </button>
+      {/* ── RIGHT: User actions (desktop) + Hamburger (mobile) ── */}
+      <div style={{ display: "flex", alignItems: "center", gap: 6, justifyContent: "flex-end" }}>
 
-      <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
+        {/* Hamburger — mobile only */}
+        <button className="rm-hamburger" onClick={() => setMenuOpen(true)}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: ink, display: "none", alignItems: "center", justifyContent: "center" }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
 
-      {/* Admin — always visible regardless of screen size */}
-      {(profile?.role === "admin" || (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim()).includes(user?.email)) && (
-        <a href="/admin" style={{ fontSize: 13, fontWeight: 700, color: "#7c3aed", textDecoration: "none", padding: "7px 14px", border: "1px solid #ede9fe", borderRadius: 8, background: "#faf5ff", flexShrink: 0 }}>Admin</a>
-      )}
+        <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
 
-      {/* Desktop nav */}
-      <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        {user ? (
-          <>
-            {profile?.role === "admin" && null}
-            {profile?.role === "seller" && <a href="/seller/dashboard" className="rm-nav-hide" style={{ fontSize: 13, fontWeight: 600, color: ink, textDecoration: "none", padding: "7px 14px", border: `1px solid ${onDark ? "rgba(255,255,255,.15)" : "#e2e8f0"}`, borderRadius: 8 }}>{t("navDashboard")}</a>}
-            <a href="/orders" className="rm-nav-hide" style={{ fontSize: 13, fontWeight: 500, color: ink, textDecoration: "none", padding: "7px 14px", borderRadius: 8 }}
-              onMouseEnter={e => e.currentTarget.style.color = inkHover}
-              onMouseLeave={e => e.currentTarget.style.color = ink}>{t("navOrders")}</a>
-            <a href="/notifications" style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 8, color: ink, textDecoration: "none" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-              {unread > 0 && <span style={{ position: "absolute", top: 2, right: 2, background: "#dc2626", color: "#fff", borderRadius: "50%", fontSize: 9, fontWeight: 700, width: 14, height: 14, display: "flex", alignItems: "center", justifyContent: "center" }}>{unread > 9 ? "9+" : unread}</span>}
-            </a>
-            <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 500, color: ink, textDecoration: "none", padding: "6px 12px", borderRadius: 8, border: `1px solid ${onDark ? "rgba(255,255,255,.15)" : "#e2e8f0"}`, transition: "all 0.15s" }}>
-              <div style={{ width: 22, height: 22, borderRadius: "50%", background: onDark ? "rgba(255,255,255,.15)" : "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700 }}>
-                {(profile?.full_name || user.email || "?")[0].toUpperCase()}
-              </div>
-              <span className="rm-nav-name">{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
-            </a>
-            <button className="rm-nav-hide" onClick={async () => { try { await supabase.auth.signOut({ scope: 'local' }); } catch {} window.location.href = "/"; }}
-              style={{ fontSize: 13, color: ink, background: "none", border: "none", cursor: "pointer", padding: "7px 10px", borderRadius: 8 }}
-              onMouseEnter={e => e.currentTarget.style.color = "#dc2626"}
-              onMouseLeave={e => e.currentTarget.style.color = ink}>{t("navLogout")}</button>
-          </>
-        ) : (
-          <>
-            <a href="/login" style={{ fontSize: 14, fontWeight: 500, color: ink, textDecoration: "none", padding: "8px 16px", borderRadius: 8, border: `1px solid ${onDark ? "rgba(255,255,255,.2)" : "#e2e8f0"}`, transition: "all 0.15s" }}
-              onMouseEnter={e => e.currentTarget.style.color = inkHover}
-              onMouseLeave={e => e.currentTarget.style.color = ink}>{t("navLogin")}</a>
-            <a href="/register" style={{ fontSize: 14, fontWeight: 600, color: onDark ? "#0f172a" : "#fff", textDecoration: "none", padding: "8px 20px", borderRadius: 8, background: onDark ? "#fff" : "#1e3a8a", transition: "all 0.15s" }}
-              onMouseEnter={e => e.currentTarget.style.opacity = "0.9"}
-              onMouseLeave={e => e.currentTarget.style.opacity = "1"}>{t("navRegister")}</a>
-          </>
-        )}
-        <LanguageToggle />
+        {/* Desktop links */}
+        <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          {user ? (
+            <>
+              {isAdmin && (
+                <a href="/admin" style={{ ...linkStyle, color: "#7c3aed", fontWeight: 600 }} onMouseEnter={onLink} onMouseLeave={e => { e.currentTarget.style.color = "#7c3aed"; e.currentTarget.style.background = "transparent"; }}>Admin</a>
+              )}
+              {profile?.role === "seller" && (
+                <a href="/seller/dashboard" style={linkStyle} onMouseEnter={onLink} onMouseLeave={offLink}>{t("navDashboard")}</a>
+              )}
+              <a href="/orders" style={linkStyle} onMouseEnter={onLink} onMouseLeave={offLink}>{t("navOrders")}</a>
+
+              {/* Notifications */}
+              <a href="/notifications" style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: 8, color: ink, textDecoration: "none", transition: "background 0.15s" }}
+                onMouseEnter={e => e.currentTarget.style.background = onDark ? "rgba(255,255,255,0.09)" : "#f1f5f9"}
+                onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                {unread > 0 && <span style={{ position: "absolute", top: 3, right: 3, background: "#dc2626", color: "#fff", borderRadius: "50%", fontSize: 8, fontWeight: 700, width: 13, height: 13, display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}>{unread > 9 ? "9+" : unread}</span>}
+              </a>
+
+              {/* Divider */}
+              <div style={{ width: 1, height: 18, background: onDark ? "rgba(255,255,255,0.15)" : "#e2e8f0", margin: "0 2px", flexShrink: 0 }} />
+
+              {/* User avatar pill */}
+              <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none", padding: "5px 10px 5px 5px", borderRadius: 99, border: `1px solid ${onDark ? "rgba(255,255,255,0.14)" : "#e2e8f0"}`, background: onDark ? "rgba(255,255,255,0.06)" : "#fff", transition: "all 0.15s" }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = onDark ? "rgba(255,255,255,0.28)" : "#94a3b8"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = onDark ? "rgba(255,255,255,0.14)" : "#e2e8f0"; }}>
+                <div style={{ width: 24, height: 24, borderRadius: "50%", background: onDark ? "rgba(255,255,255,0.18)" : "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
+                  {(profile?.full_name || user.email || "?")[0].toUpperCase()}
+                </div>
+                <span className="rm-nav-name" style={{ fontSize: 13, fontWeight: 500, color: onDark ? "rgba(255,255,255,0.85)" : "#374151" }}>
+                  {profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}
+                </span>
+              </a>
+
+              <button onClick={async () => { try { await supabase.auth.signOut({ scope: "local" }); } catch {} window.location.href = "/"; }}
+                style={{ fontSize: 13, color: onDark ? "rgba(255,255,255,0.5)" : "#94a3b8", background: "none", border: "none", cursor: "pointer", padding: "6px 8px", borderRadius: 8, transition: "color 0.15s" }}
+                onMouseEnter={e => e.currentTarget.style.color = "#dc2626"}
+                onMouseLeave={e => e.currentTarget.style.color = onDark ? "rgba(255,255,255,0.5)" : "#94a3b8"}>
+                {t("navLogout")}
+              </button>
+            </>
+          ) : (
+            <>
+              <a href="/login" style={{ ...linkStyle, border: `1px solid ${onDark ? "rgba(255,255,255,0.18)" : "#e2e8f0"}`, padding: "7px 16px" }} onMouseEnter={onLink} onMouseLeave={offLink}>{t("navLogin")}</a>
+              <a href="/register" style={{ fontSize: 13.5, fontWeight: 600, color: onDark ? "#0f172a" : "#fff", textDecoration: "none", padding: "7px 18px", borderRadius: 8, background: onDark ? "#fff" : "#1e3a8a", transition: "opacity 0.15s" }}
+                onMouseEnter={e => e.currentTarget.style.opacity = "0.88"}
+                onMouseLeave={e => e.currentTarget.style.opacity = "1"}>{t("navRegister")}</a>
+            </>
+          )}
+          <LanguageToggle />
+        </div>
       </div>
     </nav>
   );
