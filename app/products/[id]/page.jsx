@@ -444,7 +444,6 @@ export default function ProductDetailPage() {
         @media (max-width: 640px) {
           .rm-mobile-bar { display: flex !important; }
           .rm-desktop-cta { display: none !important; }
-          .rm-chat-btn-inline { display: none !important; }
         }
       `}</style>
 
@@ -578,9 +577,38 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Title */}
-          <h1 className="rm-thai" style={{ fontSize: "clamp(20px, 2.2vw, 28px)", fontWeight: 800, color: "#0f172a", margin: "0 0 12px", lineHeight: 1.35 }}>
+          <h1 className="rm-thai" style={{ fontSize: "clamp(20px, 2.2vw, 28px)", fontWeight: 800, color: "#0f172a", margin: "0 0 14px", lineHeight: 1.35 }}>
             {product.name}
           </h1>
+
+          {/* Seller row — right under title */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, padding: "10px 13px", background: "#f8fafc", borderRadius: 10, border: "1px solid #e2e8f0" }}>
+            <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 13, fontWeight: 700, flexShrink: 0, overflow: "hidden" }}>
+              {seller?.avatar_url
+                ? <img src={seller.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                : seller?.full_name?.[0] || "S"}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>{seller?.full_name || "Seller"}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 2 }}>
+                <span style={{ fontSize: 11, color: "#15803d", fontWeight: 600, display: "flex", alignItems: "center", gap: 3 }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Verified
+                </span>
+                {shippedCount > 0 && <span style={{ fontSize: 11, color: "#6b7280" }}>· {i18n[lang]?.shippedCount?.(shippedCount) ?? `ส่งแล้ว ${shippedCount} ชิ้น`}</span>}
+              </div>
+            </div>
+            {!isOwner && (
+              <button onClick={handleChat} disabled={chatLoading} className="btn-chat"
+                style={{ padding: "7px 14px", background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12, fontWeight: 600, color: "#374151", cursor: chatLoading ? "default" : "pointer", display: "flex", alignItems: "center", gap: 5, transition: "all 0.15s", flexShrink: 0, opacity: chatLoading ? 0.6 : 1 }}>
+                {chatLoading
+                  ? <span style={{ fontSize: 11 }}>...</span>
+                  : <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                }
+                {t("chatBtn")}
+              </button>
+            )}
+          </div>
 
           {/* Team badge card — shows whenever product.team exists */}
           {product.team && (
@@ -648,37 +676,6 @@ export default function ProductDetailPage() {
               <p className="rm-thai" style={{ margin: 0, fontSize: 13, color: "#374151", lineHeight: 1.8 }}>{product.description}</p>
             </div>
           )}
-
-          <div style={{ height: 1, background: "#f1f5f9", marginBottom: 18 }} />
-
-          {/* Seller row */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, padding: "12px 14px", background: "#f8fafc", borderRadius: 10, border: "1px solid #e2e8f0" }}>
-            <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 14, fontWeight: 700, flexShrink: 0, overflow: "hidden" }}>
-              {seller?.avatar_url
-                ? <img src={seller.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                : seller?.full_name?.[0] || "S"}
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>{seller?.full_name || "Seller"}</div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 2 }}>
-                <span style={{ fontSize: 11, color: "#15803d", fontWeight: 600, display: "flex", alignItems: "center", gap: 3 }}>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  Verified
-                </span>
-                {shippedCount > 0 && <span style={{ fontSize: 11, color: "#6b7280" }}>· {i18n[lang]?.shippedCount?.(shippedCount) ?? `ส่งแล้ว ${shippedCount} ชิ้น`}</span>}
-              </div>
-            </div>
-            {!isOwner && (
-              <button onClick={handleChat} disabled={chatLoading} className="btn-chat rm-chat-btn-inline"
-                style={{ padding: "6px 12px", background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12, fontWeight: 600, color: "#374151", cursor: chatLoading ? "default" : "pointer", display: "flex", alignItems: "center", gap: 5, transition: "all 0.15s", flexShrink: 0, opacity: chatLoading ? 0.6 : 1 }}>
-                {chatLoading
-                  ? <span style={{ fontSize: 11 }}>...</span>
-                  : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                }
-                {t("chatBtn")}
-              </button>
-            )}
-          </div>
 
           {/* CTA — desktop only, replaced by sticky bar on mobile */}
           <div className="rm-desktop-cta">
@@ -1024,24 +1021,15 @@ export default function ProductDetailPage() {
         </div>
       )}
 
-      {/* ── Mobile sticky bottom bar ── */}
-      <div className="rm-mobile-bar" style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #e5e7eb", padding: "10px 16px", gap: 10, zIndex: 150, alignItems: "center", boxShadow: "0 -4px 20px rgba(0,0,0,.06)" }}>
-        {!isOwner && !isSold && (
-          <button onClick={handleChat} disabled={chatLoading}
-            style={{ width: 48, height: 48, borderRadius: 10, border: "1px solid #e5e7eb", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: chatLoading ? "default" : "pointer", flexShrink: 0, color: "#374151", opacity: chatLoading ? 0.6 : 1 }}>
-            {chatLoading
-              ? <span style={{ fontSize: 12, fontWeight: 700 }}>...</span>
-              : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            }
-          </button>
-        )}
+      {/* ── Mobile sticky bottom bar — buy only ── */}
+      <div className="rm-mobile-bar" style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #e5e7eb", padding: "10px 16px", zIndex: 150, alignItems: "center", boxShadow: "0 -4px 20px rgba(0,0,0,.06)" }}>
         {isSold ? (
           <div style={{ flex: 1, padding: "13px", background: "#f1f5f9", color: "#94a3b8", borderRadius: 10, fontSize: 14, fontWeight: 700, textAlign: "center" }}>
             {t("soldLabel")}
           </div>
         ) : (
           <button onClick={openCheckout}
-            style={{ flex: 1, padding: "13px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+            style={{ width: "100%", padding: "14px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
             {t("buyBtn")}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
