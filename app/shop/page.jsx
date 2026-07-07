@@ -3,6 +3,9 @@ import { useState, useEffect, Suspense } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
 import MobileNav from "@/app/components/MobileNav";
+import { useLang } from "@/app/context/language";
+import LanguageToggle from "@/app/components/LanguageToggle";
+import i18n from "@/app/i18n";
 
 const CAT_EMOJI = { football: "⚽", basketball: "🏀", retro: "🏆" };
 const GRADE_STYLE = {
@@ -18,6 +21,8 @@ const tabEmoji   = { "ทั้งหมด": "✦", "เสื้อบอล":
 function ShopContent() {
   const supabase     = createClient();
   const searchParams = useSearchParams();
+  const { lang } = useLang();
+  const t = (key) => i18n[lang]?.[key] ?? i18n.th[key] ?? key;
 
   const [user,      setUser]     = useState(null);
   const [profile,   setProfile]  = useState(null);
@@ -96,7 +101,7 @@ function ShopContent() {
         {/* Desktop nav */}
         <div className="rm-nav-links" style={{ display: "flex", gap: 24, alignItems: "center" }}>
           <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-            {[["เสื้อบอล","football"],["เสื้อบาส","basketball"],["Retro","retro"]].map(([label, cat]) => (
+            {[[t("shopFootball"),"football"],[t("shopBasketball"),"basketball"],[t("shopRetro"),"retro"]].map(([label, cat]) => (
               <button key={cat} onClick={() => setActive(catReverse[cat])}
                 style={{ background: "none", border: "none", fontSize: 14, fontWeight: active === catReverse[cat] ? 700 : 500, color: active === catReverse[cat] ? "#1e3a8a" : "#4b5563", cursor: "pointer", padding: 0 }}>
                 {label}
@@ -106,10 +111,10 @@ function ShopContent() {
           {user ? (
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               {profile?.role === "admin" && <a href="/admin" style={navFilled("#7c3aed")}>Admin</a>}
-              {profile?.role === "seller" && <><a href="/sell" className="rm-nav-hide" style={navFilled("#1e3a8a")}>+ ลงสินค้า</a><a href="/seller/dashboard" className="rm-nav-hide" style={navBorder}>Dashboard</a></>}
-              {(profile?.role === "buyer" || !profile?.role) && <a href="/seller/terms" className="rm-nav-hide" style={navBorder}>สมัครเป็น Seller</a>}
-              <a href="/orders"   className="rm-nav-hide" style={navBorder}>คำสั่งซื้อ</a>
-              <a href="/messages" className="rm-nav-hide" style={navBorder}>ข้อความ</a>
+              {profile?.role === "seller" && <><a href="/sell" className="rm-nav-hide" style={navFilled("#1e3a8a")}>{t("navSell")}</a><a href="/seller/dashboard" className="rm-nav-hide" style={navBorder}>{t("navDashboard")}</a></>}
+              {(profile?.role === "buyer" || !profile?.role) && <a href="/seller/terms" className="rm-nav-hide" style={navBorder}>{t("navBecomeSeller")}</a>}
+              <a href="/orders"   className="rm-nav-hide" style={navBorder}>{t("navOrders")}</a>
+              <a href="/messages" className="rm-nav-hide" style={navBorder}>{t("navMessages")}</a>
               <a href="/notifications" style={{ position: "relative", display: "flex", alignItems: "center", color: "#6b7280", textDecoration: "none" }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
@@ -122,12 +127,14 @@ function ShopContent() {
                 </div>
                 <span className="rm-nav-name">{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
               </a>
-              <button onClick={handleLogout} className="rm-nav-hide" style={{ background: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", padding: "8px 14px", borderRadius: 99, fontSize: 13, cursor: "pointer" }}>ออก</button>
+              <button onClick={handleLogout} className="rm-nav-hide" style={{ background: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", padding: "8px 14px", borderRadius: 99, fontSize: 13, cursor: "pointer" }}>{t("navLogout")}</button>
+              <LanguageToggle />
             </div>
           ) : (
-            <div style={{ display: "flex", gap: 8 }}>
-              <a href="/login"    style={{ padding: "9px 18px", borderRadius: 99, fontSize: 13, fontWeight: 600, color: "#374151", textDecoration: "none", border: "1px solid #e5e7eb" }}>เข้าสู่ระบบ</a>
-              <a href="/register" style={{ background: "#1e3a8a", color: "#fff", padding: "9px 20px", borderRadius: 99, fontSize: 13, fontWeight: 600, textDecoration: "none" }}>สมัครสมาชิก</a>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <a href="/login"    style={{ padding: "9px 18px", borderRadius: 99, fontSize: 13, fontWeight: 600, color: "#374151", textDecoration: "none", border: "1px solid #e5e7eb" }}>{t("navLogin")}</a>
+              <a href="/register" style={{ background: "#1e3a8a", color: "#fff", padding: "9px 20px", borderRadius: 99, fontSize: 13, fontWeight: 600, textDecoration: "none" }}>{t("navRegister")}</a>
+              <LanguageToggle />
             </div>
           )}
         </div>
@@ -146,18 +153,18 @@ function ShopContent() {
             onMouseEnter={e => e.currentTarget.style.color = "#1e3a8a"}
             onMouseLeave={e => e.currentTarget.style.color = "#94a3b8"}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-            กลับหน้าหลัก
+            {t("navBack")}
           </a>
 
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 8 }}>Authentic Jerseys Marketplace</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 8 }}>{t("shopSubtitle")}</div>
               <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(28px,3.6vw,46px)", fontWeight: 900, color: "#0f172a", margin: 0, letterSpacing: -0.8, lineHeight: 1.1 }}>
-                เจอร์ซีย์แท้ทุกชนิด
+                {t("shopPageTitle")}
               </h1>
             </div>
             <div style={{ paddingBottom: 4, textAlign: "right" }}>
-              <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 500 }}>{filtered.length} รายการ</span>
+              <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 500 }}>{i18n[lang]?.shopItems?.(filtered.length) ?? `${filtered.length} รายการ`}</span>
             </div>
           </div>
 
@@ -167,19 +174,24 @@ function ShopContent() {
               <svg style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
               </svg>
-              <input className="shop-search" value={search} onChange={e => setSearch(e.target.value)} placeholder="ค้นหาชื่อสินค้า, ทีม..."
+              <input className="shop-search" value={search} onChange={e => setSearch(e.target.value)} placeholder={t("shopSearch")}
                 style={{ width: "100%", padding: "10px 14px 10px 36px", borderRadius: 10, border: "1.5px solid #e2e8f0", fontSize: 14, background: "#fff", color: "#0f172a", transition: "all .2s" }} />
             </div>
 
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-              {tabs.map(t => (
-                <button key={t} onClick={() => setActive(t)}
+              {[
+                { key: "ทั้งหมด", label: t("shopAll") },
+                { key: "เสื้อบอล", label: t("shopFootball") },
+                { key: "เสื้อบาส", label: t("shopBasketball") },
+                { key: "Retro",    label: t("shopRetro") },
+              ].map(({ key, label }) => (
+                <button key={key} onClick={() => setActive(key)}
                   style={{ padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all .18s",
-                    border:     active === t ? "1.5px solid #6366f1" : "1.5px solid #e2e8f0",
-                    background: active === t ? "#f0f0ff"             : "#fff",
-                    color:      active === t ? "#4f46e5"             : "#6b7280",
+                    border:     active === key ? "1.5px solid #6366f1" : "1.5px solid #e2e8f0",
+                    background: active === key ? "#f0f0ff"             : "#fff",
+                    color:      active === key ? "#4f46e5"             : "#6b7280",
                   }}>
-                  {t}
+                  {label}
                 </button>
               ))}
             </div>
@@ -198,8 +210,8 @@ function ShopContent() {
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "100px 0" }}>
             <div style={{ fontSize: 48, marginBottom: 14 }}>📦</div>
-            <div style={{ fontSize: 17, fontWeight: 700, color: "#475569", marginBottom: 6 }}>ไม่พบสินค้า</div>
-            <div style={{ fontSize: 13, color: "#94a3b8" }}>ลองเปลี่ยนคีย์เวิร์ดหรือหมวดหมู่</div>
+            <div style={{ fontSize: 17, fontWeight: 700, color: "#475569", marginBottom: 6 }}>{t("shopEmpty")}</div>
+            <div style={{ fontSize: 13, color: "#94a3b8" }}>{t("shopEmptySub")}</div>
           </div>
         ) : (
           <div className="product-grid">
@@ -217,6 +229,8 @@ export default function ShopPage() {
 
 function ProductCard({ product }) {
   const [hovered, setHovered] = useState(false);
+  const { lang } = useLang();
+  const t = (key) => i18n[lang]?.[key] ?? i18n.th[key] ?? key;
   const grade  = GRADE_STYLE[product.grade] || GRADE_STYLE.S;
   const emoji  = CAT_EMOJI[product.category] || "⚽";
   const isSold = product.status === "sold";
@@ -275,7 +289,7 @@ function ProductCard({ product }) {
             {product.name}
           </div>
           <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 10 }}>
-            ไซส์ {product.size} · <span style={{ color: grade.text, fontWeight: 600 }}>{grade.label}</span>
+            {t("shopSize")} {product.size} · <span style={{ color: grade.text, fontWeight: 600 }}>{i18n[lang]?.shopGradeLabel?.[product.grade] ?? grade.label}</span>
           </div>
 
           {/* Price + Escrow */}
@@ -314,14 +328,14 @@ function ProductCard({ product }) {
             ) : (
               <div style={{ display: "flex", alignItems: "center", gap: 2, flexShrink: 0 }}>
                 <svg width="9" height="9" viewBox="0 0 24 24" fill="#e2e8f0" stroke="#e2e8f0" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <span style={{ fontSize: 10, color: "#94a3b8" }}>ยังไม่มีรีวิว</span>
+                <span style={{ fontSize: 10, color: "#94a3b8" }}>{t("noReviews")}</span>
               </div>
             )}
           </div>
 
           {/* CTA */}
           <div style={{ width: "100%", marginTop: 11, padding: "9px 0", background: isSold ? "#f1f5f9" : hovered ? "#1e3a8a" : "#0f172a", color: isSold ? "#94a3b8" : "#fff", borderRadius: 10, fontSize: 12, fontWeight: 700, textAlign: "center", transition: "background .2s", letterSpacing: "0.02em" }}>
-            {isSold ? "ถูกซื้อแล้ว" : "ดูรายละเอียด →"}
+            {isSold ? t("soldLabel") : `${t("shopViewDetails")} →`}
           </div>
         </div>
       </div>

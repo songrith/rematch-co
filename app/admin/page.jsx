@@ -305,25 +305,25 @@ export default function AdminPage() {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap');`}</style>
 
       <nav style={S.nav}>
-        <a href="/" style={S.logo}>Re<span style={{ color: "#1e3a8a" }}>Match</span> <span style={{ fontSize: 13, fontWeight: 500, color: "#9ca3af", marginLeft: 8 }}>Admin</span></a>
+        <a href="/" style={S.logo}>Re<span style={{ color: "#1e3a8a" }}>Match</span> <span style={{ fontSize: 12, fontWeight: 500, color: "#9ca3af", marginLeft: 8 }}>Admin</span></a>
         <button onClick={async () => { try { await supabase.auth.signOut({ scope: 'local' }); } catch {} window.location.reload(); }} style={S.logoutBtn}>ออกจากระบบ</button>
       </nav>
 
-      <div style={{ maxWidth: 960, margin: "0 auto", padding: "48px 24px" }}>
+      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px 80px" }}>
         <BackLink href="/" label="กลับหน้าหลัก" />
         <h1 style={S.heading}>Admin Panel</h1>
 
-        {/* Section switcher */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 32, background: "#fff", borderRadius: 12, padding: 4, border: "1px solid #e2e8f0", width: "fit-content" }}>
+        {/* Section switcher — underline tabs */}
+        <div style={{ display: "flex", borderBottom: "2px solid #e5e7eb", marginBottom: 32 }}>
           {sections.map(s => (
             <button key={s.key} onClick={() => setSection(s.key)}
-              style={{ padding: "8px 20px", borderRadius: 9, fontSize: 14, fontWeight: 600, border: "none", background: section === s.key ? "#0f0f0e" : "transparent", color: section === s.key ? "#fff" : "#6b7280", cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}>
+              style={{ padding: "12px 24px", fontSize: 15, fontWeight: 600, border: "none", background: "none", cursor: "pointer", color: section === s.key ? "#0f172a" : "#9ca3af", borderBottom: section === s.key ? "2px solid #1e3a8a" : "2px solid transparent", marginBottom: -2, display: "flex", alignItems: "center", gap: 8, transition: "color 0.14s" }}>
               {s.label}
-              {s.badge > 0 && <span style={{ background: section === s.key ? s.color : s.color, color: "#fff", borderRadius: 99, fontSize: 11, fontWeight: 700, padding: "1px 7px" }}>{s.badge}</span>}
+              {s.badge > 0 && <span style={{ background: s.color, color: "#fff", borderRadius: 99, fontSize: 11, fontWeight: 700, padding: "2px 7px", lineHeight: 1.4 }}>{s.badge}</span>}
             </button>
           ))}
         </div>
@@ -359,26 +359,22 @@ export default function AdminPage() {
           return (
             <>
               {/* KPI row */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 14, marginBottom: 32 }}>
-                <div style={{ background: pending > 0 ? "#fff1f2" : "#fff", borderRadius: 16, border: `1.5px solid ${pending > 0 ? "#fecaca" : "#e2e8f0"}`, padding: "22px 24px" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: pending > 0 ? "#dc2626" : "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>รอตรวจสอบ</div>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 40, fontWeight: 900, color: pending > 0 ? "#dc2626" : "#0f172a", lineHeight: 1 }}>{pending}</div>
-                  <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 6 }}>ยังไม่ได้ดำเนินการ</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 14, marginBottom: 28 }}>
+                <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "20px 22px", borderTop: `3px solid ${pending > 0 ? "#dc2626" : "#94a3b8"}` }}>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: pending > 0 ? "#dc2626" : "#0f172a", lineHeight: 1, letterSpacing: "-0.04em" }}>{pending}</div>
+                  <div style={{ fontSize: 13, color: "#6b7280", marginTop: 6, fontWeight: 500 }}>รอตรวจสอบ</div>
                 </div>
-                <div style={{ background: "#fff", borderRadius: 16, border: "1.5px solid #e2e8f0", padding: "22px 24px" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>คืนเงินแล้ว</div>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 40, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>{resolved}</div>
-                  <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 6 }}>อนุมัติ Refund แล้ว</div>
+                <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "20px 22px", borderTop: "3px solid #16a34a" }}>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", lineHeight: 1, letterSpacing: "-0.04em" }}>{resolved}</div>
+                  <div style={{ fontSize: 13, color: "#6b7280", marginTop: 6, fontWeight: 500 }}>คืนเงินแล้ว</div>
                 </div>
-                <div style={{ background: denied > 0 ? "#fafafa" : "#fff", borderRadius: 16, border: `1.5px solid ${denied > 0 ? "#d1d5db" : "#e2e8f0"}`, padding: "22px 24px" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>ปฏิเสธแล้ว</div>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 40, fontWeight: 900, color: "#374151", lineHeight: 1 }}>{denied}</div>
-                  <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 6 }}>คำร้องที่ถูกปฏิเสธ</div>
+                <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "20px 22px", borderTop: "3px solid #94a3b8" }}>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", lineHeight: 1, letterSpacing: "-0.04em" }}>{denied}</div>
+                  <div style={{ fontSize: 13, color: "#6b7280", marginTop: 6, fontWeight: 500 }}>ปฏิเสธแล้ว</div>
                 </div>
-                <div style={{ background: "#fff", borderRadius: 16, border: "1.5px solid #e2e8f0", padding: "22px 24px" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>ทั้งหมด</div>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 40, fontWeight: 900, color: "#0f172a", lineHeight: 1 }}>{disputeOrds.length}</div>
-                  <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 6 }}>คำร้องสะสม</div>
+                <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "20px 22px", borderTop: "3px solid #64748b" }}>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", lineHeight: 1, letterSpacing: "-0.04em" }}>{disputeOrds.length}</div>
+                  <div style={{ fontSize: 13, color: "#6b7280", marginTop: 6, fontWeight: 500 }}>ทั้งหมด</div>
                 </div>
               </div>
 
@@ -414,7 +410,7 @@ export default function AdminPage() {
                   const topBg = isOpen ? "linear-gradient(90deg,#b91c1c,#dc2626)" : isDenied ? "linear-gradient(90deg,#374151,#1f2937)" : "#f8fafc";
                   const borderColor = isOpen ? "#fecaca" : isDenied ? "#d1d5db" : "#e2e8f0";
                   return (
-                    <div key={o.id} style={{ background: "#fff", borderRadius: 20, border: `1.5px solid ${borderColor}`, overflow: "hidden", boxShadow: isOpen ? "0 4px 24px rgba(220,38,38,.07)" : "0 1px 4px rgba(0,0,0,.04)" }}>
+                    <div key={o.id} style={{ background: "#fff", borderRadius: 12, border: `1px solid ${borderColor}`, overflow: "hidden" }}>
 
                       {/* Coloured top bar */}
                       <div style={{ padding: "11px 24px", background: topBg, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
@@ -602,26 +598,31 @@ export default function AdminPage() {
         {/* ===== SELLERS SECTION ===== */}
         {section === "sellers" && (
           <>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 32 }}>
-              {VER_TABS.map(t => (
-                <div key={t} onClick={() => setVerTab(t)}
-                  style={{ background: "#fff", borderRadius: 14, border: "1px solid #e2e8f0", padding: "20px 24px", cursor: "pointer", outline: verTab === t ? "2px solid #1e3a8a" : "none" }}>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: "#0f0f0e" }}>{verifications.filter(v => v.status === t).length}</div>
-                  <div style={{ fontSize: 13, color: "#6b7280", marginTop: 4 }}>{VER_LABEL[t]}</div>
-                </div>
-              ))}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 24 }}>
+              {VER_TABS.map(t => {
+                const accent = { pending: "#f59e0b", approved: "#16a34a", rejected: "#dc2626" }[t] || "#94a3b8";
+                return (
+                  <div key={t} onClick={() => setVerTab(t)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "20px 22px", cursor: "pointer", borderTop: `3px solid ${verTab === t ? accent : "#e5e7eb"}`, transition: "border-top-color 0.14s" }}>
+                    <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", letterSpacing: "-0.04em", lineHeight: 1 }}>{verifications.filter(v => v.status === t).length}</div>
+                    <div style={{ fontSize: 13, color: "#6b7280", marginTop: 6, fontWeight: 500 }}>{VER_LABEL[t]}</div>
+                  </div>
+                );
+              })}
             </div>
-            <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+            <div style={{ display: "flex", gap: 6, marginBottom: 20 }}>
               {VER_TABS.map(t => (
                 <button key={t} onClick={() => setVerTab(t)}
-                  style={{ padding: "8px 18px", borderRadius: 99, fontSize: 13, fontWeight: 500, border: `1px solid ${verTab === t ? "#0f0f0e" : "#e5e7eb"}`, background: verTab === t ? "#0f0f0e" : "#fff", color: verTab === t ? "#fff" : "#6b7280", cursor: "pointer" }}>
-                  {VER_LABEL[t]} ({verifications.filter(v => v.status === t).length})
+                  style={{ padding: "6px 14px", borderRadius: 99, fontSize: 13, fontWeight: 600, border: "1.5px solid", transition: "all .14s", cursor: "pointer",
+                    borderColor: verTab === t ? "#0f172a" : "#e2e8f0",
+                    background:  verTab === t ? "#0f172a" : "#fff",
+                    color:       verTab === t ? "#fff"    : "#6b7280" }}>
+                  {VER_LABEL[t]} <span style={{ opacity: 0.55, fontSize: 11, marginLeft: 2 }}>{verifications.filter(v => v.status === t).length}</span>
                 </button>
               ))}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {filteredVer.length === 0 ? <EmptyState /> : filteredVer.map(v => (
-                <div key={v.id} style={{ background: "#fff", borderRadius: 16, border: "1px solid #e2e8f0", overflow: "hidden" }}>
+                <div key={v.id} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", overflow: "hidden" }}>
                   <div style={{ padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #e2e8f0" }}>
                     <div>
                       <div style={{ fontSize: 15, fontWeight: 700, color: "#0f0f0e" }}>{v.profile.full_name || "—"}</div>
@@ -663,27 +664,30 @@ export default function AdminPage() {
         {/* ===== PAYOUT SECTION ===== */}
         {section === "payout" && (
           <>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16, marginBottom: 32 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14, marginBottom: 24 }}>
               {[
-                { key: "pending",   label: "รอโอนเงิน" },
-                { key: "confirmed", label: "โอนแล้ว (ตรวจสลิปผ่าน)" },
+                { key: "pending",   label: "รอโอนเงิน",   accent: "#f59e0b" },
+                { key: "confirmed", label: "โอนแล้ว",       accent: "#16a34a" },
               ].map(t => (
                 <div key={t.key} onClick={() => setPayoutTab(t.key)}
-                  style={{ background: "#fff", borderRadius: 14, border: "1px solid #e2e8f0", padding: "20px 24px", cursor: "pointer", outline: payoutTab === t.key ? "2px solid #1e3a8a" : "none" }}>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: "#0f0f0e" }}>{payoutOrders.filter(o => o.payout_status === t.key).length}</div>
-                  <div style={{ fontSize: 13, color: "#6b7280", marginTop: 4 }}>{t.label}</div>
+                  style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "20px 22px", cursor: "pointer", borderTop: `3px solid ${payoutTab === t.key ? t.accent : "#e5e7eb"}`, transition: "border-top-color 0.14s" }}>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", letterSpacing: "-0.04em", lineHeight: 1 }}>{payoutOrders.filter(o => o.payout_status === t.key).length}</div>
+                  <div style={{ fontSize: 13, color: "#6b7280", marginTop: 6, fontWeight: 500 }}>{t.label}</div>
                 </div>
               ))}
             </div>
 
-            <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+            <div style={{ display: "flex", gap: 6, marginBottom: 20 }}>
               {[
                 { key: "pending",   label: "รอโอนเงิน" },
                 { key: "confirmed", label: "โอนแล้ว" },
               ].map(t => (
                 <button key={t.key} onClick={() => setPayoutTab(t.key)}
-                  style={{ padding: "8px 18px", borderRadius: 99, fontSize: 13, fontWeight: 500, border: `1px solid ${payoutTab === t.key ? "#0f0f0e" : "#e5e7eb"}`, background: payoutTab === t.key ? "#0f0f0e" : "#fff", color: payoutTab === t.key ? "#fff" : "#6b7280", cursor: "pointer" }}>
-                  {t.label} ({payoutOrders.filter(o => o.payout_status === t.key).length})
+                  style={{ padding: "6px 14px", borderRadius: 99, fontSize: 13, fontWeight: 600, border: "1.5px solid", transition: "all .14s", cursor: "pointer",
+                    borderColor: payoutTab === t.key ? "#0f172a" : "#e2e8f0",
+                    background:  payoutTab === t.key ? "#0f172a" : "#fff",
+                    color:       payoutTab === t.key ? "#fff"    : "#6b7280" }}>
+                  {t.label} <span style={{ opacity: 0.55, fontSize: 11, marginLeft: 2 }}>{payoutOrders.filter(o => o.payout_status === t.key).length}</span>
                 </button>
               ))}
             </div>
@@ -691,7 +695,7 @@ export default function AdminPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {payoutOrders.filter(o => o.payout_status === payoutTab).length === 0 ? <EmptyState /> :
                 payoutOrders.filter(o => o.payout_status === payoutTab).map(o => (
-                  <div key={o.id} style={{ background: "#fff", borderRadius: 16, border: "1px solid #e2e8f0", overflow: "hidden" }}>
+                  <div key={o.id} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", overflow: "hidden" }}>
                     <div style={{ padding: "14px 24px", background: "#f1f5f9", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>
                         #{o.id.slice(0, 8).toUpperCase()}
@@ -787,26 +791,31 @@ export default function AdminPage() {
         {/* ===== PRODUCTS SECTION ===== */}
         {section === "products" && (
           <>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 32 }}>
-              {PROD_TABS.map(t => (
-                <div key={t} onClick={() => setProdTab(t)}
-                  style={{ background: "#fff", borderRadius: 14, border: "1px solid #e2e8f0", padding: "20px 24px", cursor: "pointer", outline: prodTab === t ? "2px solid #1e3a8a" : "none" }}>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: "#0f0f0e" }}>{products.filter(p => p.status === t).length}</div>
-                  <div style={{ fontSize: 13, color: "#6b7280", marginTop: 4 }}>{PROD_LABEL[t]}</div>
-                </div>
-              ))}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 24 }}>
+              {PROD_TABS.map(t => {
+                const accent = { pending: "#f59e0b", approved: "#16a34a", rejected: "#dc2626" }[t] || "#94a3b8";
+                return (
+                  <div key={t} onClick={() => setProdTab(t)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "20px 22px", cursor: "pointer", borderTop: `3px solid ${prodTab === t ? accent : "#e5e7eb"}`, transition: "border-top-color 0.14s" }}>
+                    <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", letterSpacing: "-0.04em", lineHeight: 1 }}>{products.filter(p => p.status === t).length}</div>
+                    <div style={{ fontSize: 13, color: "#6b7280", marginTop: 6, fontWeight: 500 }}>{PROD_LABEL[t]}</div>
+                  </div>
+                );
+              })}
             </div>
-            <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+            <div style={{ display: "flex", gap: 6, marginBottom: 20 }}>
               {PROD_TABS.map(t => (
                 <button key={t} onClick={() => setProdTab(t)}
-                  style={{ padding: "8px 18px", borderRadius: 99, fontSize: 13, fontWeight: 500, border: `1px solid ${prodTab === t ? "#0f0f0e" : "#e5e7eb"}`, background: prodTab === t ? "#0f0f0e" : "#fff", color: prodTab === t ? "#fff" : "#6b7280", cursor: "pointer" }}>
-                  {PROD_LABEL[t]} ({products.filter(p => p.status === t).length})
+                  style={{ padding: "6px 14px", borderRadius: 99, fontSize: 13, fontWeight: 600, border: "1.5px solid", transition: "all .14s", cursor: "pointer",
+                    borderColor: prodTab === t ? "#0f172a" : "#e2e8f0",
+                    background:  prodTab === t ? "#0f172a" : "#fff",
+                    color:       prodTab === t ? "#fff"    : "#6b7280" }}>
+                  {PROD_LABEL[t]} <span style={{ opacity: 0.55, fontSize: 11, marginLeft: 2 }}>{products.filter(p => p.status === t).length}</span>
                 </button>
               ))}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {filteredProd.length === 0 ? <EmptyState /> : filteredProd.map(p => (
-                <div key={p.id} style={{ background: "#fff", borderRadius: 16, border: "1px solid #e2e8f0", overflow: "hidden" }}>
+                <div key={p.id} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", overflow: "hidden" }}>
                   <div style={{ padding: "20px 24px", display: "flex", alignItems: "center", gap: 16 }}>
                     {p.image_url ? <img src={p.image_url} alt={p.name} style={{ width: 72, height: 72, borderRadius: 12, objectFit: "cover", flexShrink: 0 }} /> : <div style={{ width: 72, height: 72, borderRadius: 12, background: "#e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, flexShrink: 0 }}>⚽</div>}
                     <div style={{ flex: 1 }}>
@@ -1095,14 +1104,18 @@ export default function AdminPage() {
 }
 
 function EmptyState() {
-  return <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e2e8f0", padding: "48px 24px", textAlign: "center", color: "#9ca3af" }}>ไม่มีรายการ</div>;
+  return (
+    <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", padding: "56px 24px", textAlign: "center" }}>
+      <p style={{ color: "#9ca3af", fontSize: 15, margin: 0 }}>ไม่มีรายการ</p>
+    </div>
+  );
 }
 
 function BackLink({ href, label }) {
   return (
-    <a href={href} style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "#6b7280", fontSize: 13, fontWeight: 500, textDecoration: "none", marginBottom: 16 }}
+    <a href={href} style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "#9ca3af", fontSize: 14, fontWeight: 500, textDecoration: "none", marginBottom: 28 }}
       onMouseEnter={e => e.currentTarget.style.color = "#1e3a8a"}
-      onMouseLeave={e => e.currentTarget.style.color = "#6b7280"}>
+      onMouseLeave={e => e.currentTarget.style.color = "#9ca3af"}>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
       {label}
     </a>
@@ -1139,7 +1152,7 @@ function PayoutQR({ promptpayId, phone, amount }) {
 
 function Spinner() {
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f1f5f9" }}>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafc" }}>
       <div style={{ width: 36, height: 36, border: "3px solid #e5e7eb", borderTopColor: "#1e3a8a", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
@@ -1147,8 +1160,8 @@ function Spinner() {
 }
 
 const S = {
-  nav:      { position: "sticky", top: 0, background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e2e8f0", padding: "0 48px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", zIndex: 100 },
-  logo:     { fontFamily: "'Playfair Display', Georgia, serif", fontSize: 22, fontWeight: 900, color: "#0f0f0e", textDecoration: "none", display: "flex", alignItems: "center" },
-  logoutBtn:{ background: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", padding: "8px 16px", borderRadius: 99, fontSize: 13, cursor: "pointer" },
-  heading:  { fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: "#0f0f0e", margin: "0 0 24px" },
+  nav:       { position: "sticky", top: 0, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e5e7eb", padding: "0 32px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", zIndex: 100 },
+  logo:      { fontFamily: "'Playfair Display', Georgia, serif", fontSize: 22, fontWeight: 900, color: "#0f172a", textDecoration: "none", display: "flex", alignItems: "center" },
+  logoutBtn: { background: "none", border: "1px solid #e5e7eb", color: "#6b7280", padding: "9px 16px", borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: "pointer" },
+  heading:   { fontFamily: "'Playfair Display', serif", fontSize: 30, fontWeight: 900, color: "#0f172a", margin: "0 0 32px", letterSpacing: "-0.03em" },
 };

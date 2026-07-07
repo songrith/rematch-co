@@ -2,21 +2,44 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { useLang } from "@/app/context/language";
+import LanguageToggle from "@/app/components/LanguageToggle";
+import i18n from "@/app/i18n";
 
-const CATEGORIES = [
-  { value: "football",   label: "⚽ เสื้อบอล" },
-  { value: "basketball", label: "🏀 เสื้อบาส" },
-  { value: "retro",      label: "🏆 Retro" },
-];
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
-const GRADE_TYPES = [
-  { value: "player", label: "เกรดเพลเยอร์", desc: "ตัดเย็บแบบนักเตะ (Authentic)" },
-  { value: "fan",    label: "เกรดแฟนบอล",   desc: "รุ่น Replica สำหรับแฟน" },
-];
-const CONDITIONS = [
-  { value: "S", label: "มือ 1 / ใหม่มาก",  desc: "แทบไม่ผ่านการใช้งาน สภาพสมบูรณ์" },
-  { value: "A", label: "สภาพดีมาก",         desc: "ผ่านการใช้งานเล็กน้อย ไม่มีร่องรอยชัด" },
-  { value: "B", label: "สภาพดี",            desc: "มีร่องรอยการใช้งานบ้าง ยังสวยงาม" },
+
+const FOOTBALL_LEAGUES = {
+  "Premier League": [
+    "Arsenal","Aston Villa","Bournemouth","Brentford","Brighton & Hove Albion","Chelsea",
+    "Crystal Palace","Everton","Fulham","Ipswich Town","Leicester City","Liverpool",
+    "Manchester City","Manchester United","Newcastle United","Nottingham Forest",
+    "Southampton","Tottenham Hotspur","West Ham United","Wolverhampton Wanderers",
+  ],
+  "La Liga": [
+    "Real Madrid","Barcelona","Atletico Madrid","Athletic Bilbao","Real Sociedad",
+    "Real Betis","Villarreal","Valencia","Sevilla","Osasuna","Celta Vigo","Girona",
+    "Getafe","Rayo Vallecano","Mallorca","Las Palmas","Leganes","Deportivo Alaves",
+    "Valladolid","Espanyol",
+  ],
+  "Serie A": [
+    "Inter Milan","AC Milan","Juventus","Napoli","Atalanta","AS Roma","Lazio",
+    "Fiorentina","Bologna","Torino","Genoa","Monza","Como","Udinese","Lecce",
+    "Cagliari","Parma","Venezia","Hellas Verona","Empoli",
+  ],
+  "Ligue 1": [
+    "Paris Saint-Germain","Monaco","Olympique de Marseille","Olympique Lyonnais",
+    "Lille","Lens","OGC Nice","Rennes","Reims","Strasbourg","Brest","Nantes",
+    "Montpellier","Toulouse","Le Havre","Angers","Saint-Etienne",
+  ],
+};
+
+const NBA_TEAMS = [
+  "Atlanta Hawks","Boston Celtics","Brooklyn Nets","Charlotte Hornets","Chicago Bulls",
+  "Cleveland Cavaliers","Dallas Mavericks","Denver Nuggets","Detroit Pistons","Golden State Warriors",
+  "Houston Rockets","Indiana Pacers","LA Clippers","Los Angeles Lakers","Memphis Grizzlies",
+  "Miami Heat","Milwaukee Bucks","Minnesota Timberwolves","New Orleans Pelicans","New York Knicks",
+  "Oklahoma City Thunder","Orlando Magic","Philadelphia 76ers","Phoenix Suns","Portland Trail Blazers",
+  "Sacramento Kings","San Antonio Spurs","Toronto Raptors","Utah Jazz","Washington Wizards",
 ];
 const MAX_IMAGES = 25;
 
@@ -25,6 +48,11 @@ export default function SellPage() {
   const router = useRouter();
   const fileRef = useRef();
 
+  const { lang } = useLang();
+  const t = (key) => i18n[lang]?.[key] ?? i18n.th[key] ?? key;
+  const CATEGORIES  = i18n[lang]?.categories  ?? i18n.th.categories;
+  const GRADE_TYPES = i18n[lang]?.gradeTypes  ?? i18n.th.gradeTypes;
+  const CONDITIONS  = i18n[lang]?.conditions  ?? i18n.th.conditions;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -32,7 +60,7 @@ export default function SellPage() {
   const [files, setFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [form, setForm] = useState({
-    name: "", category: "", team: "", year: "", size: "", chest: "", gradeType: "", grade: "", price: "", description: "",
+    name: "", category: "", league: "", team: "", year: "", size: "", chest: "", gradeType: "", grade: "", price: "", description: "",
   });
 
   useEffect(() => {
@@ -48,6 +76,8 @@ export default function SellPage() {
   }, []);
 
   function set(key, value) { setForm(prev => ({ ...prev, [key]: value })); }
+  function setCategory(val) { setForm(prev => ({ ...prev, category: val, league: "", team: "" })); }
+  function setLeague(val)   { setForm(prev => ({ ...prev, league: val, team: "" })); }
 
   function handleFiles(e) {
     const selected = Array.from(e.target.files);
@@ -65,11 +95,13 @@ export default function SellPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!form.category)  { setError("กรุณาเลือกประเภทสินค้า"); return; }
-    if (!form.size)      { setError("กรุณาเลือกขนาด"); return; }
-    if (!form.gradeType) { setError("กรุณาเลือกประเภทเสื้อ (เพลเยอร์ / แฟนบอล)"); return; }
-    if (!form.grade)     { setError("กรุณาเลือกสภาพเสื้อ"); return; }
-    if (files.length === 0) { setError("กรุณาอัพโหลดรูปสินค้าอย่างน้อย 1 รูป"); return; }
+    if (!form.category)  { setError(t("errCategory")); return; }
+    if (form.category === "football" && !form.league) { setError(t("errLeague")); return; }
+    if ((form.category === "football" || form.category === "basketball") && !form.team) { setError(t("errTeam")); return; }
+    if (!form.size)      { setError(t("errSize")); return; }
+    if (!form.gradeType) { setError(t("errGradeType")); return; }
+    if (!form.grade)     { setError(t("errGrade")); return; }
+    if (files.length === 0) { setError(t("errPhoto")); return; }
 
     setSaving(true);
     setError("");
@@ -113,21 +145,24 @@ export default function SellPage() {
 
       <nav style={S.nav}>
         <a href="/" style={S.logo}>Re<span style={{ color: "#1e3a8a" }}>Match</span></a>
-        <button onClick={async () => { try { await supabase.auth.signOut({ scope: 'local' }); } catch {} window.location.reload(); }} style={S.logoutBtn}>ออกจากระบบ</button>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <button onClick={async () => { try { await supabase.auth.signOut({ scope: 'local' }); } catch {} window.location.reload(); }} style={S.logoutBtn}>{t("navLogout")}</button>
+          <LanguageToggle />
+        </div>
       </nav>
 
       <div style={{ maxWidth: 680, margin: "0 auto", padding: "48px 24px" }}>
-        <BackLink href="/seller/dashboard" label="กลับ Dashboard" />
-        <h1 style={S.heading}>เพิ่มสินค้าใหม่</h1>
-        <p style={{ color: "#6b7280", fontSize: 14, marginBottom: 32 }}>สินค้าจะรอ Admin อนุมัติก่อนแสดงในหน้าหลัก</p>
+        <BackLink href="/seller/dashboard" label={t("sellBackDash")} />
+        <h1 style={S.heading}>{t("sellTitle")}</h1>
+        <p style={{ color: "#6b7280", fontSize: 14, marginBottom: 32 }}>{t("sellSub")}</p>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
           {/* รูปสินค้า */}
           <div style={S.card}>
             <h2 style={S.sectionTitle}>
-              รูปสินค้า
-              <span style={{ fontWeight: 400, color: "#9ca3af", fontSize: 13 }}> (สูงสุด {MAX_IMAGES} รูป · เพิ่มได้ทีละหลายรูป)</span>
+              {t("sellPhotos")}
+              <span style={{ fontWeight: 400, color: "#9ca3af", fontSize: 13 }}>{" "}({lang === "en" ? `Up to ${MAX_IMAGES} photos` : `สูงสุด ${MAX_IMAGES} รูป · เพิ่มได้ทีละหลายรูป`})</span>
             </h2>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8, marginBottom: 12 }}>
@@ -135,7 +170,7 @@ export default function SellPage() {
                 <div key={i} style={{ position: "relative", aspectRatio: "1", borderRadius: 10, overflow: "hidden", border: "1px solid #e5e7eb" }}>
                   <img src={src} alt={`preview ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   {i === 0 && (
-                    <div style={{ position: "absolute", top: 4, left: 4, background: "#1e3a8a", color: "#fff", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 99 }}>หลัก</div>
+                    <div style={{ position: "absolute", top: 4, left: 4, background: "#1e3a8a", color: "#fff", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 99 }}>{t("mainPhotoLabel")}</div>
                   )}
                   <button type="button" onClick={() => removeImage(i)}
                     style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.6)", border: "none", color: "#fff", borderRadius: "50%", width: 20, height: 20, fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -150,13 +185,13 @@ export default function SellPage() {
                   onMouseEnter={e => { e.currentTarget.style.borderColor = "#1e3a8a"; e.currentTarget.style.color = "#1e3a8a"; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = "#d1d5db"; e.currentTarget.style.color = "#9ca3af"; }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  <span style={{ fontSize: 10, fontWeight: 600 }}>เพิ่มรูป</span>
+                  <span style={{ fontSize: 10, fontWeight: 600 }}>{t("sellAddPhoto")}</span>
                 </div>
               )}
             </div>
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>รูปแรกจะเป็นรูปหลัก · JPG, PNG · เพิ่มได้สูงสุด {MAX_IMAGES} รูป</p>
+              <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>{i18n[lang]?.sellPhotosNote?.(MAX_IMAGES) ?? `รูปแรกจะเป็นรูปหลัก · JPG, PNG · เพิ่มได้สูงสุด ${MAX_IMAGES} รูป`}</p>
               <span style={{ fontSize: 11, color: previews.length >= MAX_IMAGES ? "#dc2626" : "#9ca3af", fontWeight: 600 }}>{previews.length}/{MAX_IMAGES}</span>
             </div>
             <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleFiles} style={{ display: "none" }} />
@@ -164,38 +199,82 @@ export default function SellPage() {
 
           {/* ข้อมูลสินค้า */}
           <div style={S.card}>
-            <h2 style={S.sectionTitle}>ข้อมูลสินค้า</h2>
+            <h2 style={S.sectionTitle}>{t("sellInfo")}</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
               {/* ชื่อ */}
               <div>
-                <label style={S.label}>ชื่อสินค้า</label>
+                <label style={S.label}>{t("sellName")}</label>
                 <input required value={form.name} onChange={e => set("name", e.target.value)}
-                  placeholder="เช่น Real Madrid Home 24/25" style={S.input} />
+                  placeholder={t("sellNamePlaceholder")} style={S.input} />
               </div>
 
-              {/* ประเภท + ทีม + ปี */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+              {/* ประเภท + ปี */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div>
-                  <label style={S.label}>ประเภท</label>
-                  <select required value={form.category} onChange={e => set("category", e.target.value)} style={{ ...S.input, cursor: "pointer" }}>
-                    <option value="">เลือกประเภท</option>
+                  <label style={S.label}>{t("sellCategory")} <span style={{ color: "#dc2626" }}>*</span></label>
+                  <select required value={form.category} onChange={e => setCategory(e.target.value)} style={{ ...S.input, cursor: "pointer" }}>
+                    <option value="">{t("sellSelectCat")}</option>
                     {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label style={S.label}>ทีม / ลีก</label>
-                  <input value={form.team} onChange={e => set("team", e.target.value)} placeholder="เช่น Man City, NBA" style={S.input} />
-                </div>
-                <div>
-                  <label style={S.label}>ซีซั่น / ปี</label>
-                  <input value={form.year} onChange={e => set("year", e.target.value)} placeholder="เช่น 2024/25" style={S.input} />
+                  <label style={S.label}>{t("sellYear")}</label>
+                  <input value={form.year} onChange={e => set("year", e.target.value)} placeholder={t("sellYearPlaceholder")} style={S.input} />
                 </div>
               </div>
 
+              {/* Team selector — conditional by category */}
+              {form.category === "football" && (
+                <div>
+                  <label style={S.label}>{t("sellLeague")} <span style={{ color: "#dc2626" }}>*</span></label>
+                  {/* League pills */}
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
+                    {Object.keys(FOOTBALL_LEAGUES).map(lg => (
+                      <button key={lg} type="button" onClick={() => setLeague(lg)}
+                        style={{ padding: "7px 14px", borderRadius: 99, border: `1.5px solid ${form.league === lg ? "#1e3a8a" : "#e5e7eb"}`, background: form.league === lg ? "#1e3a8a" : "#fff", color: form.league === lg ? "#fff" : "#374151", fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all 0.15s" }}>
+                        {lg}
+                      </button>
+                    ))}
+                  </div>
+                  {/* Team search */}
+                  {form.league ? (
+                    <TeamSearch
+                      teams={FOOTBALL_LEAGUES[form.league]}
+                      value={form.team}
+                      onChange={val => set("team", val)}
+                      placeholder={i18n[lang]?.sellSearchTeam?.(form.league) ?? `ค้นหาทีมใน ${form.league}...`}
+                    />
+                  ) : (
+                    <div style={{ padding: "11px 14px", borderRadius: 10, border: "1px dashed #d1d5db", fontSize: 13, color: "#9ca3af", background: "#fafafa" }}>
+                      {t("sellSelectLeagueFirst")}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {form.category === "basketball" && (
+                <div>
+                  <label style={S.label}>{t("sellNBA")} <span style={{ color: "#dc2626" }}>*</span></label>
+                  <TeamSearch
+                    teams={NBA_TEAMS}
+                    value={form.team}
+                    onChange={val => set("team", val)}
+                    placeholder={t("sellSearchNBA")}
+                  />
+                </div>
+              )}
+
+              {form.category === "retro" && (
+                <div>
+                  <label style={S.label}>{t("sellTeam")}</label>
+                  <input value={form.team} onChange={e => set("team", e.target.value)} placeholder={t("sellTeamPlaceholder")} style={S.input} />
+                </div>
+              )}
+
               {/* ประเภทเสื้อ toggle */}
               <div>
-                <label style={S.label}>ประเภทเสื้อ <span style={{ color: "#dc2626" }}>*</span></label>
+                <label style={S.label}>{t("sellGradeType")} <span style={{ color: "#dc2626" }}>*</span></label>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   {GRADE_TYPES.map(gt => (
                     <button key={gt.value} type="button" onClick={() => set("gradeType", gt.value)}
@@ -210,19 +289,19 @@ export default function SellPage() {
               {/* ขนาด + รอบอก + ราคา */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
                 <div>
-                  <label style={S.label}>ขนาด (Size)</label>
+                  <label style={S.label}>{t("sellSize")}</label>
                   <select required value={form.size} onChange={e => set("size", e.target.value)} style={{ ...S.input, cursor: "pointer" }}>
-                    <option value="">เลือก Size</option>
+                    <option value="">{t("sellSizeDefault")}</option>
                     {SIZES.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label style={S.label}>รอบอก (cm)</label>
+                  <label style={S.label}>{t("sellChest")}</label>
                   <input value={form.chest} onChange={e => set("chest", e.target.value.replace(/\D/g, ""))}
-                    placeholder="เช่น 100" inputMode="numeric" maxLength={3} style={S.input} />
+                    placeholder={t("sellChestPlaceholder")} inputMode="numeric" maxLength={3} style={S.input} />
                 </div>
                 <div>
-                  <label style={S.label}>ราคา (บาท)</label>
+                  <label style={S.label}>{t("sellPrice")}</label>
                   <input required value={form.price} onChange={e => set("price", e.target.value.replace(/\D/g, ""))}
                     placeholder="0" inputMode="numeric" style={S.input} />
                 </div>
@@ -230,7 +309,7 @@ export default function SellPage() {
 
               {/* สภาพเสื้อ */}
               <div>
-                <label style={S.label}>สภาพเสื้อ <span style={{ color: "#dc2626" }}>*</span></label>
+                <label style={S.label}>{t("sellCondition")} <span style={{ color: "#dc2626" }}>*</span></label>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
                   {CONDITIONS.map(c => (
                     <button key={c.value} type="button" onClick={() => set("grade", c.value)}
@@ -244,9 +323,9 @@ export default function SellPage() {
 
               {/* รายละเอียด */}
               <div>
-                <label style={S.label}>รายละเอียดเพิ่มเติม</label>
+                <label style={S.label}>{t("sellDesc")}</label>
                 <textarea value={form.description} onChange={e => set("description", e.target.value)}
-                  placeholder="ขนาดจริง ประวัติการใช้งาน รายละเอียดอื่น ๆ" rows={4}
+                  placeholder={t("sellDescPlaceholder")} rows={4}
                   style={{ ...S.input, resize: "vertical", lineHeight: 1.6 }} />
               </div>
             </div>
@@ -255,10 +334,74 @@ export default function SellPage() {
           {error && <div style={S.errorBox}>⚠️ {error}</div>}
 
           <button type="submit" disabled={saving} style={{ ...S.primaryBtn, opacity: saving ? 0.7 : 1 }}>
-            {saving ? "กำลังลงสินค้า..." : "ลงสินค้า"}
+            {saving ? t("sellSubmitting") : t("sellSubmit")}
           </button>
         </form>
       </div>
+    </div>
+  );
+}
+
+function TeamSearch({ teams, value, onChange, placeholder }) {
+  const { lang } = useLang();
+  const t = (key) => i18n[lang]?.[key] ?? i18n.th[key] ?? key;
+  const [query, setQuery]   = useState(value || "");
+  const [open, setOpen]     = useState(false);
+  const wrapRef             = useRef(null);
+
+  const filtered = query.trim()
+    ? teams.filter(t => t.toLowerCase().includes(query.toLowerCase()))
+    : teams;
+
+  function select(team) {
+    setQuery(team);
+    onChange(team);
+    setOpen(false);
+  }
+
+  // reset query when value cleared externally (e.g. league change)
+  useEffect(() => { setQuery(value || ""); }, [value]);
+
+  // close on outside click
+  useEffect(() => {
+    function onDown(e) { if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false); }
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
+
+  return (
+    <div ref={wrapRef} style={{ position: "relative" }}>
+      <div style={{ position: "relative" }}>
+        <input
+          value={query}
+          onChange={e => { setQuery(e.target.value); onChange(""); setOpen(true); }}
+          onFocus={() => setOpen(true)}
+          placeholder={placeholder}
+          autoComplete="off"
+          style={{ width: "100%", padding: "11px 38px 11px 14px", borderRadius: 10, border: `1.5px solid ${open ? "#1e3a8a" : "#e5e7eb"}`, fontSize: 14, color: "#0f0f0e", outline: "none", background: "#fafafa", boxSizing: "border-box", transition: "border-color 0.15s" }}
+        />
+        {/* search icon */}
+        <svg style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#9ca3af" }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+
+      {open && filtered.length > 0 && (
+        <div style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0, background: "#fff", border: "1.5px solid #e2e8f0", borderRadius: 12, boxShadow: "0 8px 24px rgba(0,0,0,.1)", zIndex: 200, maxHeight: 220, overflowY: "auto" }}>
+          {filtered.map(t => (
+            <div key={t} onMouseDown={() => select(t)}
+              style={{ padding: "10px 14px", cursor: "pointer", fontSize: 13, color: t === value ? "#1e3a8a" : "#374151", fontWeight: t === value ? 700 : 400, background: t === value ? "#eff6ff" : "transparent", borderBottom: "1px solid #f1f5f9", transition: "background 0.1s" }}
+              onMouseEnter={e => { if (t !== value) e.currentTarget.style.background = "#f8fafc"; }}
+              onMouseLeave={e => { if (t !== value) e.currentTarget.style.background = "transparent"; }}>
+              {t}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {open && query.trim() && filtered.length === 0 && (
+        <div style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0, background: "#fff", border: "1.5px solid #e2e8f0", borderRadius: 12, boxShadow: "0 8px 24px rgba(0,0,0,.1)", zIndex: 200, padding: "12px 14px", fontSize: 13, color: "#9ca3af" }}>
+          {t("sellNoTeamFound")}
+        </div>
+      )}
     </div>
   );
 }
