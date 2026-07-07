@@ -147,6 +147,7 @@ export default function ProductDetailPage() {
   const [activeImg, setActiveImg]     = useState(0);
   const [lightbox, setLightbox]       = useState(false);
   const [navUser, setNavUser]         = useState(null);
+  const [chatLoading, setChatLoading] = useState(false);
 
   const [step, setStep]               = useState(0);
   const [addrForm, setAddrForm]       = useState({
@@ -310,16 +311,27 @@ export default function ProductDetailPage() {
 
   async function handleChat() {
     if (!buyer) { router.push("/login"); return; }
-    const { data: existing } = await supabase
-      .from("conversations").select("id")
-      .eq("buyer_id", buyer.id).eq("seller_id", product.seller_id).eq("product_id", product.id)
-      .maybeSingle();
-    if (existing) { router.push(`/messages/${existing.id}`); return; }
-    const { data: created } = await supabase
-      .from("conversations")
-      .insert({ buyer_id: buyer.id, seller_id: product.seller_id, product_id: product.id })
-      .select("id").single();
-    if (created) router.push(`/messages/${created.id}`);
+    if (chatLoading) return;
+    setChatLoading(true);
+    try {
+      const { data: existing, error: findErr } = await supabase
+        .from("conversations").select("id")
+        .eq("buyer_id", buyer.id).eq("seller_id", product.seller_id).eq("product_id", product.id)
+        .maybeSingle();
+      if (findErr) throw findErr;
+      if (existing) { router.push(`/messages/${existing.id}`); return; }
+
+      const { data: created, error: createErr } = await supabase
+        .from("conversations")
+        .insert({ buyer_id: buyer.id, seller_id: product.seller_id, product_id: product.id })
+        .select("id").single();
+      if (createErr) throw createErr;
+      if (created) router.push(`/messages/${created.id}`);
+    } catch (err) {
+      alert("ไม่สามารถเปิดแชทได้: " + (err?.message || "เกิดข้อผิดพลาด"));
+    } finally {
+      setChatLoading(false);
+    }
   }
 
   function confirmAddress() {
@@ -657,9 +669,12 @@ export default function ProductDetailPage() {
               </div>
             </div>
             {!isOwner && (
-              <button onClick={handleChat} className="btn-chat rm-chat-btn-inline"
-                style={{ padding: "6px 12px", background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12, fontWeight: 600, color: "#374151", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, transition: "all 0.15s", flexShrink: 0 }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <button onClick={handleChat} disabled={chatLoading} className="btn-chat rm-chat-btn-inline"
+                style={{ padding: "6px 12px", background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12, fontWeight: 600, color: "#374151", cursor: chatLoading ? "default" : "pointer", display: "flex", alignItems: "center", gap: 5, transition: "all 0.15s", flexShrink: 0, opacity: chatLoading ? 0.6 : 1 }}>
+                {chatLoading
+                  ? <span style={{ fontSize: 11 }}>...</span>
+                  : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                }
                 {t("chatBtn")}
               </button>
             )}
@@ -1012,9 +1027,12 @@ export default function ProductDetailPage() {
       {/* ── Mobile sticky bottom bar ── */}
       <div className="rm-mobile-bar" style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #e5e7eb", padding: "10px 16px", gap: 10, zIndex: 150, alignItems: "center", boxShadow: "0 -4px 20px rgba(0,0,0,.06)" }}>
         {!isOwner && !isSold && (
-          <button onClick={handleChat}
-            style={{ width: 48, height: 48, borderRadius: 10, border: "1px solid #e5e7eb", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0, color: "#374151" }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <button onClick={handleChat} disabled={chatLoading}
+            style={{ width: 48, height: 48, borderRadius: 10, border: "1px solid #e5e7eb", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: chatLoading ? "default" : "pointer", flexShrink: 0, color: "#374151", opacity: chatLoading ? 0.6 : 1 }}>
+            {chatLoading
+              ? <span style={{ fontSize: 12, fontWeight: 700 }}>...</span>
+              : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            }
           </button>
         )}
         {isSold ? (

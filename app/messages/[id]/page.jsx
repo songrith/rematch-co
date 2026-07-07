@@ -128,11 +128,15 @@ export default function ChatPage() {
     if (!content || sending) return;
     setSending(true);
     setText("");
-    await supabase.from("messages").insert({
+    const { error } = await supabase.from("messages").insert({
       conversation_id: convId,
       sender_id: user.id,
       content,
     });
+    if (error) {
+      setText(content); // restore text on failure
+      alert("ส่งข้อความไม่ได้: " + error.message);
+    }
     setSending(false);
   }
 
