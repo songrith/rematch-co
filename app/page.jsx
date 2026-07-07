@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import MobileNav from "@/app/components/MobileNav";
@@ -39,118 +39,122 @@ function Navbar() {
     return () => { subscription.unsubscribe(); window.removeEventListener("scroll", onScroll); };
   }, []);
 
-  const onDark = !scrolled;
   const { lang } = useLang();
   const t = (key) => i18n[lang]?.[key] ?? i18n.th[key] ?? key;
-  const ink = onDark ? "rgba(255,255,255,0.75)" : "#475569";
-  const inkHover = onDark ? "#fff" : "#0f172a";
-
   const isAdmin = profile?.role === "admin" || (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim()).includes(user?.email);
 
-  const linkStyle = {
+  const pillBg   = scrolled ? "rgba(255,255,255,0.96)" : "rgba(15,23,42,0.55)";
+  const pillBdr  = scrolled ? "rgba(226,232,240,0.9)"  : "rgba(255,255,255,0.13)";
+  const ink      = scrolled ? "#374151"                 : "rgba(255,255,255,0.82)";
+  const divColor = scrolled ? "#e2e8f0"                 : "rgba(255,255,255,0.14)";
+
+  const lnk = (extra = {}) => ({
     fontSize: 13.5, fontWeight: 500, color: ink, textDecoration: "none",
-    padding: "6px 13px", borderRadius: 8, transition: "all 0.15s",
-  };
-  const onLink = e => { e.currentTarget.style.color = inkHover; e.currentTarget.style.background = onDark ? "rgba(255,255,255,0.09)" : "#f1f5f9"; };
-  const offLink = e => { e.currentTarget.style.color = ink; e.currentTarget.style.background = "transparent"; };
+    padding: "5px 12px", borderRadius: 8, transition: "all 0.15s", whiteSpace: "nowrap",
+    ...extra,
+  });
+  const onL  = e => { e.currentTarget.style.color = scrolled ? "#0f172a" : "#fff"; e.currentTarget.style.background = scrolled ? "#f1f5f9" : "rgba(255,255,255,0.1)"; };
+  const offL = e => { e.currentTarget.style.color = ink; e.currentTarget.style.background = "transparent"; };
 
   return (
-    <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
-      height: 64,
-      background: scrolled ? "rgba(255,255,255,0.97)" : "transparent",
-      backdropFilter: scrolled ? "blur(20px)" : "none",
-      borderBottom: scrolled ? "1px solid rgba(226,232,240,0.9)" : "none",
-      transition: "background 0.3s, border-color 0.3s, backdrop-filter 0.3s",
-      display: "grid",
-      gridTemplateColumns: "1fr auto 1fr",
-      alignItems: "center",
-      padding: "0 max(40px, calc((100vw - 1280px)/2 + 40px))",
-      gap: 12,
-    }}>
+    <div style={{ position: "fixed", top: 14, left: "50%", transform: "translateX(-50%)", zIndex: 200, width: "min(calc(100vw - 32px), 1160px)" }}>
+      <nav style={{
+        height: 52,
+        background: pillBg,
+        backdropFilter: "blur(24px) saturate(160%)",
+        WebkitBackdropFilter: "blur(24px) saturate(160%)",
+        border: `1px solid ${pillBdr}`,
+        borderRadius: 14,
+        boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04)" : "0 8px 32px rgba(0,0,0,.24)",
+        transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)",
+        display: "flex", alignItems: "center",
+        padding: "0 16px",
+        gap: 4,
+      }}>
 
-      {/* ── LEFT: Logo ── */}
-      <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
-        <img src="/favicon.ico" alt="ReMatch" width="28" height="28" style={{ borderRadius: 7, display: "block" }} />
-        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 19, fontWeight: 900, color: onDark ? "#fff" : "#0f172a", letterSpacing: -0.4, transition: "color 0.3s" }}>
-          Re<span style={{ color: onDark ? "#93c5fd" : "#1e3a8a" }}>Match</span>
-        </span>
-      </a>
+        {/* Logo */}
+        <a href="/" style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none", flexShrink: 0, marginRight: 8 }}>
+          <img src="/favicon.ico" alt="" width="26" height="26" style={{ borderRadius: 7, display: "block" }} />
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 900, color: scrolled ? "#0f172a" : "#fff", letterSpacing: -0.5, transition: "color 0.3s" }}>
+            Re<span style={{ color: scrolled ? "#1e3a8a" : "#93c5fd" }}>Match</span>
+          </span>
+        </a>
 
-      {/* ── CENTER: Category links (desktop only) ── */}
-      <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 2 }}>
-        {[[t("navCatFootball"), "/shop?cat=football"], [t("navCatBasketball"), "/shop?cat=basketball"], [t("navCatRetro"), "/shop?cat=retro"], [t("navCatSell"), "/seller/terms"]].map(([l, href]) => (
-          <a key={href} href={href} style={linkStyle} onMouseEnter={onLink} onMouseLeave={offLink}>{l}</a>
-        ))}
-      </div>
+        {/* Separator */}
+        <div className="rm-nav-links" style={{ width: 1, height: 16, background: divColor, flexShrink: 0, margin: "0 6px" }} />
 
-      {/* ── RIGHT: User actions (desktop) + Hamburger (mobile) ── */}
-      <div style={{ display: "flex", alignItems: "center", gap: 6, justifyContent: "flex-end" }}>
+        {/* Category links */}
+        <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 1, flex: 1 }}>
+          {[[t("navCatFootball"), "/shop?cat=football"], [t("navCatBasketball"), "/shop?cat=basketball"], [t("navCatRetro"), "/shop?cat=retro"], [t("navCatSell"), "/seller/terms"]].map(([l, href]) => (
+            <a key={href} href={href} style={lnk()} onMouseEnter={onL} onMouseLeave={offL}>{l}</a>
+          ))}
+        </div>
 
-        {/* Hamburger — mobile only */}
-        <button className="rm-hamburger" onClick={() => setMenuOpen(true)}
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: ink, display: "none", alignItems: "center", justifyContent: "center" }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
-        </button>
+        {/* Spacer */}
+        <div className="rm-nav-links" style={{ flex: 1 }} />
 
-        <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
-
-        {/* Desktop links */}
-        <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+        {/* Right user actions */}
+        <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 3 }}>
           {user ? (
             <>
               {isAdmin && (
-                <a href="/admin" style={{ ...linkStyle, color: "#7c3aed", fontWeight: 600 }} onMouseEnter={onLink} onMouseLeave={e => { e.currentTarget.style.color = "#7c3aed"; e.currentTarget.style.background = "transparent"; }}>Admin</a>
+                <a href="/admin" style={{ fontSize: 12, fontWeight: 700, color: "#a78bfa", padding: "4px 10px", border: "1px solid rgba(167,139,250,0.3)", borderRadius: 7, textDecoration: "none", background: scrolled ? "#faf5ff" : "rgba(124,58,237,0.2)", whiteSpace: "nowrap" }}>Admin</a>
               )}
               {profile?.role === "seller" && (
-                <a href="/seller/dashboard" style={linkStyle} onMouseEnter={onLink} onMouseLeave={offLink}>{t("navDashboard")}</a>
+                <a href="/seller/dashboard" style={lnk()} onMouseEnter={onL} onMouseLeave={offL}>{t("navDashboard")}</a>
               )}
-              <a href="/orders" style={linkStyle} onMouseEnter={onLink} onMouseLeave={offLink}>{t("navOrders")}</a>
+              <a href="/orders" style={lnk()} onMouseEnter={onL} onMouseLeave={offL}>{t("navOrders")}</a>
 
-              {/* Notifications */}
-              <a href="/notifications" style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: 8, color: ink, textDecoration: "none", transition: "background 0.15s" }}
-                onMouseEnter={e => e.currentTarget.style.background = onDark ? "rgba(255,255,255,0.09)" : "#f1f5f9"}
+              {/* Bell */}
+              <a href="/notifications" style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, borderRadius: 8, color: ink, textDecoration: "none", transition: "background 0.15s", flexShrink: 0 }}
+                onMouseEnter={e => e.currentTarget.style.background = scrolled ? "#f1f5f9" : "rgba(255,255,255,0.1)"}
                 onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                {unread > 0 && <span style={{ position: "absolute", top: 3, right: 3, background: "#dc2626", color: "#fff", borderRadius: "50%", fontSize: 8, fontWeight: 700, width: 13, height: 13, display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}>{unread > 9 ? "9+" : unread}</span>}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                {unread > 0 && <span style={{ position: "absolute", top: 2, right: 2, background: "#ef4444", color: "#fff", borderRadius: "50%", fontSize: 8, fontWeight: 700, width: 13, height: 13, display: "flex", alignItems: "center", justifyContent: "center" }}>{unread > 9 ? "9+" : unread}</span>}
               </a>
 
               {/* Divider */}
-              <div style={{ width: 1, height: 18, background: onDark ? "rgba(255,255,255,0.15)" : "#e2e8f0", margin: "0 2px", flexShrink: 0 }} />
+              <div style={{ width: 1, height: 16, background: divColor, margin: "0 4px", flexShrink: 0 }} />
 
-              {/* User avatar pill */}
-              <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none", padding: "5px 10px 5px 5px", borderRadius: 99, border: `1px solid ${onDark ? "rgba(255,255,255,0.14)" : "#e2e8f0"}`, background: onDark ? "rgba(255,255,255,0.06)" : "#fff", transition: "all 0.15s" }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = onDark ? "rgba(255,255,255,0.28)" : "#94a3b8"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = onDark ? "rgba(255,255,255,0.14)" : "#e2e8f0"; }}>
-                <div style={{ width: 24, height: 24, borderRadius: "50%", background: onDark ? "rgba(255,255,255,0.18)" : "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
+              {/* Avatar pill */}
+              <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none", padding: "4px 10px 4px 4px", borderRadius: 99, border: `1px solid ${divColor}`, background: scrolled ? "#f8fafc" : "rgba(255,255,255,0.07)", transition: "all 0.15s", flexShrink: 0 }}
+                onMouseEnter={e => { e.currentTarget.style.background = scrolled ? "#f1f5f9" : "rgba(255,255,255,0.14)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = scrolled ? "#f8fafc" : "rgba(255,255,255,0.07)"; }}>
+                <div style={{ width: 24, height: 24, borderRadius: "50%", background: scrolled ? "#1e3a8a" : "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
                   {(profile?.full_name || user.email || "?")[0].toUpperCase()}
                 </div>
-                <span className="rm-nav-name" style={{ fontSize: 13, fontWeight: 500, color: onDark ? "rgba(255,255,255,0.85)" : "#374151" }}>
-                  {profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}
-                </span>
+                <span className="rm-nav-name" style={{ fontSize: 13, fontWeight: 500, color: ink }}>{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
               </a>
 
               <button onClick={async () => { try { await supabase.auth.signOut({ scope: "local" }); } catch {} window.location.href = "/"; }}
-                style={{ fontSize: 13, color: onDark ? "rgba(255,255,255,0.5)" : "#94a3b8", background: "none", border: "none", cursor: "pointer", padding: "6px 8px", borderRadius: 8, transition: "color 0.15s" }}
-                onMouseEnter={e => e.currentTarget.style.color = "#dc2626"}
-                onMouseLeave={e => e.currentTarget.style.color = onDark ? "rgba(255,255,255,0.5)" : "#94a3b8"}>
+                style={{ fontSize: 12, color: scrolled ? "#94a3b8" : "rgba(255,255,255,0.45)", background: "none", border: "none", cursor: "pointer", padding: "5px 8px", borderRadius: 7, transition: "color 0.15s", whiteSpace: "nowrap" }}
+                onMouseEnter={e => e.currentTarget.style.color = "#ef4444"}
+                onMouseLeave={e => e.currentTarget.style.color = scrolled ? "#94a3b8" : "rgba(255,255,255,0.45)"}>
                 {t("navLogout")}
               </button>
             </>
           ) : (
             <>
-              <a href="/login" style={{ ...linkStyle, border: `1px solid ${onDark ? "rgba(255,255,255,0.18)" : "#e2e8f0"}`, padding: "7px 16px" }} onMouseEnter={onLink} onMouseLeave={offLink}>{t("navLogin")}</a>
-              <a href="/register" style={{ fontSize: 13.5, fontWeight: 600, color: onDark ? "#0f172a" : "#fff", textDecoration: "none", padding: "7px 18px", borderRadius: 8, background: onDark ? "#fff" : "#1e3a8a", transition: "opacity 0.15s" }}
-                onMouseEnter={e => e.currentTarget.style.opacity = "0.88"}
+              <a href="/login" style={lnk({ border: `1px solid ${divColor}`, padding: "6px 15px" })} onMouseEnter={onL} onMouseLeave={offL}>{t("navLogin")}</a>
+              <a href="/register" style={{ fontSize: 13.5, fontWeight: 600, color: scrolled ? "#fff" : "#0f172a", textDecoration: "none", padding: "6px 16px", borderRadius: 8, background: scrolled ? "#1e3a8a" : "#fff", transition: "opacity 0.15s", whiteSpace: "nowrap", flexShrink: 0 }}
+                onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
                 onMouseLeave={e => e.currentTarget.style.opacity = "1"}>{t("navRegister")}</a>
             </>
           )}
           <LanguageToggle />
         </div>
-      </div>
-    </nav>
+
+        {/* Hamburger (mobile) */}
+        <button className="rm-hamburger" onClick={() => setMenuOpen(true)}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: ink, alignItems: "center", justifyContent: "center" }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+
+        <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
+      </nav>
+    </div>
   );
 }
 
@@ -165,7 +169,7 @@ function Hero() {
   ];
   return (
     <section style={{
-      position: "relative", overflow: "hidden", paddingTop: 68,
+      position: "relative", overflow: "hidden", paddingTop: 80,
       background: "#06091a",
       minHeight: "100vh", display: "flex", alignItems: "center",
     }}>
