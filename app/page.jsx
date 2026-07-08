@@ -40,112 +40,90 @@ function Navbar() {
   const t = (key) => i18n[lang]?.[key] ?? i18n.th[key] ?? key;
   const isAdmin = profile?.role === "admin" || (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim()).includes(user?.email);
 
-  const ink      = "rgba(255,255,255,0.82)";
-  const divColor = "rgba(255,255,255,0.18)";
-
-  const lnk = (extra = {}) => ({
-    fontSize: 13.5, fontWeight: 500, color: ink, textDecoration: "none",
-    padding: "5px 12px", borderRadius: 8, transition: "all 0.15s", whiteSpace: "nowrap",
-    ...extra,
-  });
-  const onL  = e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(255,255,255,0.12)"; };
-  const offL = e => { e.currentTarget.style.color = ink; e.currentTarget.style.background = "transparent"; };
+  const navLink = { fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#1a1a1a", textDecoration: "none", transition: "color 0.15s", whiteSpace: "nowrap" };
+  const onHov  = e => e.currentTarget.style.color = "#1e3a8a";
+  const offHov = e => e.currentTarget.style.color = "#1a1a1a";
 
   return (
-    <div style={{ padding: "14px 16px 0", background: "#06091a" }}>
-    <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+    <>
       <nav style={{
-        height: 52,
-        background: "transparent",
+        position: "fixed", top: 0, left: 0, right: 0, height: 56,
+        background: "#fff", borderBottom: "1px solid #e8e8e4",
         display: "flex", alignItems: "center",
-        padding: "0 4px",
-        gap: 4,
+        padding: "0 32px", zIndex: 200,
       }}>
-
-        {/* Logo */}
-        <a href="/" style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none", flexShrink: 0, marginRight: 8 }}>
-          <img src="/favicon.ico" alt="" width="26" height="26" style={{ borderRadius: 7, display: "block" }} />
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 900, color: "#fff", letterSpacing: -0.5 }}>
-            Re<span style={{ color: "#93c5fd" }}>Match</span>
-          </span>
-        </a>
-
-        {/* Separator */}
-        <div className="rm-nav-links" style={{ width: 1, height: 16, background: divColor, flexShrink: 0, margin: "0 6px" }} />
-
-        {/* Category links */}
-        <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 1, flex: 1 }}>
+        {/* Left — category links */}
+        <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 28 }}>
           {[[t("navCatFootball"), "/shop?cat=football"], [t("navCatBasketball"), "/shop?cat=basketball"], [t("navCatRetro"), "/shop?cat=retro"], [t("navCatSell"), "/seller/terms"]].map(([l, href]) => (
-            <a key={href} href={href} style={lnk()} onMouseEnter={onL} onMouseLeave={offL}>{l}</a>
+            <a key={href} href={href} style={navLink} onMouseEnter={onHov} onMouseLeave={offHov}>{l}</a>
           ))}
         </div>
 
-        {/* Spacer */}
-        <div className="rm-nav-links" style={{ flex: 1 }} />
+        {/* Center — logo (always centered via absolute) */}
+        <a href="/" style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 900, color: "#0f0f0e", textDecoration: "none", letterSpacing: -0.5, whiteSpace: "nowrap" }}>
+          Re<span style={{ color: "#1e3a8a" }}>Match</span>
+        </a>
 
-        {/* Right user actions */}
-        <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 3 }}>
+        {/* Right — user actions */}
+        <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 20, marginLeft: "auto" }}>
+          {isAdmin && (
+            <a href="/admin" style={{ ...navLink, color: "#7c3aed" }} onMouseEnter={e => e.currentTarget.style.color = "#6d28d9"} onMouseLeave={e => e.currentTarget.style.color = "#7c3aed"}>Admin</a>
+          )}
+          {profile?.role === "seller" && (
+            <a href="/seller/dashboard" style={navLink} onMouseEnter={onHov} onMouseLeave={offHov}>{t("navDashboard")}</a>
+          )}
+          {user && <a href="/orders" style={navLink} onMouseEnter={onHov} onMouseLeave={offHov}>{t("navOrders")}</a>}
+
           {user ? (
             <>
-              {isAdmin && (
-                <a href="/admin" style={{ fontSize: 12, fontWeight: 700, color: "#a78bfa", padding: "4px 10px", border: "1px solid rgba(167,139,250,0.4)", borderRadius: 7, textDecoration: "none", background: "rgba(124,58,237,0.2)", whiteSpace: "nowrap" }}>Admin</a>
-              )}
-              {profile?.role === "seller" && (
-                <a href="/seller/dashboard" style={lnk()} onMouseEnter={onL} onMouseLeave={offL}>{t("navDashboard")}</a>
-              )}
-              <a href="/orders" style={lnk()} onMouseEnter={onL} onMouseLeave={offL}>{t("navOrders")}</a>
-
               {/* Bell */}
-              <a href="/notifications" style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, borderRadius: 8, color: ink, textDecoration: "none", transition: "background 0.15s", flexShrink: 0 }}
-                onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
-                onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                {unread > 0 && <span style={{ position: "absolute", top: 2, right: 2, background: "#ef4444", color: "#fff", borderRadius: "50%", fontSize: 8, fontWeight: 700, width: 13, height: 13, display: "flex", alignItems: "center", justifyContent: "center" }}>{unread > 9 ? "9+" : unread}</span>}
+              <a href="/notifications" style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: 30, height: 30, borderRadius: 8, color: "#4b5563", textDecoration: "none", transition: "color 0.15s" }}
+                onMouseEnter={e => e.currentTarget.style.color = "#1e3a8a"}
+                onMouseLeave={e => e.currentTarget.style.color = "#4b5563"}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                {unread > 0 && <span style={{ position: "absolute", top: 1, right: 1, background: "#ef4444", color: "#fff", borderRadius: "50%", fontSize: 8, fontWeight: 700, width: 13, height: 13, display: "flex", alignItems: "center", justifyContent: "center" }}>{unread > 9 ? "9+" : unread}</span>}
               </a>
 
-              {/* Divider */}
-              <div style={{ width: 1, height: 16, background: divColor, margin: "0 4px", flexShrink: 0 }} />
-
-              {/* Avatar pill */}
-              <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none", padding: "4px 10px 4px 4px", borderRadius: 99, border: "1px solid #e2e8f0", background: "#f8fafc", transition: "all 0.15s", flexShrink: 0 }}
-                onMouseEnter={e => { e.currentTarget.style.background = "#f1f5f9"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "#f8fafc"; }}>
-                <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
+              {/* Avatar */}
+              <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none" }}>
+                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700 }}>
                   {(profile?.full_name || user.email || "?")[0].toUpperCase()}
                 </div>
-                <span className="rm-nav-name" style={{ fontSize: 13, fontWeight: 500, color: ink }}>{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
+                <span className="rm-nav-name" style={{ ...navLink }}>{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
               </a>
 
               <button onClick={async () => { try { await supabase.auth.signOut({ scope: "local" }); } catch {} window.location.href = "/"; }}
-                style={{ fontSize: 12, color: "#94a3b8", background: "none", border: "none", cursor: "pointer", padding: "5px 8px", borderRadius: 7, transition: "color 0.15s", whiteSpace: "nowrap" }}
+                style={{ ...navLink, background: "none", border: "none", cursor: "pointer", color: "#9ca3af", padding: 0 }}
                 onMouseEnter={e => e.currentTarget.style.color = "#ef4444"}
-                onMouseLeave={e => e.currentTarget.style.color = "#94a3b8"}>
+                onMouseLeave={e => e.currentTarget.style.color = "#9ca3af"}>
                 {t("navLogout")}
               </button>
             </>
           ) : (
             <>
-              <a href="/login" style={lnk({ border: "1px solid #e2e8f0", padding: "6px 15px" })} onMouseEnter={onL} onMouseLeave={offL}>{t("navLogin")}</a>
-              <a href="/register" style={{ fontSize: 13.5, fontWeight: 600, color: "#fff", textDecoration: "none", padding: "6px 16px", borderRadius: 8, background: "#1e3a8a", transition: "opacity 0.15s", whiteSpace: "nowrap", flexShrink: 0 }}
-                onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
-                onMouseLeave={e => e.currentTarget.style.opacity = "1"}>{t("navRegister")}</a>
+              <a href="/login" style={navLink} onMouseEnter={onHov} onMouseLeave={offHov}>{t("navLogin")}</a>
+              <a href="/register" style={{ ...navLink, color: "#fff", background: "#1e3a8a", padding: "7px 18px", borderRadius: 7 }}
+                onMouseEnter={e => e.currentTarget.style.background = "#172554"}
+                onMouseLeave={e => e.currentTarget.style.background = "#1e3a8a"}>{t("navRegister")}</a>
             </>
           )}
           <LanguageToggle />
         </div>
 
-        {/* Hamburger (mobile) */}
-        <button className="rm-hamburger" onClick={() => setMenuOpen(true)}
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: ink, alignItems: "center", justifyContent: "center", marginLeft: "auto" }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
+        {/* Hamburger (mobile only) */}
+        <button className="rm-hamburger" onClick={() => setMenuOpen(o => !o)}
+          style={{ marginLeft: "auto", background: "none", border: "none", cursor: "pointer", color: "#1a1a1a", padding: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {menuOpen
+            ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          }
         </button>
 
         <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
       </nav>
-    </div>
-    </div>
+      {/* Spacer for fixed navbar */}
+      <div style={{ height: 56 }} />
+    </>
   );
 }
 
