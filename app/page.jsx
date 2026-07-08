@@ -40,38 +40,33 @@ function Navbar() {
   const t = (key) => i18n[lang]?.[key] ?? i18n.th[key] ?? key;
   const isAdmin = profile?.role === "admin" || (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim()).includes(user?.email);
 
-  const ink      = "#374151";
-  const divColor = "#e2e8f0";
+  const ink      = "rgba(255,255,255,0.82)";
+  const divColor = "rgba(255,255,255,0.18)";
 
   const lnk = (extra = {}) => ({
     fontSize: 13.5, fontWeight: 500, color: ink, textDecoration: "none",
     padding: "5px 12px", borderRadius: 8, transition: "all 0.15s", whiteSpace: "nowrap",
     ...extra,
   });
-  const onL  = e => { e.currentTarget.style.color = "#0f172a"; e.currentTarget.style.background = "#f1f5f9"; };
+  const onL  = e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(255,255,255,0.12)"; };
   const offL = e => { e.currentTarget.style.color = ink; e.currentTarget.style.background = "transparent"; };
 
   return (
-    <div style={{ padding: "14px 16px 0", background: "transparent" }}>
+    <div style={{ padding: "14px 16px 0", background: "#06091a" }}>
     <div style={{ maxWidth: 1160, margin: "0 auto" }}>
       <nav style={{
         height: 52,
-        background: "rgba(255,255,255,0.97)",
-        backdropFilter: "blur(20px) saturate(160%)",
-        WebkitBackdropFilter: "blur(20px) saturate(160%)",
-        border: "1px solid rgba(226,232,240,0.9)",
-        borderRadius: 14,
-        boxShadow: "0 4px 24px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04)",
+        background: "transparent",
         display: "flex", alignItems: "center",
-        padding: "0 16px",
+        padding: "0 4px",
         gap: 4,
       }}>
 
         {/* Logo */}
         <a href="/" style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none", flexShrink: 0, marginRight: 8 }}>
           <img src="/favicon.ico" alt="" width="26" height="26" style={{ borderRadius: 7, display: "block" }} />
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 900, color: "#0f172a", letterSpacing: -0.5 }}>
-            Re<span style={{ color: "#1e3a8a" }}>Match</span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 900, color: "#fff", letterSpacing: -0.5 }}>
+            Re<span style={{ color: "#93c5fd" }}>Match</span>
           </span>
         </a>
 
@@ -93,7 +88,7 @@ function Navbar() {
           {user ? (
             <>
               {isAdmin && (
-                <a href="/admin" style={{ fontSize: 12, fontWeight: 700, color: "#7c3aed", padding: "4px 10px", border: "1px solid #ede9fe", borderRadius: 7, textDecoration: "none", background: "#faf5ff", whiteSpace: "nowrap" }}>Admin</a>
+                <a href="/admin" style={{ fontSize: 12, fontWeight: 700, color: "#a78bfa", padding: "4px 10px", border: "1px solid rgba(167,139,250,0.4)", borderRadius: 7, textDecoration: "none", background: "rgba(124,58,237,0.2)", whiteSpace: "nowrap" }}>Admin</a>
               )}
               {profile?.role === "seller" && (
                 <a href="/seller/dashboard" style={lnk()} onMouseEnter={onL} onMouseLeave={offL}>{t("navDashboard")}</a>
@@ -102,7 +97,7 @@ function Navbar() {
 
               {/* Bell */}
               <a href="/notifications" style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, borderRadius: 8, color: ink, textDecoration: "none", transition: "background 0.15s", flexShrink: 0 }}
-                onMouseEnter={e => e.currentTarget.style.background = "#f1f5f9"}
+                onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
                 onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                 {unread > 0 && <span style={{ position: "absolute", top: 2, right: 2, background: "#ef4444", color: "#fff", borderRadius: "50%", fontSize: 8, fontWeight: 700, width: 13, height: 13, display: "flex", alignItems: "center", justifyContent: "center" }}>{unread > 9 ? "9+" : unread}</span>}
