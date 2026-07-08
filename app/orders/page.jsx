@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import generatePayload from "promptpay-qr";
 import QRCode from "qrcode";
+import MobileNav from "@/app/components/MobileNav";
 
 const COURIER_LABEL = {
   thaipost: "ไปรษณีย์ไทย / EMS",
@@ -68,6 +69,8 @@ export default function OrdersPage() {
   const [reviewComment, setReviewComment] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [navUser, setNavUser] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [refundInputs, setRefundInputs]   = useState({});
   const [refundQrUrls, setRefundQrUrls]   = useState({});
   const [savingRefund, setSavingRefund]   = useState({});
@@ -191,6 +194,7 @@ export default function OrdersPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/login"); return; }
       setUserId(user.id);
+      setNavUser(user);
 
       const { data: orderRows } = await supabase
         .from("orders")
@@ -227,6 +231,18 @@ export default function OrdersPage() {
 
       <nav style={S.nav}>
         <a href="/" style={S.logo}>Re<span style={{ color: "#1e3a8a" }}>Match</span></a>
+        <button
+          className="rm-hamburger"
+          onClick={() => setMenuOpen(o => !o)}
+          style={{ marginLeft: "auto", width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+          aria-label="Menu"
+        >
+          {menuOpen
+            ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          }
+        </button>
+        <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={navUser} profile={null} />
       </nav>
 
       <div style={{ maxWidth: 800, margin: "0 auto", padding: "48px 24px" }}>

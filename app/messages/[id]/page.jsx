@@ -8,6 +8,7 @@ const EMOJIS = [
 ];
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useParams } from "next/navigation";
+import MobileNav from "@/app/components/MobileNav";
 
 export default function ChatPage() {
   const supabase = createClient();
@@ -15,6 +16,7 @@ export default function ChatPage() {
   const { id: convId } = useParams();
 
   const [user, setUser]         = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [conv, setConv]         = useState(null);
   const [other, setOther]       = useState(null);
   const [messages, setMessages] = useState([]);
@@ -149,16 +151,28 @@ export default function ChatPage() {
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap');`}</style>
 
       {/* Navbar */}
-      <nav style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e2e8f0", padding: "0 48px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0, position: "sticky", top: 0, zIndex: 100 }}>
+      <nav style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e2e8f0", padding: "0 48px", height: 64, display: "flex", alignItems: "center", flexShrink: 0, position: "sticky", top: 0, zIndex: 100 }}>
         <a href="/" style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900, color: "#0f0f0e", textDecoration: "none" }}>
           Re<span style={{ color: "#1e3a8a" }}>Match</span>
         </a>
-        <a href="/messages" style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#6b7280", textDecoration: "none", fontWeight: 500 }}
+        <a className="rm-nav-links" href="/messages" style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#6b7280", textDecoration: "none", fontWeight: 500 }}
           onMouseEnter={e => e.currentTarget.style.color = "#1e3a8a"}
           onMouseLeave={e => e.currentTarget.style.color = "#6b7280"}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           กลับกล่องข้อความ
         </a>
+        <button
+          className="rm-hamburger"
+          onClick={() => setMenuOpen(o => !o)}
+          style={{ marginLeft: "auto", width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+          aria-label="Menu"
+        >
+          {menuOpen
+            ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          }
+        </button>
+        <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={null} />
       </nav>
 
       {/* Centered chat frame */}

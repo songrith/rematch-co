@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import MobileNav from "@/app/components/MobileNav";
 
 const PROD_STATUS = {
   pending:  { label: "รออนุมัติ",   bg: "#fef3c7", text: "#92400e" },
@@ -22,6 +23,8 @@ export default function SellerDashboardPage() {
   const supabase = createClient();
   const router   = useRouter();
   const [profile, setProfile]   = useState(null);
+  const [navUser, setNavUser]   = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [orders, setOrders]     = useState([]);
   const [loading, setLoading]   = useState(true);
@@ -46,6 +49,7 @@ export default function SellerDashboardPage() {
     async function load() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/login"); return; }
+      setNavUser(user);
 
       const { data: prof } = await supabase.from("profiles").select("*").eq("id", user.id).single();
       if (prof?.role !== "seller" && prof?.role !== "admin") { router.push("/seller/verify"); return; }
@@ -178,11 +182,11 @@ export default function SellerDashboardPage() {
       `}</style>
 
       {/* Navbar */}
-      <nav style={{ position: "sticky", top: 0, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e5e7eb", padding: "0 32px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", zIndex: 100 }}>
+      <nav style={{ position: "sticky", top: 0, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e5e7eb", padding: "0 32px", height: 64, display: "flex", alignItems: "center", zIndex: 100 }}>
         <a href="/" style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900, color: "#0f172a", textDecoration: "none" }}>
           Re<span style={{ color: "#1e3a8a" }}>Match</span>
         </a>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <div className="rm-nav-links" style={{ display: "flex", gap: 8, alignItems: "center", marginLeft: "auto" }}>
           <IconBtn href="/notifications" badge={unreadNotif} badgeColor="#dc2626">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
@@ -196,11 +200,23 @@ export default function SellerDashboardPage() {
           <a href="/sell" style={{ background: "#1e3a8a", color: "#fff", padding: "9px 20px", borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: "none" }}>
             + เพิ่มสินค้า
           </a>
-          <button onClick={async () => { try { await supabase.auth.signOut({ scope: "local" }); } catch {} window.location.reload(); }} className="rm-nav-hide"
+          <button onClick={async () => { try { await supabase.auth.signOut({ scope: "local" }); } catch {} window.location.reload(); }}
             style={{ background: "none", border: "1px solid #e5e7eb", color: "#6b7280", padding: "9px 16px", borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
             ออกจากระบบ
           </button>
         </div>
+        <button
+          className="rm-hamburger"
+          onClick={() => setMenuOpen(o => !o)}
+          style={{ marginLeft: "auto", width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+          aria-label="Menu"
+        >
+          {menuOpen
+            ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          }
+        </button>
+        <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={navUser} profile={profile} />
       </nav>
 
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px 80px" }}>

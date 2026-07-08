@@ -6,6 +6,7 @@ import generatePayload from "promptpay-qr";
 import QRCode from "qrcode";
 import { useLang } from "@/app/context/language";
 import LanguageToggle from "@/app/components/LanguageToggle";
+import MobileNav from "@/app/components/MobileNav";
 import i18n from "@/app/i18n";
 
 const TEAM_LOGOS = {
@@ -147,6 +148,7 @@ export default function ProductDetailPage() {
   const [activeImg, setActiveImg]     = useState(0);
   const [lightbox, setLightbox]       = useState(false);
   const [navUser, setNavUser]         = useState(null);
+  const [menuOpen, setMenuOpen]       = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
 
   const [step, setStep]               = useState(0);
@@ -448,11 +450,11 @@ export default function ProductDetailPage() {
       `}</style>
 
       {/* ── Navbar ── */}
-      <nav style={{ position: "sticky", top: 0, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e2e8f0", padding: "0 48px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", zIndex: 100 }}>
+      <nav style={{ position: "sticky", top: 0, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e2e8f0", padding: "0 48px", height: 64, display: "flex", alignItems: "center", zIndex: 100 }}>
         <a href="/" style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900, color: "#0f0f0e", textDecoration: "none" }}>
           Re<span style={{ color: "#1e3a8a" }}>Match</span>
         </a>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 16, marginLeft: "auto" }}>
           <a href="/shop" style={{ fontSize: 14, fontWeight: 500, color: "#4b5563", textDecoration: "none", transition: "color 0.15s" }}
             onMouseEnter={e => e.currentTarget.style.color = "#1e3a8a"}
             onMouseLeave={e => e.currentTarget.style.color = "#4b5563"}>{t("navShop")}</a>
@@ -475,6 +477,19 @@ export default function ProductDetailPage() {
           )}
           <LanguageToggle />
         </div>
+        {/* Hamburger — mobile only */}
+        <button
+          className="rm-hamburger"
+          onClick={() => setMenuOpen(o => !o)}
+          style={{ marginLeft: "auto", width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+          aria-label="Menu"
+        >
+          {menuOpen
+            ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          }
+        </button>
+        <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={navUser} profile={buyerProfile} />
       </nav>
 
       {/* ── Breadcrumb ── */}
