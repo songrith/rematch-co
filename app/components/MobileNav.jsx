@@ -30,7 +30,7 @@ export default function MobileNav({ isOpen, onClose, user, profile, showCategori
 
       {/* Dropdown card */}
       <div ref={ref} style={{
-        position: "fixed", top: 68, right: 16,
+        position: "fixed", top: 68, right: 0,
         width: 240, background: "#fff",
         borderRadius: 16, border: "1px solid #e2e8f0",
         boxShadow: "0 8px 32px rgba(0,0,0,.12)",
