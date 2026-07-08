@@ -157,13 +157,25 @@ function Hero() {
   const [heroProds, setHeroProds] = useState([]);
 
   useEffect(() => {
-    supabase
-      .from("products")
-      .select("id, name, price, image_url, image_urls, grade, team, category")
-      .eq("status", "approved")
-      .order("created_at", { ascending: false })
-      .limit(4)
-      .then(({ data }) => setHeroProds(data || []));
+    async function fetchHero() {
+      const { data } = await supabase
+        .from("products")
+        .select("id, name, price, image_url, image_urls, grade, team, category")
+        .eq("status", "approved")
+        .order("created_at", { ascending: false })
+        .limit(4);
+      setHeroProds(data || []);
+    }
+
+    fetchHero();
+
+    const channel = supabase
+      .channel("hero-products")
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "products" }, fetchHero)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "products" }, fetchHero)
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
   }, []);
 
   const G = {
@@ -428,13 +440,26 @@ function FeaturedProducts() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase
-      .from("products")
-      .select("id, name, price, image_url, image_urls, grade, team, category, size")
-      .eq("status", "approved")
-      .order("created_at", { ascending: false })
-      .limit(8)
-      .then(({ data }) => { setProducts(data || []); setLoading(false); });
+    async function fetchFeatured() {
+      const { data } = await supabase
+        .from("products")
+        .select("id, name, price, image_url, image_urls, grade, team, category, size")
+        .eq("status", "approved")
+        .order("created_at", { ascending: false })
+        .limit(8);
+      setProducts(data || []);
+      setLoading(false);
+    }
+
+    fetchFeatured();
+
+    const channel = supabase
+      .channel("featured-products")
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "products" }, fetchFeatured)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "products" }, fetchFeatured)
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
   }, []);
 
   const GRADE = {
