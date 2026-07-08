@@ -585,7 +585,7 @@ export default function ProductDetailPage() {
           {/* Category + sold badge */}
           <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap", alignItems: "center" }}>
             <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, fontWeight: 600, color: "#64748b", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-              {CAT_ICON[product.category]}{(i18n[lang]?.catLabel ?? i18n.th.catLabel)[product.category]}
+              {(i18n[lang]?.catLabel ?? i18n.th.catLabel)[product.category]}
             </span>
             {isSold && (
               <span style={{ background: "#fef2f2", color: "#dc2626", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 6 }}>{t("soldBadge")}</span>
