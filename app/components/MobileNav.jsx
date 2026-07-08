@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
+import LanguageToggle from "@/app/components/LanguageToggle";
 
 export default function MobileNav({ isOpen, onClose, user, profile, showCategories = true }) {
   const ref = useRef(null);
@@ -66,6 +67,13 @@ export default function MobileNav({ isOpen, onClose, user, profile, showCategori
           )}
 
           {/* Nav items */}
+          {/* Language toggle */}
+          <div style={{ padding: "8px 16px 4px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontSize: 12, color: "#9ca3af", fontWeight: 600 }}>ภาษา / Language</span>
+            <LanguageToggle />
+          </div>
+          <div style={{ height: 1, background: "#f3f4f6", margin: "6px 0" }} />
+
           {user ? (
             <>
               {profile?.role === "admin"  && <Item href="/admin"            label="Admin Panel"     icon={<AdminIcon />} />}
