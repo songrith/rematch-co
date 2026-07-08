@@ -52,7 +52,7 @@ function Navbar() {
   const offL = e => { e.currentTarget.style.color = ink; e.currentTarget.style.background = "transparent"; };
 
   return (
-    <div style={{ padding: "14px 16px 0", background: "#06091a" }}>
+    <div style={{ padding: "14px 16px 0", background: "transparent" }}>
     <div style={{ maxWidth: 1160, margin: "0 auto" }}>
       <nav style={{
         height: 52,
