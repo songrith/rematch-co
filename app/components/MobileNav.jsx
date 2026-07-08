@@ -32,7 +32,7 @@ export default function MobileNav({ isOpen, onClose, user, profile, showCategori
       <div ref={ref} style={{
         position: "fixed", top: 68, right: 0,
         width: 240, background: "#fff",
-        borderRadius: 16, border: "1px solid #e2e8f0",
+        borderRadius: "16px 0 16px 16px", border: "1px solid #e2e8f0",
         boxShadow: "0 8px 32px rgba(0,0,0,.12)",
         zIndex: 999, overflow: "hidden",
         animation: "dropDown 0.2s ease",
