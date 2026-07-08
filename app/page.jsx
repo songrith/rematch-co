@@ -272,14 +272,6 @@ function Hero() {
             ))}
           </div>
 
-          <div style={{ position: "absolute", top: -14, right: -16, background: "rgba(255,255,255,.95)", border: "1px solid rgba(255,255,255,.3)", borderRadius: 10, padding: "8px 14px", fontSize: 12, fontWeight: 600, color: "#0f172a", boxShadow: "0 8px 32px rgba(0,0,0,.3)", display: "flex", alignItems: "center", gap: 7, animation: "float 3s ease-in-out infinite", backdropFilter: "blur(8px)" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Escrow Protected
-          </div>
-          <div style={{ position: "absolute", bottom: 56, left: -20, background: "rgba(255,255,255,.95)", border: "1px solid rgba(255,255,255,.3)", borderRadius: 10, padding: "8px 14px", fontSize: 12, fontWeight: 600, color: "#0f172a", boxShadow: "0 8px 32px rgba(0,0,0,.3)", display: "flex", alignItems: "center", gap: 7, animation: "float 3s 1.5s ease-in-out infinite", backdropFilter: "blur(8px)" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Verified Seller
-          </div>
         </div>
       </div>
     </section>
@@ -424,6 +416,101 @@ function SellerCTA() {
   );
 }
 
+/* ─── Featured Products ─── */
+function FeaturedProducts() {
+  const supabase = createClient();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase
+      .from("products")
+      .select("id, name, price, image_url, image_urls, grade, team, category, size")
+      .eq("status", "approved")
+      .order("created_at", { ascending: false })
+      .limit(8)
+      .then(({ data }) => { setProducts(data || []); setLoading(false); });
+  }, []);
+
+  const GRADE = {
+    S: { pill: "#dcfce7", border: "#bbf7d0", text: "#15803d" },
+    A: { pill: "#dbeafe", border: "#bfdbfe", text: "#1e40af" },
+    B: { pill: "#fef9c3", border: "#fde68a", text: "#a16207" },
+  };
+  const CAT = { football: "⚽", basketball: "🏀", retro: "🏆" };
+
+  if (!loading && products.length === 0) return null;
+
+  return (
+    <section style={{ background: "#fff", borderTop: "1px solid #f1f5f9" }}>
+      <div className="rm-sec" style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 48px" }}>
+
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 40, flexWrap: "wrap", gap: 12 }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>สินค้าล่าสุด</div>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(24px,3vw,36px)", fontWeight: 900, color: "#0f172a", margin: 0, letterSpacing: -0.5 }}>
+              เพิ่งลงขายใหม่
+            </h2>
+          </div>
+          <a href="/shop" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: "#1e3a8a", textDecoration: "none", padding: "9px 18px", border: "1.5px solid #e2e8f0", borderRadius: 10, transition: "all 0.15s" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = "#1e3a8a"; e.currentTarget.style.background = "#eff6ff"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.background = "#fff"; }}>
+            ดูทั้งหมด
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        {loading ? (
+          <div className="rm-g4" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16 }}>
+            {[...Array(8)].map((_, i) => (
+              <div key={i} style={{ background: "#f8fafc", border: "1.5px solid #e8edf5", borderRadius: 16, aspectRatio: "0.8", animation: "pulse 1.6s ease-in-out infinite" }} />
+            ))}
+          </div>
+        ) : (
+          <div className="rm-g4" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16 }}>
+            {products.map(p => {
+              const g = GRADE[p.grade] || GRADE.S;
+              const img = p.image_urls?.[0] || p.image_url;
+              return (
+                <a key={p.id} href={`/products/${p.id}`} style={{ textDecoration: "none", display: "block" }}>
+                  <div style={{ background: "#fff", border: "1.5px solid #e8edf5", borderRadius: 16, overflow: "hidden", transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)", boxShadow: "0 2px 8px rgba(0,0,0,.04)" }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = g.border; e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 16px 40px rgba(0,0,0,.09)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = "#e8edf5"; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,.04)"; }}>
+                    <div style={{ position: "relative", aspectRatio: "1", background: "#f8fafc", overflow: "hidden" }}>
+                      {img
+                        ? <img src={img} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48 }}>{CAT[p.category] || "⚽"}</div>
+                      }
+                      <div style={{ position: "absolute", top: 8, right: 8, background: g.pill, border: `1px solid ${g.border}`, borderRadius: 99, padding: "2px 9px", fontSize: 10, fontWeight: 800, color: g.text }}>
+                        Grade {p.grade}
+                      </div>
+                    </div>
+                    <div style={{ padding: "12px 14px 14px" }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginBottom: 3 }}>
+                        {p.name}
+                      </div>
+                      {(p.team || p.size) && (
+                        <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 8 }}>{[p.team, p.size ? `Size ${p.size}` : null].filter(Boolean).join(" · ")}</div>
+                      )}
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <span style={{ fontSize: 18, fontWeight: 900, color: "#0f172a", letterSpacing: -0.5 }}>฿{Number(p.price).toLocaleString()}</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: 3, background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 99, padding: "2px 8px" }}>
+                          <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                          <span style={{ fontSize: 9, fontWeight: 700, color: "#15803d" }}>Escrow</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 /* ─── Footer ─── */
 function Footer() {
   const { lang } = useLang();
@@ -484,6 +571,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <TrustBar />
+      <FeaturedProducts />
       <HowItWorks />
       <WhyUs />
       <SellerCTA />
