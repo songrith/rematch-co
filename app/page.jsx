@@ -501,10 +501,6 @@ function Footer() {
             </div>
           ))}
         </div>
-        <div style={{ paddingTop: 24, borderTop: "1px solid rgba(255,255,255,.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <p style={{ fontSize: 12, color: "rgba(255,255,255,.2)", margin: 0 }}>© 2025 ReMatch Technologies Co., Ltd. · All rights reserved.</p>
-          <p style={{ fontSize: 12, color: "rgba(255,255,255,.2)", margin: 0 }}>Made with ❤️ in Thailand</p>
-        </div>
       </div>
     </footer>
   );
