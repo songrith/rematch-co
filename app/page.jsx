@@ -151,34 +151,54 @@ function Navbar() {
 
 /* ─── Hero ─── */
 function Hero() {
+  const supabase = createClient();
   const { lang } = useLang();
   const t = (key) => i18n[lang]?.[key] ?? i18n.th[key] ?? key;
+  const [heroProds, setHeroProds] = useState([]);
+
+  useEffect(() => {
+    supabase
+      .from("products")
+      .select("id, name, price, image_url, image_urls, grade, team, category")
+      .eq("status", "approved")
+      .order("created_at", { ascending: false })
+      .limit(4)
+      .then(({ data }) => setHeroProds(data || []));
+  }, []);
+
+  const G = {
+    S: { bg: "#dcfce7", text: "#15803d", border: "#bbf7d0" },
+    A: { bg: "#dbeafe", text: "#1e40af", border: "#bfdbfe" },
+    B: { bg: "#fef9c3", text: "#a16207", border: "#fde68a" },
+  };
+  const CAT = { football: "⚽", basketball: "🏀", retro: "🏆" };
+
   const guarantees = [
-    { icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, title: t("heroEscrowTitle"), sub: t("heroEscrowSub") },
-    { icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>, title: t("heroVerifiedTitle"), sub: t("heroVerifiedSub") },
-    { icon: <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>, title: t("heroReturnTitle"), sub: t("heroReturnSub") },
+    { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, title: t("heroEscrowTitle"), sub: t("heroEscrowSub") },
+    { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>, title: t("heroVerifiedTitle"), sub: t("heroVerifiedSub") },
+    { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>, title: t("heroReturnTitle"), sub: t("heroReturnSub") },
   ];
+
+  const slots = [...heroProds, ...Array(Math.max(0, 4 - heroProds.length)).fill(null)];
+
   return (
-    <section style={{
-      position: "relative", overflow: "hidden",
-      background: "#06091a",
-      minHeight: "100vh", display: "flex", alignItems: "center",
-    }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: "-20%", right: "-5%", width: "55%", height: "80%", background: "radial-gradient(ellipse, rgba(99,102,241,.18) 0%, transparent 65%)", borderRadius: "50%" }} />
-        <div style={{ position: "absolute", bottom: "-10%", left: "-10%", width: "50%", height: "70%", background: "radial-gradient(ellipse, rgba(30,58,138,.25) 0%, transparent 65%)", borderRadius: "50%" }} />
-        <div style={{ position: "absolute", top: "30%", left: "40%", width: "30%", height: "40%", background: "radial-gradient(ellipse, rgba(139,92,246,.08) 0%, transparent 65%)", borderRadius: "50%" }} />
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px)", backgroundSize: "64px 64px", opacity: 0.6 }} />
+    <section style={{ position: "relative", overflow: "hidden", background: "#06091a" }}>
+      {/* Minimal bg glows */}
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+        <div style={{ position: "absolute", top: "-15%", right: "-5%", width: "45%", height: "70%", background: "radial-gradient(ellipse, rgba(59,130,246,.1) 0%, transparent 70%)" }} />
+        <div style={{ position: "absolute", bottom: "-10%", left: "-8%", width: "40%", height: "60%", background: "radial-gradient(ellipse, rgba(30,58,138,.15) 0%, transparent 70%)" }} />
       </div>
 
-      <div className="rm-hero-grid" style={{ maxWidth: 1200, margin: "0 auto", padding: "64px 48px 96px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center", position: "relative", zIndex: 1, width: "100%" }}>
-        <div style={{ animation: "fadeUp 0.7s ease both" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(99,102,241,.15)", color: "#a5b4fc", fontSize: 12, fontWeight: 600, padding: "5px 12px", borderRadius: 99, marginBottom: 28, border: "1px solid rgba(99,102,241,.25)" }}>
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <div className="rm-hero-grid" style={{ maxWidth: 1200, margin: "0 auto", padding: "88px 48px 100px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, alignItems: "center", position: "relative", zIndex: 1, width: "100%" }}>
+
+        {/* Left — copy */}
+        <div style={{ animation: "fadeUp 0.6s ease both" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(99,102,241,.15)", color: "#a5b4fc", fontSize: 12, fontWeight: 600, padding: "5px 14px", borderRadius: 99, marginBottom: 28, border: "1px solid rgba(99,102,241,.25)" }}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             {t("heroPill")}
           </div>
 
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(40px,5vw,66px)", fontWeight: 500, lineHeight: 1.1, letterSpacing: -1, color: "#fff", margin: "0 0 22px" }}>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(36px,4.5vw,60px)", fontWeight: 500, lineHeight: 1.1, letterSpacing: -1, color: "#fff", margin: "0 0 20px" }}>
             {t("heroLine1")}<br />
             <span style={{ background: "linear-gradient(135deg, #60a5fa 0%, #818cf8 50%, #a78bfa 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
               {t("heroLine2")}
@@ -186,92 +206,77 @@ function Hero() {
             {t("heroLine3") && <><br />{t("heroLine3")}</>}
           </h1>
 
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,.5)", margin: "0 0 36px", maxWidth: 420 }}>
+          <p style={{ fontSize: 15, lineHeight: 1.8, color: "rgba(255,255,255,.45)", margin: "0 0 32px", maxWidth: 400 }}>
             {t("heroDesc")}
           </p>
 
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-            <a href="/shop" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg, #3b82f6, #6366f1)", color: "#fff", padding: "13px 28px", borderRadius: 10, fontSize: 15, fontWeight: 600, textDecoration: "none", boxShadow: "0 4px 24px rgba(99,102,241,.45)", transition: "all 0.2s" }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(99,102,241,.55)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 4px 24px rgba(99,102,241,.45)"; }}>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+            <a href="/shop" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#2563eb", color: "#fff", padding: "12px 28px", borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: "none", boxShadow: "0 4px 20px rgba(37,99,235,.4)", transition: "all 0.2s" }}
+              onMouseEnter={e => { e.currentTarget.style.background = "#1d4ed8"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "#2563eb"; e.currentTarget.style.transform = "none"; }}>
               {t("heroCTAShop")}
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
-            <a href="#how" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "rgba(255,255,255,.6)", fontSize: 14, fontWeight: 500, textDecoration: "none", padding: "13px 20px", borderRadius: 10, border: "1px solid rgba(255,255,255,.12)", transition: "all 0.15s" }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,.3)"; e.currentTarget.style.color = "#fff"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,.12)"; e.currentTarget.style.color = "rgba(255,255,255,.6)"; }}>
+            <a href="/seller/terms" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "rgba(255,255,255,.55)", fontSize: 14, fontWeight: 500, textDecoration: "none", padding: "12px 20px", borderRadius: 10, border: "1px solid rgba(255,255,255,.1)", transition: "all 0.15s" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,.28)"; e.currentTarget.style.color = "#fff"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,.1)"; e.currentTarget.style.color = "rgba(255,255,255,.55)"; }}>
               {t("heroCTAHow")}
             </a>
           </div>
 
-          <div style={{ marginTop: 52, paddingTop: 32, borderTop: "1px solid rgba(255,255,255,.08)", display: "flex", gap: 28, flexWrap: "wrap" }}>
+          <div style={{ marginTop: 44, paddingTop: 32, borderTop: "1px solid rgba(255,255,255,.07)", display: "flex", flexDirection: "column", gap: 14 }}>
             {guarantees.map(({ icon, title, sub }) => (
-              <div key={title} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ width: 38, height: 38, background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,.7)", flexShrink: 0 }}>{icon}</div>
+              <div key={title} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 34, height: 34, background: "rgba(255,255,255,.07)", border: "1px solid rgba(255,255,255,.1)", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,.6)", flexShrink: 0 }}>{icon}</div>
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", lineHeight: 1.2 }}>{title}</div>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,.4)", marginTop: 2 }}>{sub}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#fff", lineHeight: 1.2 }}>{title}</div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,.35)", marginTop: 1 }}>{sub}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Right — product showcase */}
-        <div className="rm-hero-right" style={{ position: "relative", paddingBottom: 40, animation: "fadeIn 0.8s 0.2s ease both" }}>
-          <div style={{ position: "absolute", inset: -20, background: "radial-gradient(ellipse, rgba(99,102,241,.2) 0%, transparent 70%)", borderRadius: 32, pointerEvents: "none" }} />
-          <div style={{ background: "linear-gradient(145deg, #0f172a 0%, #131e35 100%)", borderRadius: 20, padding: 24, position: "relative", overflow: "hidden", border: "1px solid rgba(99,102,241,.25)", boxShadow: "0 0 0 1px rgba(255,255,255,.04), 0 24px 64px rgba(0,0,0,.5)" }}>
-            <div style={{ position: "absolute", top: -1, left: "10%", right: "10%", height: 1, background: "linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent)", pointerEvents: "none" }} />
-            <div style={{ position: "absolute", top: -60, right: -60, width: 220, height: 220, background: "radial-gradient(circle, rgba(99,102,241,.18) 0%, transparent 70%)", pointerEvents: "none" }} />
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
-              <div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,.3)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>🏆 {t("heroBestSeller")}</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>Real Madrid Home 24/25</div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,.4)", marginTop: 3 }}>Adidas · Size M · La Liga</div>
-              </div>
-              <div style={{ background: "linear-gradient(135deg, #15803d, #16a34a)", color: "#fff", fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 6, boxShadow: "0 2px 8px rgba(21,128,61,.4)" }}>Grade S</div>
-            </div>
-            <div style={{ background: "linear-gradient(145deg, #1e293b, #0f172a)", borderRadius: 14, height: 150, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 18, border: "1px solid rgba(255,255,255,.04)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 50%, rgba(99,102,241,.08), transparent 70%)" }} />
-              <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="rgba(99,102,241,.25)" strokeWidth="0.8"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,.3)", fontWeight: 600, marginBottom: 2 }}>{t("heroCardPrice")}</div>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 900, color: "#fff", letterSpacing: -0.5 }}>฿3,200</div>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(99,102,241,.12)", color: "#a5b4fc", fontSize: 11, fontWeight: 600, padding: "7px 12px", borderRadius: 8, border: "1px solid rgba(99,102,241,.2)" }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                Verified
-              </div>
-            </div>
+        {/* Right — real product grid */}
+        <div className="rm-hero-right" style={{ animation: "fadeIn 0.7s 0.15s ease both" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            {slots.map((p, i) => {
+              const img = p?.image_urls?.[0] || p?.image_url;
+              const g = p ? (G[p.grade] || G.S) : null;
+              return (
+                <a key={i} href={p ? `/products/${p.id}` : "/shop"} style={{ textDecoration: "none", display: "block", borderRadius: 16, overflow: "hidden", aspectRatio: "1", position: "relative", background: "#0f172a", border: "1px solid rgba(255,255,255,.08)", transition: "transform 0.22s ease" }}
+                  onMouseEnter={e => e.currentTarget.style.transform = "scale(1.03)"}
+                  onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+                  {img ? (
+                    <img src={img} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>
+                      {p ? (CAT[p.category] || "⚽") : ""}
+                    </div>
+                  )}
+                  {/* Bottom overlay */}
+                  {p && (
+                    <>
+                      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.1) 50%, transparent 100%)" }} />
+                      <div style={{ position: "absolute", top: 8, right: 8, background: g.bg, border: `1px solid ${g.border}`, borderRadius: 99, padding: "2px 8px", fontSize: 10, fontWeight: 800, color: g.text }}>
+                        {p.grade}
+                      </div>
+                      <div style={{ position: "absolute", bottom: 10, left: 10, right: 10 }}>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.85)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginBottom: 2 }}>{p.name}</div>
+                        <div style={{ fontSize: 15, fontWeight: 900, color: "#93c5fd" }}>฿{Number(p.price).toLocaleString()}</div>
+                      </div>
+                    </>
+                  )}
+                </a>
+              );
+            })}
           </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 10 }}>
-            {[
-              { name: "Lakers #23 LeBron", league: "NBA · Size L", price: "฿2,800", grade: "A", gradeBg: "#dbeafe", gradeText: "#1e3a8a" },
-              { name: "Man City 3rd 23/24", league: "EPL · Size M", price: "฿2,400", grade: "S", gradeBg: "#dcfce7", gradeText: "#15803d" },
-            ].map(p => (
-              <div key={p.name} style={{ background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.08)", borderRadius: 14, padding: "14px", backdropFilter: "blur(4px)", transition: "all 0.2s" }}
-                onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.07)"; e.currentTarget.style.borderColor = "rgba(255,255,255,.15)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,.08)"; e.currentTarget.style.transform = "none"; }}>
-                <div style={{ position: "relative", background: "rgba(255,255,255,.04)", borderRadius: 10, height: 64, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10 }}>
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.15)" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
-                  <span style={{ position: "absolute", top: 5, right: 5, background: p.gradeBg, color: p.gradeText, fontSize: 9, fontWeight: 800, padding: "2px 6px", borderRadius: 99 }}>Grade {p.grade}</span>
-                </div>
-                <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.85)" }}>{p.name}</div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,.35)", marginTop: 2 }}>{p.league}</div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,.06)" }}>
-                  <span style={{ fontSize: 15, fontWeight: 800, color: "#93c5fd" }}>{p.price}</span>
-                  <span style={{ fontSize: 9, fontWeight: 700, color: "#4ade80", display: "flex", alignItems: "center", gap: 3 }}>
-                    <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    Escrow
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
+          {heroProds.length > 0 && (
+            <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 6, justifyContent: "flex-end" }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
+              <span style={{ fontSize: 11, color: "rgba(255,255,255,.3)", fontWeight: 500 }}>สินค้าล่าสุดจากแพลตฟอร์ม</span>
+            </div>
+          )}
         </div>
       </div>
     </section>
