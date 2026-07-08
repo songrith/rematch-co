@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import MobileNav from "@/app/components/MobileNav";
+import LanguageToggle from "@/app/components/LanguageToggle";
 
 export default function MessagesPage() {
   const supabase = createClient();
@@ -51,10 +52,11 @@ export default function MessagesPage() {
       <nav style={{ position: "sticky", top: 0, background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e2e8f0", padding: "0 48px", height: 64, display: "flex", alignItems: "center", zIndex: 100 }}>
         <a href="/" style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900, color: "#0f0f0e", textDecoration: "none" }}>Re<span style={{ color: "#1e3a8a" }}>Match</span></a>
         <a className="rm-nav-links" href="/" style={{ marginLeft: "auto", fontSize: 13, color: "#6b7280", textDecoration: "none" }}>← กลับหน้าหลัก</a>
+        <span className="rm-mobile-only" style={{ marginLeft: "auto" }}><LanguageToggle /></span>
         <button
           className="rm-hamburger"
           onClick={() => setMenuOpen(o => !o)}
-          style={{ marginLeft: "auto", width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+          style={{ width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
           aria-label="Menu"
         >
           {menuOpen

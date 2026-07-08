@@ -84,60 +84,22 @@ function ShopContent() {
       `}</style>
 
       {/* ── Navbar ── */}
-      <nav style={{ position: "sticky", top: 0, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e2e8f0", padding: "0 48px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", zIndex: 100 }}>
+      <nav style={{ position: "sticky", top: 0, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e2e8f0", padding: "0 24px", height: 64, display: "flex", alignItems: "center", zIndex: 100 }}>
         <a href="/" style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900, color: "#0f0f0e", textDecoration: "none" }}>
           Re<span style={{ color: "#1e3a8a" }}>Match</span>
         </a>
-
-        {/* Hamburger — mobile only */}
-        <button className="rm-hamburger" onClick={() => setMenuOpen(true)}
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#374151", alignItems: "center", justifyContent: "center" }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
+        <span style={{ marginLeft: "auto" }}><LanguageToggle /></span>
+        <button
+          onClick={() => setMenuOpen(o => !o)}
+          style={{ marginLeft: 8, width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+          aria-label="Menu"
+        >
+          {menuOpen
+            ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          }
         </button>
         <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
-
-        {/* Desktop nav */}
-        <div className="rm-nav-links" style={{ display: "flex", gap: 24, alignItems: "center" }}>
-          <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-            {[[t("shopFootball"),"football"],[t("shopBasketball"),"basketball"],[t("shopRetro"),"retro"]].map(([label, cat]) => (
-              <button key={cat} onClick={() => setActive(catReverse[cat])}
-                style={{ background: "none", border: "none", fontSize: 14, fontWeight: active === catReverse[cat] ? 700 : 500, color: active === catReverse[cat] ? "#1e3a8a" : "#4b5563", cursor: "pointer", padding: 0 }}>
-                {label}
-              </button>
-            ))}
-          </div>
-          {user ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {profile?.role === "admin" && <a href="/admin" style={navFilled("#7c3aed")}>Admin</a>}
-              {profile?.role === "seller" && <><a href="/sell" className="rm-nav-hide" style={navFilled("#1e3a8a")}>{t("navSell")}</a><a href="/seller/dashboard" className="rm-nav-hide" style={navBorder}>{t("navDashboard")}</a></>}
-              {(profile?.role === "buyer" || !profile?.role) && <a href="/seller/terms" className="rm-nav-hide" style={navBorder}>{t("navBecomeSeller")}</a>}
-              <a href="/orders"   className="rm-nav-hide" style={navBorder}>{t("navOrders")}</a>
-              <a href="/messages" className="rm-nav-hide" style={navBorder}>{t("navMessages")}</a>
-              <a href="/notifications" style={{ position: "relative", display: "flex", alignItems: "center", color: "#6b7280", textDecoration: "none" }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                </svg>
-                {unread > 0 && <span style={{ position: "absolute", top: -2, right: -2, background: "#dc2626", color: "#fff", borderRadius: "50%", fontSize: 10, fontWeight: 700, width: 15, height: 15, display: "flex", alignItems: "center", justifyContent: "center" }}>{unread > 9 ? "9+" : unread}</span>}
-              </a>
-              <a href="/dashboard" style={{ fontSize: 13, color: "#6b7280", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
-                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
-                  {(profile?.full_name || user.email || "?")[0].toUpperCase()}
-                </div>
-                <span className="rm-nav-name">{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
-              </a>
-              <button onClick={handleLogout} className="rm-nav-hide" style={{ background: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", padding: "8px 14px", borderRadius: 99, fontSize: 13, cursor: "pointer" }}>{t("navLogout")}</button>
-              <LanguageToggle />
-            </div>
-          ) : (
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <a href="/login"    style={{ padding: "9px 18px", borderRadius: 99, fontSize: 13, fontWeight: 600, color: "#374151", textDecoration: "none", border: "1px solid #e5e7eb" }}>{t("navLogin")}</a>
-              <a href="/register" style={{ background: "#1e3a8a", color: "#fff", padding: "9px 20px", borderRadius: 99, fontSize: 13, fontWeight: 600, textDecoration: "none" }}>{t("navRegister")}</a>
-              <LanguageToggle />
-            </div>
-          )}
-        </div>
       </nav>
 
       {/* ── Header ── airy, light editorial */}

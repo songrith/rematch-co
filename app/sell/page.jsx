@@ -151,10 +151,11 @@ export default function SellPage() {
           <button onClick={async () => { try { await supabase.auth.signOut({ scope: 'local' }); } catch {} window.location.reload(); }} style={S.logoutBtn}>{t("navLogout")}</button>
           <LanguageToggle />
         </div>
+        <span className="rm-mobile-only" style={{ marginLeft: "auto" }}><LanguageToggle /></span>
         <button
           className="rm-hamburger"
           onClick={() => setMenuOpen(o => !o)}
-          style={{ marginLeft: "auto", width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+          style={{ width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
           aria-label="Menu"
         >
           {menuOpen

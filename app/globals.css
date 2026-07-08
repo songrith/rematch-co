@@ -29,8 +29,9 @@ body {
 .rm-thai { font-family: "Cordia New", "Sarabun", sans-serif !important; }
 .rm-price { font-family: "Cordia New", "Sarabun", sans-serif !important; font-weight: 700 !important; }
 
-/* Hamburger hidden on desktop */
-.rm-hamburger { display: none; }
+/* Hamburger + mobile-right group: hidden on desktop */
+.rm-hamburger   { display: none !important; }
+.rm-mobile-only { display: none !important; }
 
 /* ─── ReMatch Responsive ─── */
 @media (max-width: 640px) {
@@ -40,8 +41,9 @@ body {
   .rm-nav-hide  { display: none !important; }
   .rm-nav-name  { display: none !important; }
 
-  /* Hamburger — แสดงบนมือถือ ซ่อนบน desktop */
-  .rm-hamburger { display: flex !important; }
+  /* Hamburger + language toggle shown on mobile */
+  .rm-hamburger   { display: flex !important; }
+  .rm-mobile-only { display: flex !important; align-items: center; margin-left: auto; }
 
   /* Hero */
   .rm-hero-grid {

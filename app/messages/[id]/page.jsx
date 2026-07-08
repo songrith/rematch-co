@@ -9,6 +9,7 @@ const EMOJIS = [
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useParams } from "next/navigation";
 import MobileNav from "@/app/components/MobileNav";
+import LanguageToggle from "@/app/components/LanguageToggle";
 
 export default function ChatPage() {
   const supabase = createClient();
@@ -161,10 +162,11 @@ export default function ChatPage() {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           กลับกล่องข้อความ
         </a>
+        <span className="rm-mobile-only" style={{ marginLeft: "auto" }}><LanguageToggle /></span>
         <button
           className="rm-hamburger"
           onClick={() => setMenuOpen(o => !o)}
-          style={{ marginLeft: "auto", width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+          style={{ width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
           aria-label="Menu"
         >
           {menuOpen

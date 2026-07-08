@@ -107,19 +107,19 @@ function Navbar() {
               <div style={{ width: 1, height: 16, background: divColor, margin: "0 4px", flexShrink: 0 }} />
 
               {/* Avatar pill */}
-              <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none", padding: "4px 10px 4px 4px", borderRadius: 99, border: "1px solid #e2e8f0", background: "#f8fafc", transition: "all 0.15s", flexShrink: 0 }}
-                onMouseEnter={e => { e.currentTarget.style.background = "#f1f5f9"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "#f8fafc"; }}>
-                <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
+              <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none", padding: "4px 10px 4px 4px", borderRadius: 99, border: "1px solid rgba(255,255,255,0.2)", background: "rgba(255,255,255,0.12)", transition: "all 0.15s", flexShrink: 0 }}
+                onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.2)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; }}>
+                <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#93c5fd", display: "flex", alignItems: "center", justifyContent: "center", color: "#1e3a8a", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
                   {(profile?.full_name || user.email || "?")[0].toUpperCase()}
                 </div>
-                <span className="rm-nav-name" style={{ fontSize: 13, fontWeight: 500, color: ink }}>{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
+                <span className="rm-nav-name" style={{ fontSize: 13, fontWeight: 500, color: "#fff" }}>{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
               </a>
 
               <button onClick={async () => { try { await supabase.auth.signOut({ scope: "local" }); } catch {} window.location.href = "/"; }}
-                style={{ fontSize: 12, color: "#94a3b8", background: "none", border: "none", cursor: "pointer", padding: "5px 8px", borderRadius: 7, transition: "color 0.15s", whiteSpace: "nowrap" }}
-                onMouseEnter={e => e.currentTarget.style.color = "#ef4444"}
-                onMouseLeave={e => e.currentTarget.style.color = "#94a3b8"}>
+                style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", background: "none", border: "none", cursor: "pointer", padding: "5px 8px", borderRadius: 7, transition: "color 0.15s", whiteSpace: "nowrap" }}
+                onMouseEnter={e => e.currentTarget.style.color = "#f87171"}
+                onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.5)"}>
                 {t("navLogout")}
               </button>
             </>
@@ -135,8 +135,9 @@ function Navbar() {
         </div>
 
         {/* Hamburger (mobile) */}
+        <span className="rm-mobile-only" style={{ marginLeft: "auto" }}><LanguageToggle /></span>
         <button className="rm-hamburger" onClick={() => setMenuOpen(true)}
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: ink, alignItems: "center", justifyContent: "center", marginLeft: "auto" }}>
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: ink, alignItems: "center", justifyContent: "center" }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
@@ -151,47 +152,14 @@ function Navbar() {
 
 /* ─── Hero ─── */
 function Hero() {
-  const supabase = createClient();
   const { lang } = useLang();
   const t = (key) => i18n[lang]?.[key] ?? i18n.th[key] ?? key;
-  const [heroProds, setHeroProds] = useState([]);
-
-  useEffect(() => {
-    async function fetchHero() {
-      const { data } = await supabase
-        .from("products")
-        .select("id, name, price, image_url, image_urls, grade, team, category")
-        .eq("status", "approved")
-        .order("created_at", { ascending: false })
-        .limit(4);
-      setHeroProds(data || []);
-    }
-
-    fetchHero();
-
-    const channel = supabase
-      .channel("hero-products")
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "products" }, fetchHero)
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "products" }, fetchHero)
-      .subscribe();
-
-    return () => supabase.removeChannel(channel);
-  }, []);
-
-  const G = {
-    S: { bg: "#dcfce7", text: "#15803d", border: "#bbf7d0" },
-    A: { bg: "#dbeafe", text: "#1e40af", border: "#bfdbfe" },
-    B: { bg: "#fef9c3", text: "#a16207", border: "#fde68a" },
-  };
-  const CAT = { football: "⚽", basketball: "🏀", retro: "🏆" };
 
   const guarantees = [
     { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, title: t("heroEscrowTitle"), sub: t("heroEscrowSub") },
     { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>, title: t("heroVerifiedTitle"), sub: t("heroVerifiedSub") },
     { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>, title: t("heroReturnTitle"), sub: t("heroReturnSub") },
   ];
-
-  const slots = [...heroProds, ...Array(Math.max(0, 4 - heroProds.length)).fill(null)];
 
   return (
     <section style={{ position: "relative", overflow: "hidden", background: "#06091a" }}>
@@ -201,9 +169,9 @@ function Hero() {
         <div style={{ position: "absolute", bottom: "-10%", left: "-8%", width: "40%", height: "60%", background: "radial-gradient(ellipse, rgba(30,58,138,.15) 0%, transparent 70%)" }} />
       </div>
 
-      <div className="rm-hero-grid" style={{ maxWidth: 1200, margin: "0 auto", padding: "88px 48px 100px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, alignItems: "center", position: "relative", zIndex: 1, width: "100%" }}>
+      <div style={{ maxWidth: 680, margin: "0 auto", padding: "100px 32px 112px", position: "relative", zIndex: 1, textAlign: "center" }}>
 
-        {/* Left — copy */}
+        {/* Copy */}
         <div style={{ animation: "fadeUp 0.6s ease both" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(99,102,241,.15)", color: "#a5b4fc", fontSize: 12, fontWeight: 600, padding: "5px 14px", borderRadius: 99, marginBottom: 28, border: "1px solid rgba(99,102,241,.25)" }}>
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -218,11 +186,11 @@ function Hero() {
             {t("heroLine3") && <><br />{t("heroLine3")}</>}
           </h1>
 
-          <p style={{ fontSize: 15, lineHeight: 1.8, color: "rgba(255,255,255,.45)", margin: "0 0 32px", maxWidth: 400 }}>
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,.5)", margin: "0 0 36px" }}>
             {t("heroDesc")}
           </p>
 
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
             <a href="/shop" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#2563eb", color: "#fff", padding: "12px 28px", borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: "none", boxShadow: "0 4px 20px rgba(37,99,235,.4)", transition: "all 0.2s" }}
               onMouseEnter={e => { e.currentTarget.style.background = "#1d4ed8"; e.currentTarget.style.transform = "translateY(-1px)"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "#2563eb"; e.currentTarget.style.transform = "none"; }}>
@@ -236,7 +204,7 @@ function Hero() {
             </a>
           </div>
 
-          <div style={{ marginTop: 44, paddingTop: 32, borderTop: "1px solid rgba(255,255,255,.07)", display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ marginTop: 44, paddingTop: 32, borderTop: "1px solid rgba(255,255,255,.07)", display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 20, justifyContent: "center" }}>
             {guarantees.map(({ icon, title, sub }) => (
               <div key={title} style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <div style={{ width: 34, height: 34, background: "rgba(255,255,255,.07)", border: "1px solid rgba(255,255,255,.1)", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,.6)", flexShrink: 0 }}>{icon}</div>
@@ -247,48 +215,6 @@ function Hero() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Right — real product grid */}
-        <div className="rm-hero-right" style={{ animation: "fadeIn 0.7s 0.15s ease both" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-            {slots.map((p, i) => {
-              const img = p?.image_urls?.[0] || p?.image_url;
-              const g = p ? (G[p.grade] || G.S) : null;
-              return (
-                <a key={i} href={p ? `/products/${p.id}` : "/shop"} style={{ textDecoration: "none", display: "block", borderRadius: 16, overflow: "hidden", aspectRatio: "1", position: "relative", background: "#0f172a", border: "1px solid rgba(255,255,255,.08)", transition: "transform 0.22s ease" }}
-                  onMouseEnter={e => e.currentTarget.style.transform = "scale(1.03)"}
-                  onMouseLeave={e => e.currentTarget.style.transform = "none"}>
-                  {img ? (
-                    <img src={img} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  ) : (
-                    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>
-                      {p ? (CAT[p.category] || "⚽") : ""}
-                    </div>
-                  )}
-                  {/* Bottom overlay */}
-                  {p && (
-                    <>
-                      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.1) 50%, transparent 100%)" }} />
-                      <div style={{ position: "absolute", top: 8, right: 8, background: g.bg, border: `1px solid ${g.border}`, borderRadius: 99, padding: "2px 8px", fontSize: 10, fontWeight: 800, color: g.text }}>
-                        {p.grade}
-                      </div>
-                      <div style={{ position: "absolute", bottom: 10, left: 10, right: 10 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,.85)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginBottom: 2 }}>{p.name}</div>
-                        <div style={{ fontSize: 15, fontWeight: 900, color: "#93c5fd" }}>฿{Number(p.price).toLocaleString()}</div>
-                      </div>
-                    </>
-                  )}
-                </a>
-              );
-            })}
-          </div>
-          {heroProds.length > 0 && (
-            <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 6, justifyContent: "flex-end" }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
-              <span style={{ fontSize: 11, color: "rgba(255,255,255,.3)", fontWeight: 500 }}>สินค้าล่าสุดจากแพลตฟอร์ม</span>
-            </div>
-          )}
         </div>
       </div>
     </section>

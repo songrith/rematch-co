@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import MobileNav from "@/app/components/MobileNav";
+import LanguageToggle from "@/app/components/LanguageToggle";
 
 const TYPE_ICON = {
   new_order:       "🛍️",
@@ -54,10 +55,11 @@ export default function NotificationsPage() {
 
       <nav style={S.nav}>
         <a href="/" style={S.logo}>Re<span style={{ color: "#1e3a8a" }}>Match</span></a>
+        <span className="rm-mobile-only" style={{ marginLeft: "auto" }}><LanguageToggle /></span>
         <button
           className="rm-hamburger"
           onClick={() => setMenuOpen(o => !o)}
-          style={{ marginLeft: "auto", width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+          style={{ width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
           aria-label="Menu"
         >
           {menuOpen
