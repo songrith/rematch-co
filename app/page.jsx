@@ -12,7 +12,6 @@ function Navbar() {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [unread, setUnread] = useState(0);
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -34,39 +33,34 @@ function Navbar() {
         setProfile(data);
       } else { setProfile(null); setUnread(0); }
     });
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => { subscription.unsubscribe(); window.removeEventListener("scroll", onScroll); };
+    return () => { subscription.unsubscribe(); };
   }, []);
 
   const { lang } = useLang();
   const t = (key) => i18n[lang]?.[key] ?? i18n.th[key] ?? key;
   const isAdmin = profile?.role === "admin" || (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim()).includes(user?.email);
 
-  const pillBg   = scrolled ? "rgba(255,255,255,0.96)" : "rgba(15,23,42,0.55)";
-  const pillBdr  = scrolled ? "rgba(226,232,240,0.9)"  : "rgba(255,255,255,0.13)";
-  const ink      = scrolled ? "#374151"                 : "rgba(255,255,255,0.82)";
-  const divColor = scrolled ? "#e2e8f0"                 : "rgba(255,255,255,0.14)";
+  const ink      = "#374151";
+  const divColor = "#e2e8f0";
 
   const lnk = (extra = {}) => ({
     fontSize: 13.5, fontWeight: 500, color: ink, textDecoration: "none",
     padding: "5px 12px", borderRadius: 8, transition: "all 0.15s", whiteSpace: "nowrap",
     ...extra,
   });
-  const onL  = e => { e.currentTarget.style.color = scrolled ? "#0f172a" : "#fff"; e.currentTarget.style.background = scrolled ? "#f1f5f9" : "rgba(255,255,255,0.1)"; };
+  const onL  = e => { e.currentTarget.style.color = "#0f172a"; e.currentTarget.style.background = "#f1f5f9"; };
   const offL = e => { e.currentTarget.style.color = ink; e.currentTarget.style.background = "transparent"; };
 
   return (
     <div style={{ position: "fixed", top: 14, left: "50%", transform: "translateX(-50%)", zIndex: 200, width: "min(calc(100vw - 32px), 1160px)" }}>
       <nav style={{
         height: 52,
-        background: pillBg,
-        backdropFilter: "blur(24px) saturate(160%)",
-        WebkitBackdropFilter: "blur(24px) saturate(160%)",
-        border: `1px solid ${pillBdr}`,
+        background: "rgba(255,255,255,0.97)",
+        backdropFilter: "blur(20px) saturate(160%)",
+        WebkitBackdropFilter: "blur(20px) saturate(160%)",
+        border: "1px solid rgba(226,232,240,0.9)",
         borderRadius: 14,
-        boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04)" : "0 8px 32px rgba(0,0,0,.24)",
-        transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)",
+        boxShadow: "0 4px 24px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04)",
         display: "flex", alignItems: "center",
         padding: "0 16px",
         gap: 4,
@@ -75,8 +69,8 @@ function Navbar() {
         {/* Logo */}
         <a href="/" style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none", flexShrink: 0, marginRight: 8 }}>
           <img src="/favicon.ico" alt="" width="26" height="26" style={{ borderRadius: 7, display: "block" }} />
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 900, color: scrolled ? "#0f172a" : "#fff", letterSpacing: -0.5, transition: "color 0.3s" }}>
-            Re<span style={{ color: scrolled ? "#1e3a8a" : "#93c5fd" }}>Match</span>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 900, color: "#0f172a", letterSpacing: -0.5 }}>
+            Re<span style={{ color: "#1e3a8a" }}>Match</span>
           </span>
         </a>
 
@@ -98,7 +92,7 @@ function Navbar() {
           {user ? (
             <>
               {isAdmin && (
-                <a href="/admin" style={{ fontSize: 12, fontWeight: 700, color: "#a78bfa", padding: "4px 10px", border: "1px solid rgba(167,139,250,0.3)", borderRadius: 7, textDecoration: "none", background: scrolled ? "#faf5ff" : "rgba(124,58,237,0.2)", whiteSpace: "nowrap" }}>Admin</a>
+                <a href="/admin" style={{ fontSize: 12, fontWeight: 700, color: "#7c3aed", padding: "4px 10px", border: "1px solid #ede9fe", borderRadius: 7, textDecoration: "none", background: "#faf5ff", whiteSpace: "nowrap" }}>Admin</a>
               )}
               {profile?.role === "seller" && (
                 <a href="/seller/dashboard" style={lnk()} onMouseEnter={onL} onMouseLeave={offL}>{t("navDashboard")}</a>
@@ -117,26 +111,26 @@ function Navbar() {
               <div style={{ width: 1, height: 16, background: divColor, margin: "0 4px", flexShrink: 0 }} />
 
               {/* Avatar pill */}
-              <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none", padding: "4px 10px 4px 4px", borderRadius: 99, border: `1px solid ${divColor}`, background: scrolled ? "#f8fafc" : "rgba(255,255,255,0.07)", transition: "all 0.15s", flexShrink: 0 }}
-                onMouseEnter={e => { e.currentTarget.style.background = scrolled ? "#f1f5f9" : "rgba(255,255,255,0.14)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = scrolled ? "#f8fafc" : "rgba(255,255,255,0.07)"; }}>
-                <div style={{ width: 24, height: 24, borderRadius: "50%", background: scrolled ? "#1e3a8a" : "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
+              <a href="/dashboard" style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none", padding: "4px 10px 4px 4px", borderRadius: 99, border: "1px solid #e2e8f0", background: "#f8fafc", transition: "all 0.15s", flexShrink: 0 }}
+                onMouseEnter={e => { e.currentTarget.style.background = "#f1f5f9"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "#f8fafc"; }}>
+                <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#1e3a8a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
                   {(profile?.full_name || user.email || "?")[0].toUpperCase()}
                 </div>
                 <span className="rm-nav-name" style={{ fontSize: 13, fontWeight: 500, color: ink }}>{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
               </a>
 
               <button onClick={async () => { try { await supabase.auth.signOut({ scope: "local" }); } catch {} window.location.href = "/"; }}
-                style={{ fontSize: 12, color: scrolled ? "#94a3b8" : "rgba(255,255,255,0.45)", background: "none", border: "none", cursor: "pointer", padding: "5px 8px", borderRadius: 7, transition: "color 0.15s", whiteSpace: "nowrap" }}
+                style={{ fontSize: 12, color: "#94a3b8", background: "none", border: "none", cursor: "pointer", padding: "5px 8px", borderRadius: 7, transition: "color 0.15s", whiteSpace: "nowrap" }}
                 onMouseEnter={e => e.currentTarget.style.color = "#ef4444"}
-                onMouseLeave={e => e.currentTarget.style.color = scrolled ? "#94a3b8" : "rgba(255,255,255,0.45)"}>
+                onMouseLeave={e => e.currentTarget.style.color = "#94a3b8"}>
                 {t("navLogout")}
               </button>
             </>
           ) : (
             <>
-              <a href="/login" style={lnk({ border: `1px solid ${divColor}`, padding: "6px 15px" })} onMouseEnter={onL} onMouseLeave={offL}>{t("navLogin")}</a>
-              <a href="/register" style={{ fontSize: 13.5, fontWeight: 600, color: scrolled ? "#fff" : "#0f172a", textDecoration: "none", padding: "6px 16px", borderRadius: 8, background: scrolled ? "#1e3a8a" : "#fff", transition: "opacity 0.15s", whiteSpace: "nowrap", flexShrink: 0 }}
+              <a href="/login" style={lnk({ border: "1px solid #e2e8f0", padding: "6px 15px" })} onMouseEnter={onL} onMouseLeave={offL}>{t("navLogin")}</a>
+              <a href="/register" style={{ fontSize: 13.5, fontWeight: 600, color: "#fff", textDecoration: "none", padding: "6px 16px", borderRadius: 8, background: "#1e3a8a", transition: "opacity 0.15s", whiteSpace: "nowrap", flexShrink: 0 }}
                 onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
                 onMouseLeave={e => e.currentTarget.style.opacity = "1"}>{t("navRegister")}</a>
             </>
