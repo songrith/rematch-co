@@ -52,6 +52,8 @@ body {
     gap: 32px !important;
   }
   .rm-hero-right { display: none !important; }
+  .rm-hero-center { text-align: left !important; }
+  .rm-hero-guarantees { justify-content: flex-start !important; }
 
   /* Section padding */
   .rm-sec   { padding-left: 20px !important; padding-right: 20px !important; }

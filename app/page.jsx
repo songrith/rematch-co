@@ -169,7 +169,7 @@ function Hero() {
         <div style={{ position: "absolute", bottom: "-10%", left: "-8%", width: "40%", height: "60%", background: "radial-gradient(ellipse, rgba(30,58,138,.15) 0%, transparent 70%)" }} />
       </div>
 
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "100px 32px 112px", position: "relative", zIndex: 1, textAlign: "center" }}>
+      <div className="rm-hero-center" style={{ maxWidth: 680, margin: "0 auto", padding: "100px 32px 112px", position: "relative", zIndex: 1, textAlign: "center" }}>
 
         {/* Copy */}
         <div style={{ animation: "fadeUp 0.6s ease both" }}>
@@ -204,7 +204,7 @@ function Hero() {
             </a>
           </div>
 
-          <div style={{ marginTop: 44, paddingTop: 32, borderTop: "1px solid rgba(255,255,255,.07)", display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 20, justifyContent: "center" }}>
+          <div className="rm-hero-guarantees" style={{ marginTop: 44, paddingTop: 32, borderTop: "1px solid rgba(255,255,255,.07)", display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 20, justifyContent: "center" }}>
             {guarantees.map(({ icon, title, sub }) => (
               <div key={title} style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <div style={{ width: 34, height: 34, background: "rgba(255,255,255,.07)", border: "1px solid rgba(255,255,255,.1)", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,.6)", flexShrink: 0 }}>{icon}</div>
