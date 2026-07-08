@@ -52,7 +52,8 @@ function Navbar() {
   const offL = e => { e.currentTarget.style.color = ink; e.currentTarget.style.background = "transparent"; };
 
   return (
-    <div style={{ position: "fixed", top: 14, left: "50%", transform: "translateX(-50%)", zIndex: 200, width: "min(calc(100vw - 32px), 1160px)" }}>
+    <div style={{ padding: "14px 16px 0", background: "#06091a" }}>
+    <div style={{ maxWidth: 1160, margin: "0 auto" }}>
       <nav style={{
         height: 52,
         background: "rgba(255,255,255,0.97)",
@@ -149,6 +150,7 @@ function Navbar() {
         <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={user} profile={profile} showCategories={true} />
       </nav>
     </div>
+    </div>
   );
 }
 
@@ -163,7 +165,7 @@ function Hero() {
   ];
   return (
     <section style={{
-      position: "relative", overflow: "hidden", paddingTop: 80,
+      position: "relative", overflow: "hidden",
       background: "#06091a",
       minHeight: "100vh", display: "flex", alignItems: "center",
     }}>
