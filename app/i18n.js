@@ -11,7 +11,7 @@ const i18n = {
     breadcrumbHome:"หน้าหลัก", breadcrumbShop:"ร้านค้า",
 
     // Category labels
-    catLabel:{ football:"เสื้อบอล", basketball:"เสื้อบาส", retro:"Retro" },
+    catLabel:{ football:"เสื้อบอล", basketball:"เสื้อบาส", retro:"Retro", nhl:"NHL", nfl:"NFL", sportswear:"Sportswear" },
 
     // Hero
     heroPill:"ของแท้ 100% · ยืนยันทุกชิ้นโดย Admin",
@@ -71,6 +71,7 @@ const i18n = {
     footerTagline:"ตลาดซื้อขายเสื้อกีฬาของแท้ที่ปลอดภัยที่สุดในไทย",
     footerProducts:"สินค้า", footerAccount:"บัญชี", footerCompany:"บริษัท",
     footerFootball:"เสื้อบอล", footerBasketball:"เสื้อบาส", footerViewAll:"ดูทั้งหมด",
+    featuredLabel:"สินค้าล่าสุด", featuredTitle:"เพิ่งลงขายใหม่", featuredViewAll:"ดูทั้งหมด",
     footerLogin:"เข้าสู่ระบบ", footerRegister:"สมัครสมาชิก",
     footerOrders:"คำสั่งซื้อ", footerBecomeSeller:"สมัคร Seller",
     footerPrivacy:"นโยบายความเป็นส่วนตัว", footerTerms:"ข้อกำหนดการใช้", footerContact:"ติดต่อเรา",
@@ -79,7 +80,7 @@ const i18n = {
     shopPageTitle:"เจอร์ซีย์แท้ทุกชนิด",
     shopSubtitle:"Authentic Jerseys Marketplace",
     shopSearch:"ค้นหาเสื้อ ทีม หรือนักเตะ...",
-    shopAll:"ทั้งหมด", shopFootball:"เสื้อบอล", shopBasketball:"เสื้อบาส", shopRetro:"Retro",
+    shopAll:"ทั้งหมด", shopFootball:"เสื้อบอล", shopBasketball:"เสื้อบาส", shopRetro:"Retro", shopNHL:"NHL", shopNFL:"NFL", shopSportswear:"Sportswear",
     shopEmpty:"ไม่พบสินค้าในหมวดนี้",
     shopEmptySub:"ลองเลือกหมวดหมู่อื่น หรือค้นหาด้วยคำอื่น",
     shopSize:"ไซส์", shopSold:"ขายแล้ว",
@@ -167,9 +168,11 @@ const i18n = {
     sellName:"ชื่อสินค้า", sellNamePlaceholder:"เช่น Real Madrid Home 24/25",
     sellCategory:"ประเภท", sellYear:"ซีซั่น / ปี", sellYearPlaceholder:"เช่น 2024/25",
     sellLeague:"ลีก + ทีม", sellNBA:"ทีม NBA", sellTeam:"ทีม / สโมสร",
+    sellNHL:"ทีม NHL", sellNFL:"ทีม NFL", sellBrand:"แบรนด์",
     sellSelectLeagueFirst:"เลือกลีกก่อน",
     sellSearchTeam:(lg)=>`ค้นหาทีมใน ${lg}...`,
     sellSearchNBA:"ค้นหาทีม NBA... เช่น Lakers, Bulls",
+    sellSearchNHL:"ค้นหาทีม NHL...", sellSearchNFL:"ค้นหาทีม NFL...", sellSearchBrand:"ค้นหาแบรนด์...",
     sellTeamPlaceholder:"เช่น Brazil 1970, AC Milan Retro",
     sellNoTeamFound:"ไม่พบทีมที่ตรงกัน",
     sellGradeType:"ประเภทเสื้อ",
@@ -185,6 +188,9 @@ const i18n = {
     categories:[
       { value:"football",   label:"เสื้อบอล" },
       { value:"basketball", label:"เสื้อบาส" },
+      { value:"nhl",        label:"NHL" },
+      { value:"nfl",        label:"NFL" },
+      { value:"sportswear", label:"Sportswear" },
       { value:"retro",      label:"Retro" },
     ],
     sellSize:"ขนาด (Size)", sellSizeDefault:"เลือก Size",
@@ -215,7 +221,7 @@ const i18n = {
     breadcrumbHome:"Home", breadcrumbShop:"Shop",
 
     // Category labels
-    catLabel:{ football:"Football", basketball:"Basketball", retro:"Retro" },
+    catLabel:{ football:"Football", basketball:"Basketball", retro:"Retro", nhl:"NHL", nfl:"NFL", sportswear:"Sportswear" },
 
     // Hero
     heroPill:"100% Authentic · Every item verified by Admin",
@@ -275,6 +281,7 @@ const i18n = {
     footerTagline:"Thailand's safest authentic sports jersey marketplace.",
     footerProducts:"Products", footerAccount:"Account", footerCompany:"Company",
     footerFootball:"Football Jerseys", footerBasketball:"Basketball Jerseys", footerViewAll:"View All",
+    featuredLabel:"Latest Listings", featuredTitle:"Just Listed", featuredViewAll:"View All",
     footerLogin:"Sign In", footerRegister:"Sign Up",
     footerOrders:"Orders", footerBecomeSeller:"Become a Seller",
     footerPrivacy:"Privacy Policy", footerTerms:"Terms of Service", footerContact:"Contact Us",
@@ -283,7 +290,7 @@ const i18n = {
     shopPageTitle:"Authentic Jerseys",
     shopSubtitle:"Authentic Jerseys Marketplace",
     shopSearch:"Search jerseys, teams, or players...",
-    shopAll:"All", shopFootball:"Football", shopBasketball:"Basketball", shopRetro:"Retro",
+    shopAll:"All", shopFootball:"Football", shopBasketball:"Basketball", shopRetro:"Retro", shopNHL:"NHL", shopNFL:"NFL", shopSportswear:"Sportswear",
     shopEmpty:"No items found in this category",
     shopEmptySub:"Try a different category or search term",
     shopSize:"Size", shopSold:"Sold",
@@ -371,9 +378,11 @@ const i18n = {
     sellName:"Product Name", sellNamePlaceholder:"e.g. Real Madrid Home 24/25",
     sellCategory:"Category", sellYear:"Season / Year", sellYearPlaceholder:"e.g. 2024/25",
     sellLeague:"League + Team", sellNBA:"NBA Team", sellTeam:"Team / Club",
+    sellNHL:"NHL Team", sellNFL:"NFL Team", sellBrand:"Brand",
     sellSelectLeagueFirst:"Select a league first",
     sellSearchTeam:(lg)=>`Search teams in ${lg}...`,
     sellSearchNBA:"Search NBA teams... e.g. Lakers, Bulls",
+    sellSearchNHL:"Search NHL team...", sellSearchNFL:"Search NFL team...", sellSearchBrand:"Search brand...",
     sellTeamPlaceholder:"e.g. Brazil 1970, AC Milan Retro",
     sellNoTeamFound:"No teams found",
     sellGradeType:"Jersey Type",
@@ -389,6 +398,9 @@ const i18n = {
     categories:[
       { value:"football",   label:"Football" },
       { value:"basketball", label:"Basketball" },
+      { value:"nhl",        label:"NHL" },
+      { value:"nfl",        label:"NFL" },
+      { value:"sportswear", label:"Sportswear" },
       { value:"retro",      label:"Retro" },
     ],
     sellSize:"Size", sellSizeDefault:"Select Size",

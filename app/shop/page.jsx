@@ -7,16 +7,16 @@ import { useLang } from "@/app/context/language";
 import LanguageToggle from "@/app/components/LanguageToggle";
 import i18n from "@/app/i18n";
 
-const CAT_EMOJI = { football: "⚽", basketball: "🏀", retro: "🏆" };
+const CAT_EMOJI = { football: "⚽", basketball: "🏀", retro: "🏆", nhl: "🏒", nfl: "🏈", sportswear: "👕" };
 const GRADE_STYLE = {
   S: { pill: "#dcfce7", pillBorder: "#bbf7d0", text: "#15803d", accent: "#16a34a", label: "เกือบใหม่", shadow: "rgba(22,163,74,.14)" },
   A: { pill: "#dbeafe", pillBorder: "#bfdbfe", text: "#1e40af", accent: "#2563eb", label: "สภาพดี",   shadow: "rgba(37,99,235,.14)" },
   B: { pill: "#fef9c3", pillBorder: "#fde68a", text: "#a16207", accent: "#d97706", label: "ปานกลาง", shadow: "rgba(217,119,6,.14)" },
 };
-const catMap     = { "ทั้งหมด": null, "เสื้อบอล": "football", "เสื้อบาส": "basketball", "Retro": "retro" };
-const catReverse = { football: "เสื้อบอล", basketball: "เสื้อบาส", retro: "Retro" };
-const tabs       = ["ทั้งหมด", "เสื้อบอล", "เสื้อบาส", "Retro"];
-const tabEmoji   = { "ทั้งหมด": "✦", "เสื้อบอล": "⚽", "เสื้อบาส": "🏀", "Retro": "🏆" };
+const catMap     = { "ทั้งหมด": null, "เสื้อบอล": "football", "เสื้อบาส": "basketball", "Retro": "retro", "NHL": "nhl", "NFL": "nfl", "Sportswear": "sportswear" };
+const catReverse = { football: "เสื้อบอล", basketball: "เสื้อบาส", retro: "Retro", nhl: "NHL", nfl: "NFL", sportswear: "Sportswear" };
+const tabs       = ["ทั้งหมด", "เสื้อบอล", "เสื้อบาส", "NHL", "NFL", "Sportswear", "Retro"];
+const tabEmoji   = { "ทั้งหมด": "✦", "เสื้อบอล": "⚽", "เสื้อบาส": "🏀", "Retro": "🏆", "NHL": "🏒", "NFL": "🏈", "Sportswear": "👕" };
 
 function ShopContent() {
   const supabase     = createClient();
@@ -142,9 +142,12 @@ function ShopContent() {
 
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
               {[
-                { key: "ทั้งหมด", label: t("shopAll") },
+                { key: "ทั้งหมด",   label: t("shopAll") },
                 { key: "เสื้อบอล", label: t("shopFootball") },
                 { key: "เสื้อบาส", label: t("shopBasketball") },
+                { key: "NHL",       label: t("shopNHL") },
+                { key: "NFL",       label: t("shopNFL") },
+                { key: "Sportswear",label: t("shopSportswear") },
                 { key: "Retro",    label: t("shopRetro") },
               ].map(({ key, label }) => (
                 <button key={key} onClick={() => setActive(key)}

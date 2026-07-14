@@ -10,6 +10,15 @@ import i18n from "@/app/i18n";
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
 const FOOTBALL_LEAGUES = {
+  "ทีมชาติ": [
+    "Thailand","Japan","South Korea","Australia","Saudi Arabia","Iran","Iraq","Vietnam",
+    "Indonesia","Malaysia","Philippines","Singapore","China","India","UAE",
+    "Brazil","Argentina","France","England","Germany","Spain","Portugal","Italy",
+    "Netherlands","Belgium","Croatia","Poland","Switzerland","Denmark","Sweden",
+    "Norway","Scotland","USA","Mexico","Colombia","Uruguay","Chile","Peru",
+    "Ecuador","Canada","Morocco","Senegal","Nigeria","Ghana","Ivory Coast",
+    "Egypt","Cameroon","Algeria",
+  ],
   "Premier League": [
     "Arsenal","Aston Villa","Bournemouth","Brentford","Brighton & Hove Albion","Chelsea",
     "Crystal Palace","Everton","Fulham","Ipswich Town","Leicester City","Liverpool",
@@ -33,6 +42,32 @@ const FOOTBALL_LEAGUES = {
     "Montpellier","Toulouse","Le Havre","Angers","Saint-Etienne",
   ],
 };
+
+const NHL_TEAMS = [
+  "Anaheim Ducks","Boston Bruins","Buffalo Sabres","Calgary Flames","Carolina Hurricanes",
+  "Chicago Blackhawks","Colorado Avalanche","Columbus Blue Jackets","Dallas Stars","Detroit Red Wings",
+  "Edmonton Oilers","Florida Panthers","Los Angeles Kings","Minnesota Wild","Montreal Canadiens",
+  "Nashville Predators","New Jersey Devils","New York Islanders","New York Rangers","Ottawa Senators",
+  "Philadelphia Flyers","Pittsburgh Penguins","San Jose Sharks","Seattle Kraken","St. Louis Blues",
+  "Tampa Bay Lightning","Toronto Maple Leafs","Utah Hockey Club","Vancouver Canucks","Vegas Golden Knights",
+  "Washington Capitals","Winnipeg Jets",
+];
+
+const NFL_TEAMS = [
+  "Arizona Cardinals","Atlanta Falcons","Baltimore Ravens","Buffalo Bills","Carolina Panthers",
+  "Chicago Bears","Cincinnati Bengals","Cleveland Browns","Dallas Cowboys","Denver Broncos",
+  "Detroit Lions","Green Bay Packers","Houston Texans","Indianapolis Colts","Jacksonville Jaguars",
+  "Kansas City Chiefs","Las Vegas Raiders","Los Angeles Chargers","Los Angeles Rams","Miami Dolphins",
+  "Minnesota Vikings","New England Patriots","New Orleans Saints","New York Giants","New York Jets",
+  "Philadelphia Eagles","Pittsburgh Steelers","San Francisco 49ers","Seattle Seahawks","Tampa Bay Buccaneers",
+  "Tennessee Titans","Washington Commanders",
+];
+
+const SPORTSWEAR_BRANDS = [
+  "Nike","Adidas","Puma","Under Armour","New Balance","Jordan","Reebok","Asics",
+  "Mizuno","Umbro","Hummel","Kappa","Fila","Lotto","Le Coq Sportif","Errea",
+  "Macron","Joma","Castore","Champion","2XU","Babolat","Skins",
+];
 
 const NBA_TEAMS = [
   "Atlanta Hawks","Boston Celtics","Brooklyn Nets","Charlotte Hornets","Chicago Bulls",
@@ -99,7 +134,7 @@ export default function SellPage() {
     e.preventDefault();
     if (!form.category)  { setError(t("errCategory")); return; }
     if (form.category === "football" && !form.league) { setError(t("errLeague")); return; }
-    if ((form.category === "football" || form.category === "basketball") && !form.team) { setError(t("errTeam")); return; }
+    if (["football","basketball","nhl","nfl","sportswear"].includes(form.category) && !form.team) { setError(t("errTeam")); return; }
     if (!form.size)      { setError(t("errSize")); return; }
     if (!form.gradeType) { setError(t("errGradeType")); return; }
     if (!form.grade)     { setError(t("errGrade")); return; }
@@ -277,6 +312,27 @@ export default function SellPage() {
                     onChange={val => set("team", val)}
                     placeholder={t("sellSearchNBA")}
                   />
+                </div>
+              )}
+
+              {form.category === "nhl" && (
+                <div>
+                  <label style={S.label}>{t("sellNHL")} <span style={{ color: "#dc2626" }}>*</span></label>
+                  <TeamSearch teams={NHL_TEAMS} value={form.team} onChange={val => set("team", val)} placeholder={t("sellSearchNHL")} />
+                </div>
+              )}
+
+              {form.category === "nfl" && (
+                <div>
+                  <label style={S.label}>{t("sellNFL")} <span style={{ color: "#dc2626" }}>*</span></label>
+                  <TeamSearch teams={NFL_TEAMS} value={form.team} onChange={val => set("team", val)} placeholder={t("sellSearchNFL")} />
+                </div>
+              )}
+
+              {form.category === "sportswear" && (
+                <div>
+                  <label style={S.label}>{t("sellBrand")} <span style={{ color: "#dc2626" }}>*</span></label>
+                  <TeamSearch teams={SPORTSWEAR_BRANDS} value={form.team} onChange={val => set("team", val)} placeholder={t("sellSearchBrand")} />
                 </div>
               )}
 
