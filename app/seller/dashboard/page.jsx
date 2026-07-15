@@ -201,7 +201,7 @@ export default function SellerDashboardPage() {
           <a href="/sell" style={{ background: "#1e3a8a", color: "#fff", padding: "9px 20px", borderRadius: 8, fontSize: 14, fontWeight: 600, textDecoration: "none" }}>
             + เพิ่มสินค้า
           </a>
-          <button onClick={async () => { try { await supabase.auth.signOut({ scope: "local" }); } catch {} window.location.reload(); }}
+          <button onClick={async () => { await fetch("/api/signout", { method: "POST" }); window.location.href = "/"; }}
             style={{ background: "none", border: "1px solid #e5e7eb", color: "#6b7280", padding: "9px 16px", borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
             ออกจากระบบ
           </button>

@@ -116,7 +116,7 @@ function Navbar() {
                 <span className="rm-nav-name" style={{ fontSize: 13, fontWeight: 500, color: "#fff" }}>{profile?.full_name?.split(" ")[0] || user.email?.split("@")[0]}</span>
               </a>
 
-              <button onClick={async () => { try { await supabase.auth.signOut({ scope: "local" }); } catch {} window.location.href = "/"; }}
+              <button onClick={async () => { await fetch("/api/signout", { method: "POST" }); window.location.href = "/"; }}
                 style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", background: "none", border: "none", cursor: "pointer", padding: "5px 8px", borderRadius: 7, transition: "color 0.15s", whiteSpace: "nowrap" }}
                 onMouseEnter={e => e.currentTarget.style.color = "#f87171"}
                 onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.5)"}>
@@ -362,6 +362,8 @@ function SellerCTA() {
 /* ─── Featured Products ─── */
 function FeaturedProducts() {
   const supabase = createClient();
+  const { lang } = useLang();
+  const t = (key) => i18n[lang]?.[key] ?? i18n.th[key] ?? key;
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -403,15 +405,15 @@ function FeaturedProducts() {
 
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 40, flexWrap: "wrap", gap: 12 }}>
           <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>สินค้าล่าสุด</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>{t("featuredLabel")}</div>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(24px,3vw,36px)", fontWeight: 900, color: "#0f172a", margin: 0, letterSpacing: -0.5 }}>
-              เพิ่งลงขายใหม่
+              {t("featuredTitle")}
             </h2>
           </div>
           <a href="/shop" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: "#1e3a8a", textDecoration: "none", padding: "9px 18px", border: "1.5px solid #e2e8f0", borderRadius: 10, transition: "all 0.15s" }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = "#1e3a8a"; e.currentTarget.style.background = "#eff6ff"; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.background = "#fff"; }}>
-            ดูทั้งหมด
+            {t("featuredViewAll")}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>

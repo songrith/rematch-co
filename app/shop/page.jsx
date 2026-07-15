@@ -57,7 +57,7 @@ function ShopContent() {
   }, []);
 
   async function handleLogout() {
-    await supabase.auth.signOut({ scope: 'local' });
+    await fetch("/api/signout", { method: "POST" });
     window.location.href = "/";
   }
 

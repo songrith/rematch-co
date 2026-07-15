@@ -118,7 +118,7 @@ export default function DashboardPage() {
         </a>
         <div className="rm-nav-links" style={{ marginLeft: "auto" }}>
           <button
-            onClick={async () => { try { await supabase.auth.signOut({ scope: 'local' }); } catch {} window.location.reload(); }}
+            onClick={async () => { await fetch("/api/signout", { method: "POST" }); window.location.href = "/"; }}
             style={{ background: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", padding: "8px 16px", borderRadius: 99, fontSize: 13, fontWeight: 500, cursor: "pointer" }}
           >
             ออกจากระบบ

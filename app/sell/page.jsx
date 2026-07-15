@@ -183,7 +183,7 @@ export default function SellPage() {
       <nav style={S.nav}>
         <a href="/" style={S.logo}>Re<span style={{ color: "#1e3a8a" }}>Match</span></a>
         <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 10, marginLeft: "auto" }}>
-          <button onClick={async () => { try { await supabase.auth.signOut({ scope: 'local' }); } catch {} window.location.reload(); }} style={S.logoutBtn}>{t("navLogout")}</button>
+          <button onClick={async () => { await fetch("/api/signout", { method: "POST" }); window.location.href = "/"; }} style={S.logoutBtn}>{t("navLogout")}</button>
           <LanguageToggle />
         </div>
         <span className="rm-mobile-only" style={{ marginLeft: "auto" }}><LanguageToggle /></span>

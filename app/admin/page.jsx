@@ -310,7 +310,7 @@ export default function AdminPage() {
 
       <nav style={S.nav}>
         <a href="/" style={S.logo}>Re<span style={{ color: "#1e3a8a" }}>Match</span> <span style={{ fontSize: 12, fontWeight: 500, color: "#9ca3af", marginLeft: 8 }}>Admin</span></a>
-        <button onClick={async () => { try { await supabase.auth.signOut({ scope: 'local' }); } catch {} window.location.reload(); }} style={S.logoutBtn}>ออกจากระบบ</button>
+        <button onClick={async () => { await fetch("/api/signout", { method: "POST" }); window.location.href = "/"; }} style={S.logoutBtn}>ออกจากระบบ</button>
       </nav>
 
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px 80px" }}>

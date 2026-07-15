@@ -79,7 +79,7 @@ export default function SellerTermsPage() {
           Re<span style={{ color: "#1e3a8a" }}>Match</span>
         </a>
         <div className="rm-nav-links" style={{ marginLeft: "auto" }}>
-          <button onClick={async () => { try { await supabase.auth.signOut({ scope: 'local' }); } catch {} window.location.reload(); }}
+          <button onClick={async () => { await fetch("/api/signout", { method: "POST" }); window.location.href = "/"; }}
             style={{ background: "transparent", border: "1px solid #e5e7eb", color: "#6b7280", padding: "8px 16px", borderRadius: 99, fontSize: 13, cursor: "pointer" }}>
             ออกจากระบบ
           </button>
