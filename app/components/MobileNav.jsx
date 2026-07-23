@@ -82,7 +82,11 @@ export default function MobileNav({ isOpen, onClose, user, profile: _profileProp
 
           {user ? (
             <>
-              {profile?.role === "admin"  && <Item href="/admin"            label="Admin Panel"     icon={<AdminIcon />} />}
+              {(() => {
+                const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim()).filter(Boolean);
+                const isAdmin = profile?.role === "admin" || adminEmails.includes(user.email);
+                return isAdmin && <Item href="/admin" label="Admin Panel" icon={<AdminIcon />} />;
+              })()}
               {profile?.role === "seller" && <Item href="/seller/dashboard" label="Seller Dashboard" icon={<DashIcon />} />}
               {profile?.role === "seller" && <Item href="/sell"             label="+ ลงสินค้า"       icon={<PlusIcon />} accent />}
               {(profile?.role === "buyer" || !profile?.role) && <Item href="/seller/terms" label="สมัครเป็น Seller" icon={<ShopIcon />} />}
