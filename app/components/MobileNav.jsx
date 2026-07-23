@@ -8,10 +8,10 @@ export default function MobileNav({ isOpen, onClose, user, profile: _profileProp
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    if (!user?.id) { setProfile(null); return; }
+    if (!user?.id || !isOpen) return;
     createClient().from("profiles").select("full_name, role").eq("id", user.id).single()
       .then(({ data }) => setProfile(data || null));
-  }, [user?.id]);
+  }, [user?.id, isOpen]);
 
   useEffect(() => {
     function handleClick(e) {
