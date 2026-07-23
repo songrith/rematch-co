@@ -3,17 +3,15 @@ import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import LanguageToggle from "@/app/components/LanguageToggle";
 
-export default function MobileNav({ isOpen, onClose, user, profile: profileProp, showCategories = true }) {
+export default function MobileNav({ isOpen, onClose, user, profile: _profileProp, showCategories = true }) {
   const ref = useRef(null);
-  const [profile, setProfile] = useState(profileProp);
+  const [profile, setProfile] = useState(null);
 
-  // fetch profile when parent doesn't provide one (so role-based links always work)
   useEffect(() => {
-    if (profileProp) { setProfile(profileProp); return; }
-    if (!user) return;
+    if (!user?.id) { setProfile(null); return; }
     createClient().from("profiles").select("full_name, role").eq("id", user.id).single()
-      .then(({ data }) => { if (data) setProfile(data); });
-  }, [user, profileProp]);
+      .then(({ data }) => setProfile(data || null));
+  }, [user?.id]);
 
   useEffect(() => {
     function handleClick(e) {
