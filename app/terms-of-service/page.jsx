@@ -44,7 +44,7 @@ export default function TermsOfServicePage() {
         <Section title="4. ระบบ Escrow และการชำระเงิน">
           <ul>
             <li>เงินจากผู้ซื้อจะถูกพักไว้กับ ReMatch จนกว่าสินค้าจะถูกจัดส่งและยืนยันการรับ</li>
-            <li>ค่าบริการแพลตฟอร์ม 10% จะถูกหักจากยอดขายของผู้ขายในแต่ละธุรกรรม</li>
+            <li>ค่าบริการแพลตฟอร์ม 7% จะถูกหักจากยอดขายของผู้ขายในแต่ละธุรกรรม</li>
             <li>การชำระเงินผ่านระบบ PromptPay เท่านั้น</li>
             <li>หลักฐานการโอนเงิน (สลิป) จะถูกตรวจสอบด้วยระบบอัตโนมัติ</li>
           </ul>
@@ -107,7 +107,7 @@ export default function TermsOfServicePage() {
         </Section>
 
         <Section title="12. ติดต่อเรา">
-          <p>หากมีข้อสงสัย ติดต่อได้ที่: <strong>support@rematch.th</strong></p>
+          <p>หากมีข้อสงสัย ติดต่อได้ที่: <strong>songrith.st@gmail.com</strong></p>
         </Section>
 
         <div style={{ marginTop: 48, paddingTop: 24, borderTop: "1px solid #e2e8f0", display: "flex", gap: 24 }}>

@@ -441,7 +441,7 @@ export default function SellerDashboardPage() {
                         <div style={{ fontSize: 19, fontWeight: 700, color: "#1e3a8a", marginTop: 4, letterSpacing: "-0.03em" }}>
                           ฿{Number(o.seller_amount || o.amount).toLocaleString()}
                         </div>
-                        <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>หลังหักค่าธรรมเนียม 10%</div>
+                        <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>หลังหักค่าธรรมเนียม 7%</div>
                       </div>
                     </div>
 

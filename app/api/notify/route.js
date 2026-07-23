@@ -90,7 +90,7 @@ async function orderPlaced({ buyerEmail, buyerName, sellerEmail, sellerName, pro
     await send(sellerEmail, `🛒 มีออเดอร์ใหม่! ${productName}`, wrap(
       `คุณมีออเดอร์ใหม่รอจัดส่ง`,
       `<p style="color:#6b7280;font-size:14px;line-height:1.7;margin:0 0 16px;">กรุณาจัดส่งสินค้าภายใน <strong>3 วันทำการ</strong> หลังได้รับแจ้ง</p>
-      ${table(`${row("ออเดอร์", `#${shortId}`)}${row("สินค้า", productName)}${row("ยอดของคุณ", `฿${Number(amount * 0.9).toLocaleString()} (หลังหัก 10%)`)}${row("ผู้ซื้อ", buyerName || "-")}`)}
+      ${table(`${row("ออเดอร์", `#${shortId}`)}${row("สินค้า", productName)}${row("ยอดของคุณ", `฿${Number(amount * 0.93).toLocaleString()} (หลังหัก 7%)`)}${row("ผู้ซื้อ", buyerName || "-")}`)}
       ${btn("https://rematch.th/seller/dashboard", "จัดการออเดอร์")}`
     ));
   }

@@ -59,12 +59,12 @@ const i18n = {
     // SellerCTA
     sellerForLabel:"สำหรับผู้ขาย",
     sellerCTATitle:["มีเสื้อกีฬา", "ของแท้อยู่?"],
-    sellerCTASub:"ไม่ต้องมีหน้าร้าน ลงขายง่าย ได้เงินเร็ว ค่าธรรมเนียมแค่ 10%",
+    sellerCTASub:"ไม่ต้องมีหน้าร้าน ลงขายง่าย ได้เงินเร็ว ค่าธรรมเนียมแค่ 7%",
     sellerCTABtn:"เริ่มขายเลย",
     sellerSteps:[
       ["สมัครและยืนยันตัวตน", "รูปบัตร ปชช. + Selfie ใช้เวลา 5 นาที"],
       ["ลงรายการสินค้า", "ถ่ายรูป ใส่ราคา รอ Admin อนุมัติใน 24 ชม."],
-      ["รับออเดอร์ ส่งของ รับเงิน", "หักค่าธรรมเนียม 10% โอนเข้าบัญชีทันที"],
+      ["รับออเดอร์ ส่งของ รับเงิน", "หักค่าธรรมเนียม 7% โอนเข้าบัญชีทันที"],
     ],
 
     // Footer
@@ -269,12 +269,12 @@ const i18n = {
     // SellerCTA
     sellerForLabel:"For Sellers",
     sellerCTATitle:["Got authentic", "jerseys?"],
-    sellerCTASub:"No storefront needed. Easy listing, fast payment. 10% commission only.",
+    sellerCTASub:"No storefront needed. Easy listing, fast payment. 7% commission only.",
     sellerCTABtn:"Start Selling",
     sellerSteps:[
       ["Verify Identity", "ID card photo + Selfie in 5 minutes"],
       ["List Your Item",  "Upload photos, set price, Admin approves in 24h"],
-      ["Ship & Get Paid", "10% fee deducted, rest transferred immediately"],
+      ["Ship & Get Paid", "7% fee deducted, rest transferred immediately"],
     ],
 
     // Footer
