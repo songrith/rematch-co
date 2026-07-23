@@ -1,11 +1,19 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import LanguageToggle from "@/app/components/LanguageToggle";
 
-export default function MobileNav({ isOpen, onClose, user, profile, showCategories = true }) {
+export default function MobileNav({ isOpen, onClose, user, profile: profileProp, showCategories = true }) {
   const ref = useRef(null);
-  const supabase = createClient();
+  const [profile, setProfile] = useState(profileProp);
+
+  // fetch profile when not provided by parent (so role-based links always work)
+  useEffect(() => {
+    if (profileProp !== undefined) { setProfile(profileProp); return; }
+    if (!user) return;
+    createClient().from("profiles").select("full_name, role").eq("id", user.id).single()
+      .then(({ data }) => { if (data) setProfile(data); });
+  }, [user, profileProp]);
 
   useEffect(() => {
     function handleClick(e) {
