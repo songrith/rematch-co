@@ -7,9 +7,9 @@ export default function MobileNav({ isOpen, onClose, user, profile: profileProp,
   const ref = useRef(null);
   const [profile, setProfile] = useState(profileProp);
 
-  // fetch profile when not provided by parent (so role-based links always work)
+  // fetch profile when parent doesn't provide one (so role-based links always work)
   useEffect(() => {
-    if (profileProp !== undefined) { setProfile(profileProp); return; }
+    if (profileProp) { setProfile(profileProp); return; }
     if (!user) return;
     createClient().from("profiles").select("full_name, role").eq("id", user.id).single()
       .then(({ data }) => { if (data) setProfile(data); });
