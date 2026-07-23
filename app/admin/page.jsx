@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import generatePayload from "promptpay-qr";
 import QRCode from "qrcode";
+import MobileNav from "@/app/components/MobileNav";
+import LanguageToggle from "@/app/components/LanguageToggle";
 
 const VER_TABS  = ["pending", "approved", "rejected"];
 const VER_LABEL = { pending: "รอตรวจสอบ", approved: "อนุมัติแล้ว", rejected: "ไม่ผ่าน" };
@@ -15,6 +17,8 @@ export default function AdminPage() {
   const supabase = createClient();
   const router   = useRouter();
   const [loading, setLoading]   = useState(true);
+  const [navUser, setNavUser]   = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [section, setSection]   = useState("disputes"); // disputes | sellers | products | payout
 
   const [lightbox, setLightbox] = useState(null); // url string when open
@@ -58,6 +62,7 @@ export default function AdminPage() {
       const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
       const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map(e => e.trim()).filter(Boolean);
       if (profile?.role !== "admin" && !ADMIN_EMAILS.includes(user.email)) { router.push("/"); return; }
+      setNavUser(user);
       await Promise.all([fetchVerifications(), fetchProducts(), fetchPayoutOrders(), fetchDisputeOrders()]);
       setLoading(false);
     }
@@ -310,7 +315,20 @@ export default function AdminPage() {
 
       <nav style={S.nav}>
         <a href="/" style={S.logo}>Re<span style={{ color: "#1e3a8a" }}>Match</span> <span style={{ fontSize: 12, fontWeight: 500, color: "#9ca3af", marginLeft: 8 }}>Admin</span></a>
-        <button onClick={async () => { await fetch("/api/signout", { method: "POST" }); window.location.href = "/"; }} style={S.logoutBtn}>ออกจากระบบ</button>
+        <div className="rm-nav-links" style={{ display: "flex", alignItems: "center", gap: 10, marginLeft: "auto" }}>
+          <button onClick={async () => { await fetch("/api/signout", { method: "POST" }); window.location.href = "/"; }} style={S.logoutBtn}>ออกจากระบบ</button>
+          <LanguageToggle />
+        </div>
+        <span className="rm-mobile-only" style={{ marginLeft: "auto" }}><LanguageToggle /></span>
+        <button className="rm-hamburger" onClick={() => setMenuOpen(o => !o)}
+          style={{ width: 38, height: 38, borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+          aria-label="Menu">
+          {menuOpen
+            ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          }
+        </button>
+        <MobileNav isOpen={menuOpen} onClose={() => setMenuOpen(false)} user={navUser} profile={null} />
       </nav>
 
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px 80px" }}>
