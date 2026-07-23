@@ -105,7 +105,7 @@ export default function PrivacyPage() {
         <Section title="11. ติดต่อเรา">
           <p>หากมีข้อสงสัยเกี่ยวกับนโยบายนี้ ติดต่อได้ที่:</p>
           <ul>
-            <li>อีเมล: <strong>privacy@rematch.th</strong></li>
+            <li>อีเมล: <strong>songrith.st@gmail.com</strong></li>
             <li>ผู้ควบคุมข้อมูลส่วนบุคคล: ReMatch Co., Ltd.</li>
           </ul>
         </Section>

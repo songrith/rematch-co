@@ -58,7 +58,7 @@ export async function POST(request) {
     }
 
     const receiverProxy  = result.data?.receiver?.proxy?.value?.replace(/\D/g, "");
-    const platformNumber = "0994156241".replace(/\D/g, "");
+    const platformNumber = (process.env.NEXT_PUBLIC_PLATFORM_PROMPTPAY || "").replace(/\D/g, "");
 
     if (receiverProxy && receiverProxy !== platformNumber && !receiverProxy.endsWith(platformNumber.slice(-9))) {
       return Response.json({ ok: false, error: "เบอร์ผู้รับเงินไม่ตรงกับ ReMatch" });

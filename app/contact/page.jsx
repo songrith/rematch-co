@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 // ── แก้ข้อมูลติดต่อตรงนี้ ──
-const CONTACT_EMAIL = "contact@rematch.th";
-const CONTACT_PHONE = "086-000-0000";
+const CONTACT_EMAIL = "songrith.st@gmail.com";
+const CONTACT_PHONE = "096-195-6225";
 const CONTACT_HOURS = "จันทร์ – ศุกร์  09:00 – 18:00";
 
 export default function ContactPage() {
